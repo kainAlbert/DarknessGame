@@ -17,6 +17,7 @@ import Application.Panel;
 public class CharacterBase {
 
 	protected BufferedImage mImage;
+	protected String mFileName;
 	protected JButton mButton;
 	protected GSvector2 mPos;
 	protected GSvector2 mLastPos;
@@ -30,7 +31,12 @@ public class CharacterBase {
 	protected boolean mIsDead;
 
 	// コンストラクタ
-	public CharacterBase( Application app, Panel p, String fileName, GSvector2 pos,  int number, int type ){
+	public CharacterBase(){
+
+	}
+
+	// 初期化
+	public void initialize( Application app, Panel p, String fileName, GSvector2 pos,  int number, int type ){
 
 		// 画像読み込み
 		try{
@@ -40,6 +46,7 @@ public class CharacterBase {
 		}
 
 		// メンバ変数の設定
+		mFileName = fileName;
 		mPos = pos;
 		mLastPos = new GSvector2( pos.x, pos.y );
 		mSize = new GSvector2( Define.BASE_SIZE, Define.BASE_SIZE );
@@ -51,7 +58,7 @@ public class CharacterBase {
 		mType = type;
 		mIsDead = false;
 
-		if( app == null ) return;
+		if( app == null || p == null ) return;
 
 		//アイコンの生成
 		mButton = new JButton( );
@@ -75,9 +82,6 @@ public class CharacterBase {
 		mButton.setActionCommand( Integer.toString(number) );
 	}
 
-	// 初期化
-	public void initialize(){}
-
 	// アイコンに画像を設定
 	protected void setImage(){
 
@@ -89,7 +93,7 @@ public class CharacterBase {
 				(int)mFirstReSize.y)
 				);
 
-		Image image2 = image.getImage().getScaledInstance( Define.BASE_SIZE, Define.BASE_SIZE, 1);
+		Image image2 = image.getImage().getScaledInstance( (int)mSize.x, (int)mSize.y, 1);
 		image = new ImageIcon( image2 );
 
 		//ボタンにアイコンを設定する
@@ -99,6 +103,8 @@ public class CharacterBase {
 	// 更新
 	public void update(){
 
+		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
+		mButton.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
 	}
 
 	// 衝突
@@ -106,6 +112,7 @@ public class CharacterBase {
 
 	// ゲッター
 	public BufferedImage getImage(){ return mImage; }
+	public String getFileName(){ return mFileName; }
 	public JButton getButton(){ return mButton; }
 	public GSvector2 getPos(){ return mPos; }
 	public GSvector2 getSize(){ return mSize; }

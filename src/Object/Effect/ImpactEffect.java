@@ -10,7 +10,9 @@ public class ImpactEffect extends CharacterBase{
 	// コンストラクタ
 	public ImpactEffect( GSvector2 pos, double size ){
 
-		super( null, null, "impact", pos, 0, 0 );
+		super();
+
+		super.initialize( null, null, "impact", pos, 0, 0 );
 
 		mTimer = 0;
 
