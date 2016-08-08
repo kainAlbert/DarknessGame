@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 import Application.Application;
 import Application.Define;
@@ -19,15 +20,14 @@ public class CharacterBase {
 	protected BufferedImage mImage;
 	protected String mFileName;
 	protected JButton mButton;
+	protected JLabel mLabel;
 	protected GSvector2 mPos;
 	protected GSvector2 mLastPos;
 	protected GSvector2 mSize;
 	protected GSvector2 mFirstReSize;
 	protected GSvector2 mReSize;
 	protected double mAngle;
-	protected int mNumber;
-	protected int mType;
-	protected int mForce;
+	protected int mID;
 	protected boolean mIsDead;
 
 	// コンストラクタ
@@ -53,9 +53,7 @@ public class CharacterBase {
 		mFirstReSize = new GSvector2( Define.BASE_RESIZE, Define.BASE_RESIZE );
 		mReSize = new GSvector2( Define.BASE_RESIZE, Define.BASE_RESIZE );
 		mAngle = 0;
-		mForce = Define.BASE_FORCE.NONE.ordinal();
-		mNumber = number;
-		mType = type;
+		mID = 0;
 		mIsDead = false;
 
 		if( app == null || p == null ) return;
@@ -119,8 +117,5 @@ public class CharacterBase {
 	public GSvector2 getFirstReSize(){ return mFirstReSize; }
 	public GSvector2 getReSize(){ return mReSize; }
 	public double getAngle(){ return mAngle; }
-	public int getNumber(){ return mNumber; }
-	public int getType(){ return mType; }
-	public int getForce(){ return mForce; }
 	public boolean getIsDead(){ return mIsDead; }
 }
