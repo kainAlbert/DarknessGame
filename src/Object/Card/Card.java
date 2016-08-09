@@ -21,7 +21,7 @@ public class Card extends CharacterBase{
 
 		super.initialize(fileName, pos, size, resize, id, type);
 
-		mExplanation.initialize("guardDistance", new GSvector2(), new GSvector2(), new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ), 0, 0);
+		mExplanation.initialize("guardDistance", new GSvector2(1,1), new GSvector2( 1, 1 ), new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ), 0, 0);
 		mExplanation.initializeLabel(app);
 	}
 

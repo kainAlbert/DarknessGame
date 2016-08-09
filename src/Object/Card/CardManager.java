@@ -23,7 +23,7 @@ public class CardManager {
 		for( int i=0; i<5; i++ ){
 
 			CharacterBase c = new Card();
-			c.initialize("bullet", new GSvector2( 100 + i * 50, 100 ),
+			((Card)c).initialize( app, "bullet", new GSvector2( 100 + i * 50, 100 ),
 					new GSvector2( Define.CARD_SIZE.x, Define.CARD_SIZE.y ),
 					new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ),
 					i, Define.CARD_TYPE.ENEMYHAND.ordinal() );
@@ -37,7 +37,7 @@ public class CardManager {
 			double[] posy = { FIRST_POSY+20, FIRST_POSY+15, FIRST_POSY+10, FIRST_POSY+5, FIRST_POSY, FIRST_POSY, FIRST_POSY+5, FIRST_POSY+10, FIRST_POSY+15, FIRST_POSY+20 };
 
 			CharacterBase c = new Card();
-			c.initialize("bullet", new GSvector2( 100 + i * Define.CARD_SIZE.x * 0.9, posy[i] ),
+			((Card)c).initialize(app, "bullet", new GSvector2( 100 + i * Define.CARD_SIZE.x * 0.9, posy[i] ),
 					new GSvector2( Define.CARD_SIZE.x, Define.CARD_SIZE.y ),
 					new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ),
 					i, Define.CARD_TYPE.MYHAND.ordinal() );
