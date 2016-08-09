@@ -141,6 +141,13 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	//マウスがオブジェクトから出たときの処理
 	public void mouseExited(MouseEvent e) {
+
+		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
+		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
+
+		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+
+		mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.MOUSEOFF );
 	}
 
 	public void mousePressed(MouseEvent e) {//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）

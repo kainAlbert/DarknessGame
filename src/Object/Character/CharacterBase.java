@@ -12,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 import Application.Application;
-import Application.Define;
 import Application.GSvector2;
 
 public class CharacterBase {
@@ -32,7 +31,7 @@ public class CharacterBase {
 	protected int mType;
 	protected GSvector2 mFirstMousePos;
 	protected boolean mIsSelect;
-	protected int mMouseOnTimer;
+	protected boolean mIsMouseOn;
 
 	// コンストラクタ
 	public CharacterBase(){
@@ -62,7 +61,7 @@ public class CharacterBase {
 		mType = type;
 		mFirstMousePos = new GSvector2();
 		mIsSelect = false;
-		mMouseOnTimer = 0;
+		mIsMouseOn = false;
 
 		//アイコンの生成
 		mButton = new JButton( );
@@ -138,17 +137,15 @@ public class CharacterBase {
 	// 更新
 	public void update(){
 
-		mMouseOnTimer--;
-
 		//ボタン(orラベル)の大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
 		mButton.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
 		mLabel.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
 	}
 
 	// マウスオン
-	public void mouseON(){
+	public void mouseONOFF(){
 
-		mMouseOnTimer = Define.MOUSE_ON_TIME;
+		mIsMouseOn = !mIsMouseOn;
 	}
 
 	// 選択
@@ -160,7 +157,7 @@ public class CharacterBase {
 	}
 
 	// 選択解除
-	public void release(){
+	public void release( Point mousePos ){
 
 		mFirstMousePos = new GSvector2();
 		mIsSelect = false;
@@ -191,5 +188,10 @@ public class CharacterBase {
 	public double getAngle(){ return mAngle; }
 	public int getID(){ return mID; }
 	public boolean getIsDead(){ return mIsDead; }
+	public int getType(){ return mType; }
+	public GSvector2 getFirstMousePos(){ return mFirstMousePos; }
+	public boolean getIsSelect(){ return mIsSelect; }
+	public boolean getIsMouseOn(){ return mIsMouseOn; }
+
 
 }

@@ -66,6 +66,19 @@ public class CardManager {
 		}
 	}
 
+	// リスト内タイプ数検索
+	public int searchTypeNum( Define.CARD_TYPE type ){
+
+		int num = 0;
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			if( mCardList.get(i).getType() == type.ordinal() ) num++;
+		}
+
+		return num;
+	}
+
 	// マウスの挙動
 	public void mouseMove( String index, Point mousePos, Define.MOUSE_CARD_TYPE type ){
 
@@ -75,15 +88,16 @@ public class CardManager {
 
 				switch( type ){
 				case MOUSEON:
-					mCardList.get(i).mouseON();
+					mCardList.get(i).mouseONOFF();
 					return;
 				case MOUSEOFF:
+					mCardList.get(i).mouseONOFF();
 					return;
 				case SELECT:
 					mCardList.get(i).select( mousePos );
 					return;
 				case RELEASE:
-					mCardList.get(i).release();
+					mCardList.get(i).release( mousePos );
 					return;
 				case DRAG:
 					mCardList.get(i).drag( mousePos );

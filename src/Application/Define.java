@@ -9,6 +9,13 @@ public interface Define {
 	GSvector2 IMPACT_EFFECT_RESIZE = new GSvector2( 240, 240 );
 	int IMPACT_EFFECT_TIME = 5;
 
+	// フィールド関連
+	double FIELD_HAND = 500;
+	double FIELD_MYCARD_POSY = 350;
+	double FIELD_ENEMYCARD_POSY = 200;
+	double[] FIELD_CARD_POSX = { 230, 300, 370, 440, 510 };
+	int MAX_FIELD_CARD = 5;
+
 	// カード本体関連
 	GSvector2 CARD_SIZE = new GSvector2( 60, 90 );
 	GSvector2 CARD_RESIZE = new GSvector2( 128, 128 );
