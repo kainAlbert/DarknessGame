@@ -1,4 +1,5 @@
 package Application;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -18,7 +19,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	 */
 	private static final long serialVersionUID = 6296962141376967263L;
 
-	private static Panel mPanel;
+	public static Panel mPanel;
 	public static ObjectManager mObj;		// オブジェクト管理者
 	public static int mID;								// プレイヤーID
 
@@ -39,7 +40,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		setSize( (int)Define.WINDOW_SIZE.x, (int)Define.WINDOW_SIZE.y );
 
 		// オブジェクト管理者生成
-		mObj = new ObjectManager( this, mPanel );
+		mObj = new ObjectManager( this );
 
 		// IDの初期化
 		mID = 0;
@@ -66,13 +67,10 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	public static void main(String[] args) {
 
 		// アプリケーションを生成
-		Application net = new Application();
-
-		// 初期化
-		mObj.getCM().initialize(net, mPanel);
+		Application app = new Application();
 
 		// 画面表示
-		net.setVisible(true);
+		app.setVisible(true);
 
 		while( true ){
 
@@ -83,7 +81,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 			mObj.update();
 
 			// 再描画
-			net.repaint();
+			app.repaint();
 		}
 	}
 
@@ -131,13 +129,29 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	}
 
 	//マウスがオブジェクトに入ったときの処理
-	public void mouseEntered(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {
+
+		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
+		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
+
+		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+
+		mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.MOUSEON );
+	}
 
 	//マウスがオブジェクトから出たときの処理
-	public void mouseExited(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {
+	}
 
 	public void mousePressed(MouseEvent e) {//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）
 		//System.out.println("マウスを押した");
+
+		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
+		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
+
+		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+
+		mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.SELECT );
 	}
 
 	//マウスで押していたオブジェクトを離したときの処理
@@ -146,21 +160,28 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		JButton theButton = (JButton)e.getComponent();//クリックしたオブジェクトを得る．型が違うのでキャストする
 		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
 
+		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+
+		mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.RELEASE );
+
 //		mObj.getCM().changeForce(  Integer.parseInt(theArrayIndex), mID );
 
-		String msg = mID + Define.STR_D + Define.STR_CHANGE_FORCE + Define.STR_D + theArrayIndex;
-
-		// サーバーに送信
-		MesgRecvThread.outServer(msg);
+//		String msg = mID + Define.STR_D + Define.STR_CHANGE_FORCE + Define.STR_D + theArrayIndex;
+//
+//		// サーバーに送信
+//		MesgRecvThread.outServer(msg);
 	}
 
 	//マウスでオブジェクトとをドラッグしているときの処理
 	public void mouseDragged(MouseEvent e) {
 		//		System.out.println("マウスをドラッグ");
-		//		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
-		//		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
-		//
-		//		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+				JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
+				String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
+
+				Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+
+				mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.DRAG );
+
 		//		System.out.println(theMLoc);//デバッグ（確認用）に，取得したマウスの位置をコンソールに出力する
 		//		Point theBtnLocation = theButton.getLocation();//クリックしたボタンを座標を取得する
 		//		theBtnLocation.x += theMLoc.x-15;//ボタンの真ん中当たりにマウスカーソルがくるように補正する
@@ -183,6 +204,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	public static void setID( int id ){ mID = id; }
 
 	// ゲッター
+	public static Panel getPanel(){ return mPanel; }
 	public static ObjectManager getObj(){ return mObj; }
 	public static int getID(){ return mID; }
 }

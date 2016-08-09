@@ -3,26 +3,28 @@ package Object.Character;
 import java.util.List;
 
 import Application.Application;
-import Application.Panel;
 
 public class CharacterManager {
 
-	// コンストラクタ
-	public CharacterManager( Application app, Panel p ){
 
-		// リストを生成
+	// コンストラクタ
+	public CharacterManager( Application app ){
 
 	}
 
 	// 初期化
-	public void initialize( Application app, Panel p ){
+	public void initialize( Application app ){
 
 	}
 
 	// 更新
 	public void update(){
 
+
 	}
+
+
+
 
 	// リスト更新
 	private void updateList( List<CharacterBase> list ){

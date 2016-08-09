@@ -16,6 +16,9 @@ public class Direction {
 		vel.x = vel.x / revision;
 		vel.y = vel.y / revision;
 
+		if( pos1.x == pos2.x ) vel.x = 0;
+		if( pos1.y == pos2.y ) vel.y = 0;
+
 		return vel;
 	}
 

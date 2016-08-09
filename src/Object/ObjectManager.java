@@ -2,20 +2,22 @@ package Object;
 
 
 import Application.Application;
-import Application.Panel;
+import Object.Card.CardManager;
 import Object.Character.CharacterManager;
 import Object.Effect.EffectManager;
 
 public class ObjectManager {
 
-	private CharacterManager mCM;
+	private CharacterManager mCharacterManager;
+	private CardManager mCardManager;
 	private Collision mCollision;
 	private EffectManager mEM;
 
 	// コンストラクタ
-	public ObjectManager( Application app, Panel p ){
+	public ObjectManager( Application app ){
 
-		mCM = new CharacterManager( app, p );
+		mCharacterManager = new CharacterManager( app );
+		mCardManager = new CardManager(app);
 		mCollision = new Collision();
 		mEM = new EffectManager();
 	}
@@ -23,13 +25,15 @@ public class ObjectManager {
 	// 更新
 	public void update(){
 
-		mCM.update();
+		mCharacterManager.update();
+		mCardManager.update();
 		mCollision.update();
 		mEM.update();
 	}
 
 	// ゲッター
-	public CharacterManager getCM(){ return mCM; }
+	public CharacterManager getCharacterManager(){ return mCharacterManager; }
+	public CardManager getCardManager(){ return mCardManager; }
 	public Collision getCollision(){ return mCollision; }
 	public EffectManager getEM(){ return mEM; }
 

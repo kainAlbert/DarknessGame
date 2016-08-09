@@ -12,13 +12,14 @@ public class ImpactEffect extends CharacterBase{
 
 		super();
 
-		super.initialize( null, null, "impact", pos, 0, 0 );
+		super.initialize(
+				"impact",
+				pos,
+				new GSvector2( size, size ),
+				new GSvector2( Define.IMPACT_EFFECT_RESIZE.x, Define.IMPACT_EFFECT_RESIZE.y ),
+				0, 0 );
 
 		mTimer = 0;
-
-		mSize = new GSvector2( size, size );
-		mReSize = new GSvector2( Define.IMPACT_EFFECT_RESIZE.x, Define.IMPACT_EFFECT_RESIZE.y );
-		mFirstReSize = new GSvector2( Define.IMPACT_EFFECT_RESIZE.x, Define.IMPACT_EFFECT_RESIZE.y );
 	}
 
 	// 更新
