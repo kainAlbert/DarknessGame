@@ -84,26 +84,26 @@ public class CardManager {
 
 		for( int i=0; i<mCardList.size(); i++ ){
 
-			if( mCardList.get(i).getButton().getActionCommand().equals(index) ){
+			CharacterBase c = mCardList.get(i);
 
-				switch( type ){
-				case MOUSEON:
-					mCardList.get(i).mouseONOFF();
-					return;
-				case MOUSEOFF:
-					mCardList.get(i).mouseONOFF();
-					return;
-				case SELECT:
-					mCardList.get(i).select( mousePos );
-					return;
-				case RELEASE:
-					mCardList.get(i).release( mousePos );
-					return;
-				case DRAG:
-					mCardList.get(i).drag( mousePos );
-				default:
-				}
+			if( !c.getButton().getActionCommand().equals(index) ) continue;
 
+			switch( type ){
+			case MOUSEON:
+				c.mouseONOFF();
+				return;
+			case MOUSEOFF:
+				c.mouseONOFF();
+				return;
+			case SELECT:
+				c.select( mousePos );
+				return;
+			case RELEASE:
+				c.release( mousePos );
+				return;
+			case DRAG:
+				c.drag( mousePos );
+			default:
 			}
 		}
 	}

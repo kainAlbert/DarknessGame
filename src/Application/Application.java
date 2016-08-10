@@ -1,4 +1,5 @@
 package Application;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -10,6 +11,7 @@ import java.net.UnknownHostException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import Object.ObjectManager;
 
@@ -181,11 +183,14 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	//マウスでオブジェクトとをドラッグしているときの処理
 	public void mouseDragged(MouseEvent e) {
+
 		//		System.out.println("マウスをドラッグ");
 				JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
 				String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
 
-				Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+//				Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+				Point theMLoc = MouseInfo.getPointerInfo().getLocation();
+				SwingUtilities.convertPointFromScreen( theMLoc, this );
 
 				mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.DRAG );
 

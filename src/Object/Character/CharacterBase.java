@@ -12,7 +12,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 
 import Application.Application;
+import Application.Define;
 import Application.GSvector2;
+import Application.Panel;
 
 public class CharacterBase {
 
@@ -25,6 +27,7 @@ public class CharacterBase {
 	protected GSvector2 mSize;
 	protected GSvector2 mFirstReSize;
 	protected GSvector2 mReSize;
+	protected double mSpeed;
 	protected double mAngle;
 	protected int mID;
 	protected boolean mIsDead;
@@ -55,6 +58,7 @@ public class CharacterBase {
 		mSize = new GSvector2( size.x, size.y );
 		mFirstReSize = new GSvector2( resize.x, resize.y );
 		mReSize = new GSvector2( resize.x, resize.y );
+		mSpeed = 1;
 		mAngle = 0;
 		mID = id;
 		mIsDead = false;
@@ -166,14 +170,30 @@ public class CharacterBase {
 	// ドラッグ
 	public void drag( Point mousePos ){
 
-		mPos.x += mousePos.x - mFirstMousePos.x;
-		mPos.y += mousePos.y - mFirstMousePos.y;
+		mPos.x = mousePos.x - mFirstMousePos.x - Define.WINDOW_REVISION.x;
+		mPos.y = mousePos.y - mFirstMousePos.y - Define.WINDOW_REVISION.y;
 	}
-
-
 
 	// 衝突
 	public void collision(){}
+
+	// 死亡処理
+	public void finish(){
+
+		Panel p = Application.getPanel();
+
+		try{
+			p.remove( mButton );
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		try{
+			p.remove( mLabel );
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
 	// ゲッター
 	public BufferedImage getImage(){ return mImage; }
