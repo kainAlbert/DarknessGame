@@ -36,6 +36,8 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		mPanel = new Panel( this );
 		this.add(mPanel);
 
+		mPanel.setLayout(null);
+
 		//ウィンドウを作成する
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("MyClient");
@@ -73,6 +75,9 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		// 画面表示
 		app.setVisible(true);
+
+		//初期化
+		mObj.initialize();
 
 		while( true ){
 

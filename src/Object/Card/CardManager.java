@@ -11,7 +11,10 @@ import Object.Character.CharacterBase;
 
 public class CardManager {
 
-	List<CharacterBase> mCardList;
+	private List<CharacterBase> mCardList;
+	private CharacterBase mExplanation;
+	private GSvector2[] mHandPos;
+	private int mCardID;
 
 	// コンストラクタ
 	public CardManager( Application app ){
@@ -19,38 +22,59 @@ public class CardManager {
 		// リストを生成
 		mCardList = new ArrayList<CharacterBase>();
 
-		// カードを生成
-		for( int i=0; i<5; i++ ){
+		// デッキ生成
+		CharacterBase deck = new DeckCard();
 
-			CharacterBase c = new Card();
-			((Card)c).initialize( app, "bullet", new GSvector2( 100 + i * 50, 100 ),
-					new GSvector2( Define.CARD_SIZE.x, Define.CARD_SIZE.y ),
-					new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ),
-					i, Define.CARD_TYPE.ENEMYHAND.ordinal() );
-			c.initializeLabel(app);
+		mCardList.add( deck );
+	}
 
-			mCardList.add( c );
+	// 初期化
+	public void initialize(){
+
+		// 手札の位置設定
+		final double FIRST_POS_X = 100;
+		double[] POS_Y = {
+				Define.FIELD_HAND+20, Define.FIELD_HAND+15, Define.FIELD_HAND+10, Define.FIELD_HAND+5, Define.FIELD_HAND,
+				Define.FIELD_HAND, Define.FIELD_HAND+5, Define.FIELD_HAND+10, Define.FIELD_HAND+15, Define.FIELD_HAND+20
+		};
+
+		mHandPos = new GSvector2[Define.MAX_HAND_CARD];
+
+		for( int i=0; i<Define.MAX_HAND_CARD; i++ ){
+
+			mHandPos[i] = new GSvector2( FIRST_POS_X + i * Define.CARD_SIZE.x * 0.9, POS_Y[i] );
 		}
-		for( int i=0; i<10; i++ ){
 
-			final double FIRST_POSY = 490;
-			double[] posy = { FIRST_POSY+20, FIRST_POSY+15, FIRST_POSY+10, FIRST_POSY+5, FIRST_POSY, FIRST_POSY, FIRST_POSY+5, FIRST_POSY+10, FIRST_POSY+15, FIRST_POSY+20 };
+		// リスト初期化
+		for( int i=0; i<mCardList.size(); i++ ){
 
-			CharacterBase c = new Card();
-			((Card)c).initialize(app, "bullet", new GSvector2( 100 + i * Define.CARD_SIZE.x * 0.9, posy[i] ),
-					new GSvector2( Define.CARD_SIZE.x, Define.CARD_SIZE.y ),
-					new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ),
-					i, Define.CARD_TYPE.MYHAND.ordinal() );
-			c.initializeButton(app);
-
-			mCardList.add( c );
+			mCardList.get(i).initialize();
 		}
+
+		// 変数初期化
+		mCardID = 0;
 	}
 
 	// 更新
 	public void update(){
 
+		// リスト更新
 		updateList( mCardList );
+
+		// 手札ソート
+		sortHand();
+
+		// 説明更新
+		if( mExplanation != null ){
+
+			mExplanation.update();
+
+			if( mExplanation.getIsDead() ){
+
+				mExplanation.finish();
+				mExplanation = null;
+			}
+		}
 	}
 
 	// リスト更新
@@ -62,7 +86,30 @@ public class CardManager {
 
 			if( !list.get(i).getIsDead() ) continue;
 
+			list.get(i).finish();
+
 			list.remove(i);
+
+			continue;
+		}
+	}
+
+	// 手札ソート
+	private void sortHand(){
+
+		int handNum = searchTypeNum( Define.CARD_TYPE.MYHAND );
+		int index = ( Define.MAX_HAND_CARD - handNum ) / 2;
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			if( mCardList.get(i) == null ) continue;
+
+			// 手札のみ
+			if( mCardList.get(i).getType() != Define.CARD_TYPE.MYHAND.ordinal() ) continue;
+
+			((HandCard)mCardList.get(i)).sortPos( mHandPos[ index ] );
+
+			index++;
 		}
 	}
 
@@ -108,6 +155,30 @@ public class CardManager {
 		}
 	}
 
+	// カード説明を生成
+	public void createExplanation( int id, GSvector2 pos, GSvector2 size){
+
+		if( mExplanation == null ){
+
+			// 説明を生成
+			mExplanation = new CardExplanation();
+			mExplanation.initialize();
+		}
+
+		// ID設定
+		((CardExplanation)mExplanation).setID( id, pos, size );
+	}
+
+	// カードリストに追加
+	public void addCardList( CharacterBase c ){
+
+		mCardList.add( c );
+
+		mCardID++;
+	}
+
 	// ゲッター
 	public List<CharacterBase> getCardList(){ return mCardList; }
+	public CharacterBase getExplanation(){ return mExplanation; }
+	public int getCardID(){ return mCardID; }
 }

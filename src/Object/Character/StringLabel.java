@@ -18,7 +18,7 @@ public class StringLabel {
 	// コンストラクタ
 	public StringLabel( String str, double size ){
 
-		mStr = changeNumToString( str );;
+		mStr = changeNumToString( str );
 		mLabel = new JLabel( mStr );
 		mPos = new GSvector2();
 		mSize = new GSvector2( size, size );
@@ -82,7 +82,7 @@ public class StringLabel {
 	// コスト位置設定
 	public void setCost( GSvector2 pos, GSvector2 size  ){
 
-		mPos.x = pos.x + size.x / 2 - mSize.x / 2;
+		mPos.x = pos.x;
 		mPos.y = pos.y;
 
 		update();

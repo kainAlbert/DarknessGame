@@ -41,6 +41,32 @@ public class CharacterBase {
 
 	}
 
+	// 初期化(設定無し)
+	public void initialize(){}
+
+	public void initialize( Application app, String fileName, GSvector2 pos, GSvector2 size, GSvector2 resize,  int id, int type ){
+
+		initialize(fileName, pos, size, resize, id, type);
+
+		// ペインに貼り付ける
+		Application.getPanel().add( mButton );
+
+		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
+		mButton.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
+
+		//ボタンをマウスでさわったときに反応するようにする
+		mButton.addMouseListener(app);
+
+		//ボタンをマウスで動かそうとしたときに反応するようにする
+		mButton.addMouseMotionListener(app);
+
+		//ボタンに配列の情報を付加する（ネットワークを介してオブジェクトを識別するため）
+		mButton.setActionCommand( Integer.toString(mID) );
+
+		// ボタンの設定
+		setButton();
+	}
+
 	// 初期化
 	public void initialize( String fileName, GSvector2 pos, GSvector2 size, GSvector2 resize,  int id, int type ){
 
@@ -68,24 +94,24 @@ public class CharacterBase {
 		mIsMouseOn = false;
 
 		//アイコンの生成
-		mButton = new JButton( );
+		mButton = new JButton();
 		mLabel = new JLabel();
 	}
 
 	// ボタンの初期設定
-	public void initializeButton( Application app ){
+	public void initializeButton(){
 
 		// ペインに貼り付ける
-		Application.getPanel().add(mButton);
+		Application.getPanel().add( mButton );
 
 		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
 		mButton.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
 
 		//ボタンをマウスでさわったときに反応するようにする
-		mButton.addMouseListener(app);
+		mButton.addMouseListener(Application.getObj().getApplication());
 
 		//ボタンをマウスで動かそうとしたときに反応するようにする
-		mButton.addMouseMotionListener(app);
+		mButton.addMouseMotionListener(Application.getObj().getApplication());
 
 		//ボタンに配列の情報を付加する（ネットワークを介してオブジェクトを識別するため）
 		mButton.setActionCommand( Integer.toString(mID) );
@@ -95,17 +121,17 @@ public class CharacterBase {
 	}
 
 	// ボタンの設定
-	private void setButton(){
+	protected void setButton(){
 
 		//ボタンにアイコンを設定する
 		mButton.setIcon( setImage() );
 	}
 
 	// ラベルの初期設定
-	public void initializeLabel( Application app ){
+	public void initializeLabel(){
 
 		// ペインに貼り付ける
-		Application.getPanel().add( mLabel );
+		Application.getPanel().add( mLabel, 0 );
 
 		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
 		mLabel.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
@@ -115,7 +141,7 @@ public class CharacterBase {
 	}
 
 	// ラベルの設定
-	private void setLabel(){
+	protected void setLabel(){
 
 		//ボタンにアイコンを設定する
 		mLabel.setIcon( setImage() );
