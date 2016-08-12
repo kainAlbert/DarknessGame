@@ -33,7 +33,7 @@ public class DeckCard extends CharacterBase{
 		CharacterBase card = new HandCard();
 		((HandCard)card).initialize( new GSvector2( mPos.x, mPos.y ) );
 
-		Application.getObj().getCardManager().addCardList( card );
+		Application.getObj().getMyCardManager().addCardList( card );
 	}
 
 	// 選択解除

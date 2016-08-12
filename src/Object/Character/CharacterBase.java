@@ -44,29 +44,6 @@ public class CharacterBase {
 	// 初期化(設定無し)
 	public void initialize(){}
 
-	public void initialize( Application app, String fileName, GSvector2 pos, GSvector2 size, GSvector2 resize,  int id, int type ){
-
-		initialize(fileName, pos, size, resize, id, type);
-
-		// ペインに貼り付ける
-		Application.getPanel().add( mButton );
-
-		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
-		mButton.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
-
-		//ボタンをマウスでさわったときに反応するようにする
-		mButton.addMouseListener(app);
-
-		//ボタンをマウスで動かそうとしたときに反応するようにする
-		mButton.addMouseMotionListener(app);
-
-		//ボタンに配列の情報を付加する（ネットワークを介してオブジェクトを識別するため）
-		mButton.setActionCommand( Integer.toString(mID) );
-
-		// ボタンの設定
-		setButton();
-	}
-
 	// 初期化
 	public void initialize( String fileName, GSvector2 pos, GSvector2 size, GSvector2 resize,  int id, int type ){
 

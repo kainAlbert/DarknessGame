@@ -34,25 +34,21 @@ public class HandCard extends Card{
 	// 更新
 	public void update(){
 
-		// まだ手札状態でないなら動かすのみ
-		if( !mIsHand ){
-
-			updateNotHand();
-			return;
-		}
-
 		super.update();
+
+		// 手札状態でない時の処理
+		if( mIsHand ) return;
+
+		updateNotHand();
 	}
 
 	// 手札状態でない時の処理
 	private void updateNotHand(){
 
-		super.update();
-
 		// 終点でなければ終了
 		if( mPos.x != mLastPos.x ) return;
 
-		int handNum = Application.getObj().getCardManager().searchTypeNum( Define.CARD_TYPE.MYHAND );
+		int handNum = Application.getObj().getMyCardManager().searchTypeNum( Define.CARD_TYPE.MYHAND );
 
 		// 手札がすでに最大なら消去
 		if( handNum >= Define.MAX_HAND_CARD ){
@@ -89,10 +85,10 @@ public class HandCard extends Card{
 		mIsSelect = false;
 
 		// 自分のフィールドのカードの数を取得
-		int myFieldNum = Application.getObj().getCardManager().searchTypeNum( Define.CARD_TYPE.MYFIELD );
+		int myFieldNum = Application.getObj().getMyCardManager().searchTypeNum( Define.CARD_TYPE.MYFIELD );
 
 		// 手を離した場所が手札の位置ではないか
-		boolean isPosY = mousePos.y + mPos.y < Define.FIELD_HAND;
+		boolean isPosY = mousePos.y + mPos.y < Define.FIELD_MYHAND;
 
 		// フィールドのカードの数が5未満か
 		boolean isFieldNum =  myFieldNum < Define.MAX_FIELD_CARD;
@@ -100,29 +96,45 @@ public class HandCard extends Card{
 		// 手札にあるか
 		boolean isHand = mType == Define.CARD_TYPE.MYHAND.ordinal();
 
-		// 条件を満たせばカードを置く
+		// 条件を満たせばクリーチャーを置く
 		if( isPosY && isFieldNum && isHand ){
 
-			if( putField( mousePos ) ) return;
+			if( putCreature( mousePos ) ) return;
+		}
+
+		// 条件を満たせば呪文を使う
+		if( true ){
+
 		}
 
 		super.release( mousePos );
 	}
 
 	// フィールドにカードを置く
-	private boolean putField( Point mousePos ){
+	private boolean putCreature( Point mousePos ){
 
 		// 位置xを取得
-		double posx = returnPutPos( mousePos );
+		double lastPosX = returnPutPos( mousePos );
 
-		if( posx == -1 ) return false;
+		if( lastPosX == -1 ) return false;
 
-		// タイプをフィールドに設定
-		mType = Define.CARD_TYPE.MYFIELD.ordinal();
+		// フィールドカードを生成
+		CharacterBase card = new FieldCard();
 
-		// 終点を設定
-		mLastPos.x = posx;
-		mLastPos.y = Define.FIELD_MYCARD_POSY;
+		((FieldCard)card).initialize( new GSvector2( mPos.x, mPos.y ), new GSvector2( lastPosX, Define.FIELD_MYCARD_POSY ) );
+
+		// リストに追加
+		Application.getObj().getMyCardManager().addCardList( card );
+
+		// この手札は死亡させる
+		mIsDead = true;
+
+//		// タイプをフィールドに設定
+//		mType = Define.CARD_TYPE.MYFIELD.ordinal();
+//
+//		// 終点を設定
+//		mLastPos.x = lastPosX;
+//		mLastPos.y = Define.FIELD_MYCARD_POSY;
 
 		return true;
 	}
@@ -151,7 +163,7 @@ public class HandCard extends Card{
 			}
 		}
 
-		List<CharacterBase> list = Application.getObj().getCardManager().getCardList();
+		List<CharacterBase> list = Application.getObj().getMyCardManager().getCardList();
 
 		// すでに同じ位置にカードがあれば置かない
 		for( int i=0; i<list.size(); i++ ){

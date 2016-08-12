@@ -13,7 +13,6 @@ public class StringLabel {
 	private String mStr;
 	private GSvector2 mPos;
 	private GSvector2 mSize;
-	private double mTimer;
 
 	// コンストラクタ
 	public StringLabel( String str, double size ){

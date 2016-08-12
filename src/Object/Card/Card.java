@@ -17,6 +17,7 @@ public class Card extends CharacterBase{
 	protected int mAttack;
 	protected int mHP;
 	protected int mFieldNumber;
+	protected boolean mIsCreature;
 	protected int mMouseOnTimer;
 
 	// コンストラクタ
@@ -27,10 +28,18 @@ public class Card extends CharacterBase{
 		mAttack = 4;
 		mHP = 5;
 		mFieldNumber = 0;
+		mIsCreature = true;
 		mMouseOnTimer = 0;
 
 		// 各数字の文字ラベル生成
+		mAttackLabel = null;
+		mHPLabel = null;
+
 		mCostLabel = new StringLabel( String.valueOf( mCost ), Define.CARD_NUM_SIZE );
+
+		// クリーチャーカード以外は生成しない
+		if( !mIsCreature ) return;
+
 		mAttackLabel = new StringLabel( String.valueOf( mAttack ), Define.CARD_NUM_SIZE );
 		mHPLabel = new StringLabel( String.valueOf( mHP ), Define.CARD_NUM_SIZE );
 	}
@@ -38,7 +47,7 @@ public class Card extends CharacterBase{
 	// 初期化
 	public void initialize(){
 
-		int cardID = Application.getObj().getCardManager().getCardID();
+		int cardID = Application.getObj().getMyCardManager().getCardID();
 
 		super.initialize( "card_image",
 				new GSvector2(),
@@ -62,11 +71,13 @@ public class Card extends CharacterBase{
 		// 一定時間マウスが置かれたら説明を出す
 		if( mMouseOnTimer > Define.MOUSE_ON_TIME ){
 
-			Application.getObj().getCardManager().createExplanation( mID, mPos, mSize );
+			Application.getObj().getMyCardManager().createExplanation( mID, mPos, mSize );
 		}
 
 		// 各数字の位置設定
 		mCostLabel.setCost( new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ) );
+
+		if( !mIsCreature ) return;
 		mAttackLabel.setAttack( new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ) );
 		mHPLabel.setHP( new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ) );
 	}

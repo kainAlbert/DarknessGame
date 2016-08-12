@@ -10,7 +10,8 @@ public class ObjectManager {
 
 	private Application mApp;
 	private CharacterManager mCharacterManager;
-	private CardManager mCardManager;
+	private CardManager mMyCardManager;
+	private CardManager mEnemyCardManager;
 	private Collision mCollision;
 	private EffectManager mEM;
 
@@ -19,7 +20,8 @@ public class ObjectManager {
 
 		mApp = app;
 		mCharacterManager = new CharacterManager( app );
-		mCardManager = new CardManager( app );
+		mMyCardManager = new CardManager( true );
+		mEnemyCardManager = new CardManager( false );
 		mCollision = new Collision();
 		mEM = new EffectManager();
 
@@ -29,14 +31,16 @@ public class ObjectManager {
 	// 初期化
 	public void initialize(){
 
-		mCardManager.initialize();
+		mMyCardManager.initialize();
+		mEnemyCardManager.initialize();
 	}
 
 	// 更新
 	public void update(){
 
 		mCharacterManager.update();
-		mCardManager.update();
+		mMyCardManager.update();
+		mEnemyCardManager.update();
 		mCollision.update();
 		mEM.update();
 	}
@@ -44,7 +48,8 @@ public class ObjectManager {
 	// ゲッター
 	public Application getApplication(){ return mApp; }
 	public CharacterManager getCharacterManager(){ return mCharacterManager; }
-	public CardManager getCardManager(){ return mCardManager; }
+	public CardManager getMyCardManager(){ return mMyCardManager; }
+	public CardManager getEnemyCardManager(){ return mEnemyCardManager; }
 	public Collision getCollision(){ return mCollision; }
 	public EffectManager getEM(){ return mEM; }
 

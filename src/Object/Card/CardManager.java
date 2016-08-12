@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import Application.Application;
 import Application.Define;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
@@ -15,12 +14,16 @@ public class CardManager {
 	private CharacterBase mExplanation;
 	private GSvector2[] mHandPos;
 	private int mCardID;
+	private boolean mIsMy;
 
 	// コンストラクタ
-	public CardManager( Application app ){
+	public CardManager( boolean isMy ){
 
 		// リストを生成
 		mCardList = new ArrayList<CharacterBase>();
+
+		// 敵か味方か
+		mIsMy = isMy;
 
 		// デッキ生成
 		CharacterBase deck = new DeckCard();
@@ -34,8 +37,8 @@ public class CardManager {
 		// 手札の位置設定
 		final double FIRST_POS_X = 100;
 		double[] POS_Y = {
-				Define.FIELD_HAND+20, Define.FIELD_HAND+15, Define.FIELD_HAND+10, Define.FIELD_HAND+5, Define.FIELD_HAND,
-				Define.FIELD_HAND, Define.FIELD_HAND+5, Define.FIELD_HAND+10, Define.FIELD_HAND+15, Define.FIELD_HAND+20
+				Define.FIELD_MYHAND+20, Define.FIELD_MYHAND+15, Define.FIELD_MYHAND+10, Define.FIELD_MYHAND+5, Define.FIELD_MYHAND,
+				Define.FIELD_MYHAND, Define.FIELD_MYHAND+5, Define.FIELD_MYHAND+10, Define.FIELD_MYHAND+15, Define.FIELD_MYHAND+20
 		};
 
 		mHandPos = new GSvector2[Define.MAX_HAND_CARD];
@@ -52,7 +55,7 @@ public class CardManager {
 		}
 
 		// 変数初期化
-		mCardID = 0;
+		mCardID = 1;
 	}
 
 	// 更新

@@ -143,7 +143,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
 
-		mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.MOUSEON );
+		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.MOUSEON );
 	}
 
 	//マウスがオブジェクトから出たときの処理
@@ -154,7 +154,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
 
-		mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.MOUSEOFF );
+		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.MOUSEOFF );
 	}
 
 	public void mousePressed(MouseEvent e) {//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）
@@ -165,7 +165,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
 
-		mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.SELECT );
+		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.SELECT );
 	}
 
 	//マウスで押していたオブジェクトを離したときの処理
@@ -176,28 +176,28 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
 
-		mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.RELEASE );
+		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.RELEASE );
 
-//		mObj.getCM().changeForce(  Integer.parseInt(theArrayIndex), mID );
+		//		mObj.getCM().changeForce(  Integer.parseInt(theArrayIndex), mID );
 
-//		String msg = mID + Define.STR_D + Define.STR_CHANGE_FORCE + Define.STR_D + theArrayIndex;
-//
-//		// サーバーに送信
-//		MesgRecvThread.outServer(msg);
+		//		String msg = mID + Define.STR_D + Define.STR_CHANGE_FORCE + Define.STR_D + theArrayIndex;
+		//
+		//		// サーバーに送信
+		//		MesgRecvThread.outServer(msg);
 	}
 
 	//マウスでオブジェクトとをドラッグしているときの処理
 	public void mouseDragged(MouseEvent e) {
 
 		//		System.out.println("マウスをドラッグ");
-				JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
-				String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
+		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
+		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
 
-//				Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
-				Point theMLoc = MouseInfo.getPointerInfo().getLocation();
-				SwingUtilities.convertPointFromScreen( theMLoc, this );
+		//				Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
+		Point theMLoc = MouseInfo.getPointerInfo().getLocation();
+		SwingUtilities.convertPointFromScreen( theMLoc, this );
 
-				mObj.getCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.DRAG );
+		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.DRAG );
 
 		//		System.out.println(theMLoc);//デバッグ（確認用）に，取得したマウスの位置をコンソールに出力する
 		//		Point theBtnLocation = theButton.getLocation();//クリックしたボタンを座標を取得する

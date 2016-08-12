@@ -24,9 +24,10 @@ public interface Define {
 	}
 
 	// フィールド関連
-	double FIELD_HAND = WINDOW_SIZE.y - CARD_SIZE.y;
-	double FIELD_MYCARD_POSY = FIELD_HAND - CARD_SIZE.y - 100;
-	double FIELD_ENEMYCARD_POSY = 200;
+	double FIELD_MYHAND = WINDOW_SIZE.y - CARD_SIZE.y;
+	double FIELD_ENEMYHAND = CARD_SIZE.y;
+	double FIELD_MYCARD_POSY = FIELD_MYHAND - CARD_SIZE.y - 100;
+	double FIELD_ENEMYCARD_POSY = CARD_SIZE.y + 100;
 	double[] FIELD_CARD_POSX = { 280 ,370 ,460 ,550 ,640 };
 	int MAX_FIELD_CARD = 5;
 
