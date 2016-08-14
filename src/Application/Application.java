@@ -1,6 +1,4 @@
 package Application;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -8,10 +6,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import Object.ObjectManager;
 
@@ -37,11 +33,13 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		this.add(mPanel);
 
 		mPanel.setLayout(null);
+		mPanel.addMouseListener( this );
+		mPanel.addMouseMotionListener( this );
 
 		//ウィンドウを作成する
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("MyClient");
-		setSize( (int)Define.WINDOW_SIZE.x, (int)Define.WINDOW_SIZE.y );
+		setSize( (int)(Define.WINDOW_SIZE.x + Define.WINDOW_REVISION.x), (int)(Define.WINDOW_SIZE.y + Define.WINDOW_REVISION.y));
 
 		// オブジェクト管理者生成
 		mObj = new ObjectManager( this );
@@ -119,64 +117,26 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	//ボタンをクリックしたときの処理
 	public void mouseClicked(MouseEvent e) {
-		//		JButton theButton = (JButton)e.getComponent();//クリックしたオブジェクトを得る．型が違うのでキャストする
-		//		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
-		//
-		//		mObj.getCM().changeForce(  Integer.parseInt(theArrayIndex) );
-		//
-		//		Icon theIcon = theButton.getIcon();//theIconには，現在のボタンに設定されたアイコンが入る
-		//		//System.out.println(theIcon);//デバッグ（確認用）に，クリックしたアイコンの名前を出力する
-		//
-		////				if(theIcon == whiteIcon){//アイコンがwhiteIconと同じなら
-		////					theButton.setIcon(blackIcon);//blackIconに設定する
-		////				}else{
-		////					theButton.setIcon(whiteIcon);//whiteIconに設定する
-		////				}
-		//		repaint();//画面のオブジェクトを描画し直す
+
+		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
+		mObj.getCardManager( false ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
 	}
 
 	//マウスがオブジェクトに入ったときの処理
-	public void mouseEntered(MouseEvent e) {
-
-		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
-		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
-
-		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
-
-		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.MOUSEON );
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	//マウスがオブジェクトから出たときの処理
-	public void mouseExited(MouseEvent e) {
-
-		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
-		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
-
-		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
-
-		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.MOUSEOFF );
-	}
+	public void mouseExited(MouseEvent e) {}
 
 	public void mousePressed(MouseEvent e) {//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）
-		//System.out.println("マウスを押した");
 
-		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
-		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
-
-		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
-
-		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.SELECT );
+		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.SELECT );
 	}
 
 	//マウスで押していたオブジェクトを離したときの処理
 	public void mouseReleased(MouseEvent e) {
 
-		JButton theButton = (JButton)e.getComponent();//クリックしたオブジェクトを得る．型が違うのでキャストする
-		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
-
-		Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
-
-		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.RELEASE );
+		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.RELEASE );
 
 		//		mObj.getCM().changeForce(  Integer.parseInt(theArrayIndex), mID );
 
@@ -189,15 +149,9 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	//マウスでオブジェクトとをドラッグしているときの処理
 	public void mouseDragged(MouseEvent e) {
 
-		//		System.out.println("マウスをドラッグ");
-		JButton theButton = (JButton)e.getComponent();//型が違うのでキャストする
-		String theArrayIndex = theButton.getActionCommand();//ボタンの配列の番号を取り出す
+		mObj.setMousePos( e.getPoint() );
 
-		//				Point theMLoc = e.getPoint();//発生元コンポーネントを基準とする相対座標
-		Point theMLoc = MouseInfo.getPointerInfo().getLocation();
-		SwingUtilities.convertPointFromScreen( theMLoc, this );
-
-		mObj.getMyCardManager().mouseMove( theArrayIndex, theMLoc, Define.MOUSE_CARD_TYPE.DRAG );
+		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.DRAG );
 
 		//		System.out.println(theMLoc);//デバッグ（確認用）に，取得したマウスの位置をコンソールに出力する
 		//		Point theBtnLocation = theButton.getLocation();//クリックしたボタンを座標を取得する
@@ -215,7 +169,10 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	}
 
 	//マウスがオブジェクト上で移動したときの処理
-	public void mouseMoved(MouseEvent e) {}
+	public void mouseMoved(MouseEvent e) {
+
+		mObj.setMousePos( e.getPoint() );
+	}
 
 	// セッター
 	public static void setID( int id ){ mID = id; }

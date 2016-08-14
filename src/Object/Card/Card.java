@@ -5,57 +5,39 @@ import Application.Define;
 import Application.Direction;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
-import Object.Character.StringLabel;
+import Object.Detail.DetailBase;
 
 public class Card extends CharacterBase{
 
-	private StringLabel mCostLabel;
-	private StringLabel mAttackLabel;
-	private StringLabel mHPLabel;
-	protected int mCardID;
-	protected int mCost;
-	protected int mAttack;
-	protected int mHP;
+	protected DetailBase mDetail;
 	protected int mFieldNumber;
-	protected boolean mIsCreature;
-	protected int mMouseOnTimer;
+	protected boolean mIsMy;
 
 	// コンストラクタ
-	public Card(){
+	public Card( boolean isMy ){
 
-		mCardID = 0;
-		mCost = 3;
-		mAttack = 4;
-		mHP = 5;
+		mDetail = new DetailBase( isMy );
+
 		mFieldNumber = 0;
-		mIsCreature = true;
-		mMouseOnTimer = 0;
-
-		// 各数字の文字ラベル生成
-		mAttackLabel = null;
-		mHPLabel = null;
-
-		mCostLabel = new StringLabel( String.valueOf( mCost ), Define.CARD_NUM_SIZE );
-
-		// クリーチャーカード以外は生成しない
-		if( !mIsCreature ) return;
-
-		mAttackLabel = new StringLabel( String.valueOf( mAttack ), Define.CARD_NUM_SIZE );
-		mHPLabel = new StringLabel( String.valueOf( mHP ), Define.CARD_NUM_SIZE );
+		mIsMy = isMy;
 	}
 
 	// 初期化
 	public void initialize(){
 
-		int cardID = Application.getObj().getMyCardManager().getCardID();
+		int cardID = Application.getObj().getCardManager( mIsMy ).getCardID();
 
 		super.initialize( "card_image",
 				new GSvector2(),
 				new GSvector2( Define.CARD_SIZE.x, Define.CARD_SIZE.y ),
 				new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ),
 				cardID, Define.CARD_TYPE.NONE.ordinal() );
+	}
 
-		super.initializeButton();
+	// 詳細初期化
+	public void initializeDetail( int cardID ){
+
+		mDetail.initialize( cardID, new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ), mType );
 	}
 
 	// 更新
@@ -65,21 +47,7 @@ public class Card extends CharacterBase{
 
 		super.update();
 
-		// 未選択でマウスが置かれていたらタイマーを回す
-		mMouseOnTimer = mIsMouseOn && !mIsSelect ? mMouseOnTimer + 1 : 0;
-
-		// 一定時間マウスが置かれたら説明を出す
-		if( mMouseOnTimer > Define.MOUSE_ON_TIME ){
-
-			Application.getObj().getMyCardManager().createExplanation( mID, mPos, mSize );
-		}
-
-		// 各数字の位置設定
-		mCostLabel.setCost( new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ) );
-
-		if( !mIsCreature ) return;
-		mAttackLabel.setAttack( new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ) );
-		mHPLabel.setHP( new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ) );
+		mDetail.update( new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ) );
 	}
 
 	// 元の場所に戻る
@@ -108,17 +76,11 @@ public class Card extends CharacterBase{
 	// 死亡処理
 	public void finish(){
 
-		mCostLabel.finish();
-		mAttackLabel.finish();
-		mHPLabel.finish();
-
 		super.finish();
 	}
 
 	// ゲッター
-	public int getCardID(){ return mCardID; }
-	public int getCost(){ return mCost; }
-	public int getAttack(){ return mAttack; }
-	public int getHP(){ return mHP; }
+	public DetailBase getDetail(){ return mDetail; }
 	public int getFieldNumber(){ return mFieldNumber; }
+	protected boolean getIsMy(){ return mIsMy; }
 }

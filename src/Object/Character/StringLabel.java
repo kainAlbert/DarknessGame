@@ -1,49 +1,59 @@
 package Object.Character;
 
-import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JLabel;
+import javax.imageio.ImageIO;
 
-import Application.Application;
 import Application.GSvector2;
 
 public class StringLabel {
 
-	private JLabel mLabel;
+	private BufferedImage mImage;
 	private String mStr;
-	private GSvector2 mPos;
-	private GSvector2 mSize;
+	private GSvector2 mStrPos;
+	private int mStrSize;
+	private GSvector2 mImagePos;
+	private GSvector2 mImageSize;
+	private GSvector2 mImageReSize;
 
 	// コンストラクタ
-	public StringLabel( String str, double size ){
+	public StringLabel(){
 
-		mStr = changeNumToString( str );
-		mLabel = new JLabel( mStr );
-		mPos = new GSvector2();
-		mSize = new GSvector2( size, size );
-
-		// 文字の設定
-		setFont();
-
-		// ペインに貼り付ける
-		Application.getPanel().add( mLabel );
-
-		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
-		mLabel.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
+		mStr = "";
+		mStrPos = new GSvector2();
+		mStrSize = 12;
+		mImagePos = new GSvector2();
+		mImageSize = new GSvector2();
+		mImageReSize = new GSvector2();
 	}
 
-	// 更新
-	public void update(){
+	// 初期化
+	public void initialize( String fileName, GSvector2 strPos, int strSize, GSvector2 imagePos, GSvector2 imageSize, GSvector2 imageReSize ){
 
-		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
-		mLabel.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
+		// 画像読み込み
+		try{
+			mImage = ImageIO.read(new File("img/" + fileName + ".png"));
+		}catch( IOException e ){
+			e.printStackTrace();
+		}
+
+		mStr = "";
+		mStrPos = strPos;
+		mStrSize = strSize;
+		mImagePos = imagePos;
+		mImageSize = imageSize;
+		mImageReSize = imageReSize;
 	}
 
-	// 文字の設定
-	public void setFont(){
+	// 数字を設定
+	public void updateNum( int num, GSvector2 pos ){
 
-		// 文字の設定
-		mLabel.setFont(new Font( "Meiryo", Font.BOLD, (int)mSize.x ) );
+		mStr = String.valueOf( num );
+
+		mStrPos = new GSvector2( pos.x + mStrSize * 0.2, pos.y + mStrSize * 0.9 );
+		mImagePos = new GSvector2( pos.x, pos.y );
 	}
 
 	// 数字を文字に変換
@@ -60,39 +70,6 @@ public class StringLabel {
 		return numStr[ num - 1 ];
 	}
 
-	// 攻撃力位置設定
-	public void setAttack( GSvector2 pos, GSvector2 size ){
-
-		mPos.x = pos.x;
-		mPos.y = pos.y + size.y - mSize.y;
-
-		update();
-	}
-
-	// 体力位置設定
-	public void setHP( GSvector2 pos, GSvector2 size  ){
-
-		mPos.x = pos.x + size.x - mSize.x;
-		mPos.y = pos.y + size.y - mSize.y;
-
-		update();
-	}
-
-	// コスト位置設定
-	public void setCost( GSvector2 pos, GSvector2 size  ){
-
-		mPos.x = pos.x;
-		mPos.y = pos.y;
-
-		update();
-	}
-
-	// 終了処理
-	public void finish(){
-
-		Application.getPanel().remove( mLabel );
-	}
-
 	// 数値かどうか
 	public boolean isNumber( String val ) {
 		try {
@@ -102,4 +79,13 @@ public class StringLabel {
 			return false;
 		}
 	}
+
+	// ゲッター
+	public BufferedImage getImage(){ return mImage; }
+	public String getStr(){ return mStr; }
+	public GSvector2 getStrPos(){ return mStrPos; }
+	public int getStrSize(){ return mStrSize; }
+	public GSvector2 getImagePos(){ return mImagePos; }
+	public GSvector2 getImageSize(){ return mImageSize; }
+	public GSvector2 getImageReSize(){ return mImageReSize; }
 }

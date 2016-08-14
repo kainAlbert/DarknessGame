@@ -1,44 +1,70 @@
 package Object.Card;
 
-import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
+import Object.Character.Tactician;
 
-public class DeckCard extends CharacterBase{
+public class DeckCard extends Card{
+
+	private List<CharacterBase> mDeckList;
 
 	// コンストラクタ
-	public DeckCard(){
+	public DeckCard( boolean isMy ){
 
-		super();
+		super( isMy );
+
+		mDeckList = new ArrayList<CharacterBase>();
 	}
 
 	// 初期化
 	public void initialize(){
 
+		GSvector2 pos = mIsMy ?
+				new GSvector2( Define.MYDECK_POS.x, Define.MYDECK_POS.y ) :
+				new GSvector2( Define.ENEMYDECK_POS.x, Define.ENEMYDECK_POS.y );
+
 		super.initialize( "card_back",
-				new GSvector2( Define.MYDECK_POS.x, Define.MYDECK_POS.y ),
+				pos,
 				new GSvector2( Define.CARD_SIZE.x, Define.CARD_SIZE.y ),
 				new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ),
-				0, 0 );
+				Application.getObj().getCardManager( mIsMy ).getCardID(),
+				0 );
 
-		super.initializeButton();
+		CharacterBase t = Application.getObj().getCharacterManager().getTactician( mIsMy );
+
+		mDeckList = DeckReader.readDeck( ((Tactician)t).getID(), mIsMy, new GSvector2( mPos.x, mPos.y ) );
 	}
 
+	// 更新
+	public void update(){}
+
 	// 選択
-	public void select( Point mousePos ){
+	public void select(){
 
-		CharacterBase card = new HandCard();
-		((HandCard)card).initialize( new GSvector2( mPos.x, mPos.y ) );
+		if( mDeckList.size() == 0 ) return;
 
-		Application.getObj().getMyCardManager().addCardList( card );
+		CharacterBase card = mDeckList.get(0);
+
+		Application.getObj().getCardManager( mIsMy ).addCardList( card );
+
+		mDeckList.remove(0);
+
+		if( mIsMy ){
+			((DeckCard)Application.getObj().getCardManager( false ).getCardList().get(0)).select();
+		}
 	}
 
 	// 選択解除
-	public void release( Point mousePos ){}
+	public void release(){}
 
 	// ドラッグ
-	public void drag( Point mousePos ){}
+	public void drag(){}
+
+	// ゲッター
+	public boolean getIsMy(){ return mIsMy; }
 }

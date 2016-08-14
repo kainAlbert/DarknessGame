@@ -8,6 +8,7 @@ import Object.Character.CharacterBase;
 public class EffectManager {
 
 	private List<CharacterBase> mEffectList;
+	private CharacterBase mPointer;
 
 	// コンストラクタ
 	public EffectManager(){
@@ -15,6 +16,13 @@ public class EffectManager {
 		mEffectList = new ArrayList<CharacterBase>();
 
 		// 各エフェクト生成
+		mPointer = new PointerEffect();
+	}
+
+	// 初期化
+	public void initialize(){
+
+		mPointer.initialize();
 	}
 
 	// 更新
@@ -27,8 +35,12 @@ public class EffectManager {
 			// 死亡処理
 			if( !mEffectList.get(i).getIsDead() ) continue;
 
+			mEffectList.get(i).finish();
+
 			mEffectList.remove(i);
 		}
+
+		mPointer.update();
 	}
 
 	// リストに追加
@@ -36,4 +48,5 @@ public class EffectManager {
 
 	// ゲッター
 	public List<CharacterBase> getEffectList(){ return mEffectList; }
+	public CharacterBase getPointer(){ return mPointer; }
 }

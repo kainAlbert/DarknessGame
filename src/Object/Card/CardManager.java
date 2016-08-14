@@ -1,11 +1,12 @@
 package Object.Card;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import Application.Application;
 import Application.Define;
 import Application.GSvector2;
+import Object.Collision;
 import Object.Character.CharacterBase;
 
 public class CardManager {
@@ -26,7 +27,7 @@ public class CardManager {
 		mIsMy = isMy;
 
 		// デッキ生成
-		CharacterBase deck = new DeckCard();
+		CharacterBase deck = new DeckCard( isMy );
 
 		mCardList.add( deck );
 	}
@@ -35,17 +36,21 @@ public class CardManager {
 	public void initialize(){
 
 		// 手札の位置設定
-		final double FIRST_POS_X = 100;
-		double[] POS_Y = {
+		final double FIRST_POS_X = 200;
+		double[] MY_POS_Y = {
 				Define.FIELD_MYHAND+20, Define.FIELD_MYHAND+15, Define.FIELD_MYHAND+10, Define.FIELD_MYHAND+5, Define.FIELD_MYHAND,
 				Define.FIELD_MYHAND, Define.FIELD_MYHAND+5, Define.FIELD_MYHAND+10, Define.FIELD_MYHAND+15, Define.FIELD_MYHAND+20
+		};
+		double[] ENEMY_POS_Y = {
+				Define.FIELD_ENEMYHAND-20, Define.FIELD_ENEMYHAND-15, Define.FIELD_ENEMYHAND-10, Define.FIELD_ENEMYHAND-5, Define.FIELD_ENEMYHAND,
+				Define.FIELD_ENEMYHAND, Define.FIELD_ENEMYHAND-5, Define.FIELD_ENEMYHAND-10, Define.FIELD_ENEMYHAND-15, Define.FIELD_ENEMYHAND-20
 		};
 
 		mHandPos = new GSvector2[Define.MAX_HAND_CARD];
 
 		for( int i=0; i<Define.MAX_HAND_CARD; i++ ){
 
-			mHandPos[i] = new GSvector2( FIRST_POS_X + i * Define.CARD_SIZE.x * 0.9, POS_Y[i] );
+			mHandPos[i] = new GSvector2( FIRST_POS_X + i * Define.CARD_SIZE.x * 0.9, mIsMy ? MY_POS_Y[i] + Define.CARD_SIZE.y : ENEMY_POS_Y[i] - Define.CARD_SIZE.y );
 		}
 
 		// リスト初期化
@@ -100,19 +105,22 @@ public class CardManager {
 	// 手札ソート
 	private void sortHand(){
 
-		int handNum = searchTypeNum( Define.CARD_TYPE.MYHAND );
-		int index = ( Define.MAX_HAND_CARD - handNum ) / 2;
+		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYHAND : Define.CARD_TYPE.ENEMYHAND;
+		int handNum = searchTypeNum( type );
+		int index = (int)(Math.ceil( ( Define.MAX_HAND_CARD - handNum ) / 2) );
 
 		for( int i=0; i<mCardList.size(); i++ ){
 
 			if( mCardList.get(i) == null ) continue;
 
 			// 手札のみ
-			if( mCardList.get(i).getType() != Define.CARD_TYPE.MYHAND.ordinal() ) continue;
+			if( mCardList.get(i).getType() != type.ordinal() ) continue;
 
 			((HandCard)mCardList.get(i)).sortPos( mHandPos[ index ] );
 
 			index++;
+
+			if( index >= Define.MAX_HAND_CARD ) return;
 		}
 	}
 
@@ -129,47 +137,104 @@ public class CardManager {
 		return num;
 	}
 
-	// マウスの挙動
-	public void mouseMove( String index, Point mousePos, Define.MOUSE_CARD_TYPE type ){
+	// リスト内タイプ&位置検索
+	public int searchPosType( Define.CARD_TYPE type , GSvector2 pos ){
 
 		for( int i=0; i<mCardList.size(); i++ ){
 
 			CharacterBase c = mCardList.get(i);
 
-			if( !c.getButton().getActionCommand().equals(index) ) continue;
+			// 指定したタイプのみ
+			if( c.getType() != type.ordinal() ) continue;
 
-			switch( type ){
-			case MOUSEON:
-				c.mouseONOFF();
-				return;
-			case MOUSEOFF:
-				c.mouseONOFF();
-				return;
-			case SELECT:
-				c.select( mousePos );
-				return;
-			case RELEASE:
-				c.release( mousePos );
-				return;
-			case DRAG:
-				c.drag( mousePos );
-			default:
+			// 指定位置がカード内にあるか
+			if( c.getPos().x <= pos.x && c.getPos().x + c.getSize().x >= pos.x &&
+					c.getPos().y <= pos.y && c.getPos().y + c.getSize().y >= pos.y ){
+
+				// IDを返す
+				return c.getID();
 			}
 		}
+
+		return -1;
+	}
+
+	// 指定したIDのカードを返す
+	public CharacterBase searchID( int id ){
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			if( mCardList.get(i).getID() == id ) return mCardList.get(i);
+		}
+
+		return null;
+	}
+
+	// マウスの挙動
+	public void mouseMove( Define.MOUSE_STATUS_TYPE type ){
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			CharacterBase c = mCardList.get(i);
+
+			if( mouseMove( type, c ) ) return;
+		}
+	}
+
+	// マウスの挙動(カード側)
+	private boolean mouseMove( Define.MOUSE_STATUS_TYPE type, CharacterBase c ){
+
+		// 離す
+		if( type == Define.MOUSE_STATUS_TYPE.RELEASE ){
+
+			c.release();
+			return false;
+		}
+
+		// ドラッグ
+		if( type == Define.MOUSE_STATUS_TYPE.DRAG ){
+
+			c.drag();
+			return false;
+		}
+
+		boolean isCollision = Collision.isCollisionSquareDot( c.getPos(), c.getSize(), Application.getObj().getMousePos() );
+
+		// クリック
+		if( type == Define.MOUSE_STATUS_TYPE.CLICK ){
+
+			mExplanation = null;
+
+			if( !isCollision ) return false;
+
+			c.click();
+			return true;
+		}
+
+		// 選択
+		if( type == Define.MOUSE_STATUS_TYPE.SELECT ){
+
+			if( !isCollision ) return false;
+
+			c.select();
+			return true;
+		}
+
+		return false;
 	}
 
 	// カード説明を生成
 	public void createExplanation( int id, GSvector2 pos, GSvector2 size){
 
-		if( mExplanation == null ){
+		if( mExplanation != null ){
 
-			// 説明を生成
-			mExplanation = new CardExplanation();
-			mExplanation.initialize();
+			mExplanation.finish();
+			mExplanation = null;
 		}
 
-		// ID設定
-		((CardExplanation)mExplanation).setID( id, pos, size );
+		// 説明を生成
+		mExplanation = new CardExplanation();
+		((CardExplanation)mExplanation).initialize( id, pos, size );
 	}
 
 	// カードリストに追加

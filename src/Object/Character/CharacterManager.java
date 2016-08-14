@@ -2,29 +2,33 @@ package Object.Character;
 
 import java.util.List;
 
-import Application.Application;
+import Application.Define;
 
 public class CharacterManager {
 
+	private CharacterBase mMyTactician;
+	private CharacterBase mEnemyTactician;
 
 	// コンストラクタ
-	public CharacterManager( Application app ){
+	public CharacterManager(){
 
+		mMyTactician = new Tactician( true );
+		mEnemyTactician = new Tactician( false );
 	}
 
 	// 初期化
-	public void initialize( Application app ){
+	public void initialize(){
 
+		((Tactician)mMyTactician).initialize( Define.TACTICIAN_ID.SONKEN );
+		((Tactician)mEnemyTactician).initialize( Define.TACTICIAN_ID.SIBAI );
 	}
 
 	// 更新
 	public void update(){
 
-
+		mMyTactician.update();
+		mEnemyTactician.update();
 	}
-
-
-
 
 	// リスト更新
 	private void updateList( List<CharacterBase> list ){
@@ -37,6 +41,12 @@ public class CharacterManager {
 
 			list.remove(i);
 		}
+	}
+
+	// ゲッター
+	public CharacterBase getTactician( boolean isMy ){
+
+		return isMy ? mMyTactician : mEnemyTactician;
 	}
 
 }

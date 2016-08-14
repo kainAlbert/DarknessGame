@@ -65,4 +65,13 @@ public class Collision {
 
 		return Math.pow( pos1.x - pos2.x, 2 ) + Math.pow( pos1.y - pos2.y, 2 ) < Math.pow( radius1 + radius2, 2 );
 	}
+
+	// 四角と点の判定
+	public static boolean isCollisionSquareDot( GSvector2 pos1, GSvector2 size1, GSvector2 pos2 ){
+
+		if( pos1 == null || size1 == null || pos2 == null ) return false;
+
+		return pos1.x <= pos2.x && pos1.x + size1.x  >= pos2.x &&
+				   pos1.y <= pos2.y && pos1.y + size1.y  >= pos2.y;
+	}
 }

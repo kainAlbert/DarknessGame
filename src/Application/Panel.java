@@ -1,13 +1,18 @@
 package Application;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import javax.swing.JPanel;
 
+import Object.Card.Card;
 import Object.Character.CharacterBase;
+import Object.Character.StringLabel;
+import Object.Detail.DetailBase;
 
 public class Panel extends JPanel{
 
@@ -24,8 +29,19 @@ public class Panel extends JPanel{
 
 		Graphics2D g2 = (Graphics2D)g;
 
+		List<CharacterBase> myCardList = null;
+		List<CharacterBase> enemyCardList = null;
+		List<CharacterBase> effectList = null;
+		CharacterBase pointer = null;
+		CharacterBase cardExplanation = null;
+
 		try{
 
+			myCardList = Application.getObj().getCardManager(true).getCardList();
+			enemyCardList = Application.getObj().getCardManager(false).getCardList();
+			effectList = Application.getObj().getEffectManager().getEffectList();
+			pointer = Application.getObj().getEffectManager().getPointer();
+			cardExplanation = Application.getObj().getCardManager(true).getExplanation();
 		}catch( Exception e ){
 			return;
 		}
@@ -33,6 +49,51 @@ public class Panel extends JPanel{
 		// 背景描画
 		drawBack( g2 );
 
+		// 軍師描画
+		draw( g2, Application.getObj().getCharacterManager().getTactician(true) );
+		draw( g2, Application.getObj().getCharacterManager().getTactician(false) );
+
+		// 各カード描画
+		for( int i=0; i<myCardList.size(); i++ ){
+
+			CharacterBase card = myCardList.get(i);
+			DetailBase detail = ((Card)card).getDetail();
+
+			draw( g2, detail );
+
+			draw( g2, card );
+
+			// 数値描画
+			drawStr( g2, detail.getCostLabel() );
+			drawStr( g2, detail.getAttackLabel() );
+			drawStr( g2, detail.getHPLabel() );
+		}
+		for( int i=0; i<enemyCardList.size(); i++ ){
+
+			CharacterBase card = enemyCardList.get(i);
+			DetailBase detail = ((Card)card).getDetail();
+
+			draw( g2, detail );
+
+			draw( g2, card );
+
+			// 数値描画
+			drawStr( g2, detail.getCostLabel() );
+			drawStr( g2, detail.getAttackLabel() );
+			drawStr( g2, detail.getHPLabel() );
+		}
+
+		// エフェクト描画
+		for( int i=0; i<effectList.size(); i++ ){
+
+			draw( g2, effectList.get(i) );
+		}
+
+		// ポインター描画
+		draw( g2, pointer );
+
+		// カード説明描画
+		if( cardExplanation != null ) draw( g2, cardExplanation );
 
 		AffineTransform af = new AffineTransform();
 
@@ -40,6 +101,7 @@ public class Panel extends JPanel{
 		g2.setTransform(af);
 	}
 
+	// 画像描画
 	private void draw( Graphics2D g2, CharacterBase c ){
 
 		BufferedImage readImage = null;
@@ -58,8 +120,16 @@ public class Panel extends JPanel{
 		af.rotate(c.getAngle() * Math.PI / 180, c.getPos().x + c.getSize().x / 2, c.getPos().y + c.getSize().y / 2);
 		g2.setTransform(af);
 
-		int posx = (int)c.getPos().x;
-		int posy = (int)c.getPos().y;
+		// ダメージ時の振動
+		int revision = 0;
+
+		if( c.getDamageTimer() > 0 ){
+
+			revision = (int)( Math.random() * 10 - 5 );
+		}
+
+		int posx = (int)c.getPos().x + revision;
+		int posy = (int)c.getPos().y + revision;
 		int scalex = (int)c.getSize().x + posx;
 		int scaley = (int)c.getSize().y + posy;
 		int resizex1 = (int)c.getReSize().x - (int)c.getFirstReSize().x;
@@ -74,6 +144,44 @@ public class Panel extends JPanel{
 				resizex1, resizey1,
 				resizex2, resizey2,
 				mApp );
+	}
+
+	// 文字描画
+	private void drawStr( Graphics g2, StringLabel s ){
+
+		if( s == null ) return;
+
+		if( s.getStr().equals("") ) return;
+
+		BufferedImage readImage = null;
+
+		try{
+
+			readImage = s.getImage();
+		}catch( Exception e ){
+			return;
+		}
+
+		if( readImage == null )return;
+
+		int posx = (int)s.getImagePos().x;
+		int posy = (int)s.getImagePos().y;
+		int scalex = (int)s.getImageSize().x + posx;
+		int scaley = (int)s.getImageSize().y + posy;
+		int resizex2 = (int)s.getImageReSize().x;
+		int resizey2 = (int)s.getImageReSize().y;
+
+		g2.drawImage(
+				readImage,
+				posx, posy,
+				scalex, scaley,
+				0, 0,
+				resizex2, resizey2,
+				mApp );
+
+		g2.setFont( new Font( "Meiryo", Font.BOLD, s.getStrSize() ));
+
+		g2.drawString( s.getStr(), (int)s.getStrPos().x, (int)s.getStrPos().y );
 	}
 
 	// 背景描画

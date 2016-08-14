@@ -1,7 +1,10 @@
 package Object;
 
 
+import java.awt.Point;
+
 import Application.Application;
+import Application.GSvector2;
 import Object.Card.CardManager;
 import Object.Character.CharacterManager;
 import Object.Effect.EffectManager;
@@ -13,17 +16,19 @@ public class ObjectManager {
 	private CardManager mMyCardManager;
 	private CardManager mEnemyCardManager;
 	private Collision mCollision;
-	private EffectManager mEM;
+	private EffectManager mEffectManager;
+
+	private GSvector2 mMousePos;
 
 	// コンストラクタ
 	public ObjectManager( Application app ){
 
 		mApp = app;
-		mCharacterManager = new CharacterManager( app );
+		mCharacterManager = new CharacterManager();
 		mMyCardManager = new CardManager( true );
 		mEnemyCardManager = new CardManager( false );
 		mCollision = new Collision();
-		mEM = new EffectManager();
+		mEffectManager = new EffectManager();
 
 
 	}
@@ -31,8 +36,10 @@ public class ObjectManager {
 	// 初期化
 	public void initialize(){
 
+		mCharacterManager.initialize();
 		mMyCardManager.initialize();
 		mEnemyCardManager.initialize();
+		mEffectManager.initialize();
 	}
 
 	// 更新
@@ -42,15 +49,24 @@ public class ObjectManager {
 		mMyCardManager.update();
 		mEnemyCardManager.update();
 		mCollision.update();
-		mEM.update();
+		mEffectManager.update();
+	}
+
+	// マウス位置を設定
+	public void setMousePos( Point mousePos ){
+
+		mMousePos = new GSvector2( mousePos.x, mousePos.y );
 	}
 
 	// ゲッター
 	public Application getApplication(){ return mApp; }
 	public CharacterManager getCharacterManager(){ return mCharacterManager; }
-	public CardManager getMyCardManager(){ return mMyCardManager; }
-	public CardManager getEnemyCardManager(){ return mEnemyCardManager; }
+	public CardManager getCardManager( boolean isMy ){
+
+		return isMy ? mMyCardManager : mEnemyCardManager;
+	}
 	public Collision getCollision(){ return mCollision; }
-	public EffectManager getEM(){ return mEM; }
+	public EffectManager getEffectManager(){ return mEffectManager; }
+	public GSvector2 getMousePos(){ return mMousePos; }
 
 }

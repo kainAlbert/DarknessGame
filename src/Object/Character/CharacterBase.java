@@ -1,27 +1,19 @@
 package Object.Character;
 
-import java.awt.Image;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
-import Application.Panel;
 
 public class CharacterBase {
 
 	protected BufferedImage mImage;
 	protected String mFileName;
-	protected JButton mButton;
-	protected JLabel mLabel;
 	protected GSvector2 mPos;
 	protected GSvector2 mLastPos;
 	protected GSvector2 mSize;
@@ -35,6 +27,7 @@ public class CharacterBase {
 	protected GSvector2 mFirstMousePos;
 	protected boolean mIsSelect;
 	protected boolean mIsMouseOn;
+	protected int mDamageTimer;
 
 	// コンストラクタ
 	public CharacterBase(){
@@ -69,109 +62,39 @@ public class CharacterBase {
 		mFirstMousePos = new GSvector2();
 		mIsSelect = false;
 		mIsMouseOn = false;
-
-		//アイコンの生成
-		mButton = new JButton();
-		mLabel = new JLabel();
-	}
-
-	// ボタンの初期設定
-	public void initializeButton(){
-
-		// ペインに貼り付ける
-		Application.getPanel().add( mButton );
-
-		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
-		mButton.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
-
-		//ボタンをマウスでさわったときに反応するようにする
-		mButton.addMouseListener(Application.getObj().getApplication());
-
-		//ボタンをマウスで動かそうとしたときに反応するようにする
-		mButton.addMouseMotionListener(Application.getObj().getApplication());
-
-		//ボタンに配列の情報を付加する（ネットワークを介してオブジェクトを識別するため）
-		mButton.setActionCommand( Integer.toString(mID) );
-
-		// ボタンの設定
-		setButton();
-	}
-
-	// ボタンの設定
-	protected void setButton(){
-
-		//ボタンにアイコンを設定する
-		mButton.setIcon( setImage() );
-	}
-
-	// ラベルの初期設定
-	public void initializeLabel(){
-
-		// ペインに貼り付ける
-		Application.getPanel().add( mLabel, 0 );
-
-		//ボタンの大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
-		mLabel.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
-
-		// ラベルの設定
-		setLabel();
-	}
-
-	// ラベルの設定
-	protected void setLabel(){
-
-		//ボタンにアイコンを設定する
-		mLabel.setIcon( setImage() );
-	}
-
-	// 画像の大きさとリサイズ設定
-	private ImageIcon setImage(){
-
-		// 画像の設定
-		ImageIcon image =new ImageIcon(mImage.getSubimage(
-				(int)(mReSize.x - mFirstReSize.x),
-				(int)(mReSize.y - mFirstReSize.y),
-				(int)mFirstReSize.x,
-				(int)mFirstReSize.y)
-				);
-
-		Image image2 = image.getImage().getScaledInstance( (int)mSize.x, (int)mSize.y, 1);
-		image = new ImageIcon( image2 );
-
-		return image;
+		mDamageTimer = 0;
 	}
 
 	// 更新
 	public void update(){
 
-		//ボタン(orラベル)の大きさと位置を設定する．(x座標，y座標, xの幅,yの幅）
-		mButton.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
-		mLabel.setBounds( (int)mPos.x, (int)mPos.y, (int)mSize.x, (int)mSize.y );
+		mDamageTimer--;
 	}
 
-	// マウスオン
-	public void mouseONOFF(){
-
-		mIsMouseOn = !mIsMouseOn;
-	}
+	// クリック
+	public void click(){}
 
 	// 選択
-	public void select( Point mousePos ){
+	public void select(){
 
-		mFirstMousePos.x = mousePos.x;
-		mFirstMousePos.y = mousePos.y;
+		GSvector2 mousePos = Application.getObj().getMousePos();
+
+		mFirstMousePos.x = mousePos.x - mPos.x;
+		mFirstMousePos.y = mousePos.y - mPos.y;
 		mIsSelect = true;
 	}
 
 	// 選択解除
-	public void release( Point mousePos ){
+	public void release(){
 
 		mFirstMousePos = new GSvector2();
 		mIsSelect = false;
 	}
 
 	// ドラッグ
-	public void drag( Point mousePos ){
+	public void drag(){
+
+		GSvector2 mousePos = Application.getObj().getMousePos();
 
 		mPos.x = mousePos.x - mFirstMousePos.x - Define.WINDOW_REVISION.x;
 		mPos.y = mousePos.y - mFirstMousePos.y - Define.WINDOW_REVISION.y;
@@ -182,27 +105,11 @@ public class CharacterBase {
 
 	// 死亡処理
 	public void finish(){
-
-		Panel p = Application.getPanel();
-
-		try{
-			p.remove( mButton );
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-
-		try{
-			p.remove( mLabel );
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
 	// ゲッター
 	public BufferedImage getImage(){ return mImage; }
 	public String getFileName(){ return mFileName; }
-	public JButton getButton(){ return mButton; }
-	public JLabel getLabel(){ return mLabel; }
 	public GSvector2 getPos(){ return mPos; }
 	public GSvector2 getLastPos(){ return mLastPos; }
 	public GSvector2 getSize(){ return mSize; }
@@ -215,6 +122,6 @@ public class CharacterBase {
 	public GSvector2 getFirstMousePos(){ return mFirstMousePos; }
 	public boolean getIsSelect(){ return mIsSelect; }
 	public boolean getIsMouseOn(){ return mIsMouseOn; }
-
+	public int getDamageTimer(){ return mDamageTimer; }
 
 }
