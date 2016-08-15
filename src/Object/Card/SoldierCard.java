@@ -10,7 +10,6 @@ import Object.Effect.AttackEffect;
 
 public class SoldierCard extends Card{
 
-	private GSvector2 mFirstPos;
 	private GSvector2 mTargetPos;
 	private GSvector2 mTargetSize;
 	private int mAttackTimer;
@@ -22,18 +21,16 @@ public class SoldierCard extends Card{
 	}
 
 	// 初期化
-	public void initialize( int cardID, GSvector2 pos, GSvector2 lastPos, int fieldNumber ){
+	public void initialize( int cardID, GSvector2 pos, int fieldNumber ){
 
 		super.initialize();
 
 		mPos = pos;
-		mLastPos = lastPos;
 		mType = mIsMy ? Define.CARD_TYPE.MYFIELD.ordinal() : Define.CARD_TYPE.ENEMYFIELD.ordinal();
 		mFieldNumber = fieldNumber;
 
 		super.initializeDetail( cardID );
 
-		mFirstPos = new GSvector2( lastPos.x, lastPos.y );
 		mTargetPos = new GSvector2();
 		mTargetSize = new GSvector2();
 		mAttackTimer = 0;
@@ -66,8 +63,6 @@ public class SoldierCard extends Card{
 		// タイマー終了時の処理
 		if( mAttackTimer > 0 ) return;
 
-		mLastPos = new GSvector2( mFirstPos.x, mFirstPos.y );
-
 		CharacterBase e = new AttackEffect( new GSvector2( mTargetPos.x + mTargetSize.x / 2, mTargetPos.y + mTargetSize.y / 2 ) );
 
 		Application.getObj().getEffectManager().addEffectList( e );
@@ -87,6 +82,8 @@ public class SoldierCard extends Card{
 	public void click(){
 
 		Application.getObj().getCardManager( true ).createExplanation( mID, mPos, mSize );
+
+		System.out.println("exp");
 	}
 
 	// 選択
@@ -174,4 +171,7 @@ public class SoldierCard extends Card{
 
 		mDamageTimer = Define.DAMAGE_TIME;
 	}
+
+	// ゲッター
+	public int getAttackTimer(){ return mAttackTimer; }
 }

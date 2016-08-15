@@ -52,7 +52,10 @@ public class Panel extends JPanel{
 		}
 
 		// 背景描画
-		drawBack( g2 );
+		draw( g2, Application.getObj().getBackGround() );
+
+		// ターン終了ボタン描画
+		draw( g2, Application.getTurn() );
 
 		// 軍師描画
 		draw( g2, myTactician );

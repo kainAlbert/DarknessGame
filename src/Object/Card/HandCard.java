@@ -1,7 +1,5 @@
 package Object.Card;
 
-import java.util.List;
-
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
@@ -54,7 +52,7 @@ public class HandCard extends Card{
 
 		int fieldCardNum = Application.getObj().getCardManager( mIsMy ).searchTypeNum( Define.CARD_TYPE.ENEMYFIELD );
 
-		if( fieldCardNum >=  5 ) return;
+		if( fieldCardNum >=  Define.MAX_FIELD_CARD ) return;
 
 		// フィールドカードを生成
 		CharacterBase card = new SoldierCard( mIsMy );
@@ -62,7 +60,6 @@ public class HandCard extends Card{
 		((SoldierCard)card).initialize(
 				mDetail.getCardID(),
 				new GSvector2( mPos.x, mPos.y ),
-				new GSvector2( Define.FIELD_CARD_POSX[ fieldCardNum ], Define.FIELD_ENEMYCARD_POSY ),
 				mFieldNumber);
 
 		// リストに追加
@@ -76,7 +73,7 @@ public class HandCard extends Card{
 	private void updateNotHand(){
 
 		// 終点でなければ終了
-		if( mPos.y != mLastPos.y ) return;
+		if( mPos.x != mLastPos.x || mPos.y != mLastPos.y ) return;
 
 		int handNum = Application.getObj().getCardManager( mIsMy ).searchTypeNum( mIsMy ? Define.CARD_TYPE.MYHAND : Define.CARD_TYPE.ENEMYHAND );
 
@@ -90,12 +87,6 @@ public class HandCard extends Card{
 		mIsHand = true;
 
 		mType = mIsMy ? Define.CARD_TYPE.MYHAND.ordinal() : Define.CARD_TYPE.ENEMYHAND.ordinal();
-	}
-
-	// 位置ソート
-	public void sortPos( GSvector2 pos ){
-
-		mLastPos = new GSvector2( pos.x, pos.y );
 	}
 
 	// クリックした時
@@ -127,11 +118,11 @@ public class HandCard extends Card{
 		// 自分のフィールドのカードの数を取得
 		int myFieldNum = Application.getObj().getCardManager( mIsMy ).searchTypeNum( Define.CARD_TYPE.MYFIELD );
 
-		// 手を離した場所が手札の位置ではないか
-		boolean isPosY = mousePos.y < Define.FIELD_MYCARD_POSY + Define.CARD_SIZE.y;
-
 		// フィールドのカードの数が5未満か
 		boolean isFieldNum =  myFieldNum < Define.MAX_FIELD_CARD;
+
+		// 手を離した場所が手札の位置ではないか
+		boolean isPosY = mousePos.y < Define.FIELD_MYCARD_POSY + Define.CARD_SIZE.y;
 
 		// 手札にあるか
 		boolean isHand = mType == Define.CARD_TYPE.MYHAND.ordinal();
@@ -156,11 +147,6 @@ public class HandCard extends Card{
 	// フィールドにカードを置く
 	private boolean putCreature( GSvector2 mousePos, CharacterBase tactician ){
 
-		// 位置xを取得
-		double lastPosX = returnPutPos( mousePos );
-
-		if( lastPosX == -1 ) return false;
-
 		// マナを消費
 		((Tactician)tactician).useMana( mDetail.getCost() );
 
@@ -170,7 +156,6 @@ public class HandCard extends Card{
 		((SoldierCard)card).initialize(
 				mDetail.getCardID(),
 				new GSvector2( mPos.x, mPos.y ),
-				new GSvector2( lastPosX, Define.FIELD_MYCARD_POSY ),
 				mFieldNumber );
 
 		// リストに追加
@@ -180,39 +165,6 @@ public class HandCard extends Card{
 		mIsDead = true;
 
 		return true;
-	}
-
-	// カードを置く位置を返す
-	private double returnPutPos( GSvector2 mousePos ){
-
-		double posx = -1;
-		int fieldNumber = 0;
-
-		// 各ボックスにマウスの位置があれば設定
-		for( int i=0; i<Define.FIELD_CARD_POSX.length; i++ ){
-
-			if( mousePos.x >= Define.FIELD_CARD_POSX[i] && mousePos.x <= Define.FIELD_CARD_POSX[i] + mSize.x ){
-
-				posx = Define.FIELD_CARD_POSX[i];
-				fieldNumber = i;
-				break;
-			}
-		}
-
-		List<CharacterBase> list = Application.getObj().getCardManager( mIsMy ).getCardList();
-
-		// すでに同じ位置にカードがあれば置かない
-		for( int i=0; i<list.size(); i++ ){
-
-			if( list.get(i).getType() == Define.CARD_TYPE.MYFIELD.ordinal() &&
-				((Card)list.get(i)).getFieldNumber() == fieldNumber ){
-
-				return -1;
-			}
-		}
-
-		mFieldNumber = fieldNumber;
-		return posx;
 	}
 
 	// ドラッグ

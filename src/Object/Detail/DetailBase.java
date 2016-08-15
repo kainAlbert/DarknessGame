@@ -58,9 +58,9 @@ public class DetailBase extends CharacterBase{
 				new GSvector2( Define.CARD_RESIZE.x / 2, Define.CARD_RESIZE.y / 2 ), 0, type);
 
 		// 数値ラベルクラス初期化
-		mCostLabel.initialize( Define.CARD_NUM_TYPE.COST.ordinal() );
-		mAttackLabel.initialize( Define.CARD_NUM_TYPE.ATTACK.ordinal() );
-		mHPLabel.initialize( Define.CARD_NUM_TYPE.HP.ordinal() );
+		mCostLabel.initialize( Define.CARD_NUM_TYPE.COST.ordinal(), Define.CARD_NUM_IMAGE_SIZE );
+		mAttackLabel.initialize( Define.CARD_NUM_TYPE.ATTACK.ordinal(), Define.CARD_NUM_IMAGE_SIZE );
+		mHPLabel.initialize( Define.CARD_NUM_TYPE.HP.ordinal(), Define.CARD_NUM_IMAGE_SIZE );
 	}
 
 	// 更新

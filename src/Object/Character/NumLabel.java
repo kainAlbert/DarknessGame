@@ -12,7 +12,7 @@ public class NumLabel extends CharacterBase{
 	}
 
 	// 初期化
-	public void initialize( int type ){
+	public void initialize( int type, double size ){
 
 		String[] fileName = {
 			"numHP", "numCost", "numAttack", "numHP"
@@ -21,7 +21,7 @@ public class NumLabel extends CharacterBase{
 		super.initialize(
 				fileName[ type ],
 				new GSvector2( -1000, -1000 ),
-				new GSvector2( Define.CARD_NUM_IMAGE_SIZE, Define.CARD_NUM_IMAGE_SIZE ),
+				new GSvector2( size, size ),
 				new GSvector2( Define.CARD_NUM_IMAGE_RESIZE.x, Define.CARD_NUM_IMAGE_RESIZE.y ),
 				0, type);
 	}
@@ -32,6 +32,6 @@ public class NumLabel extends CharacterBase{
 		mPos = pos;
 
 		mReSize.x = ( num + 1 ) * Define.CARD_NUM_IMAGE_RESIZE.x;
-		mReSize.x = Math.min( mReSize.x, Define.CARD_NUM_IMAGE_RESIZE.x * 21 );
+		mReSize.x = Math.min( mReSize.x, Define.CARD_NUM_IMAGE_RESIZE.x * 32 );
 	}
 }

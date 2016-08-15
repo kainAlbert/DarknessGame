@@ -28,7 +28,7 @@ public class Tactician extends CharacterBase{
 		mHP = 10;
 		mID = id.ordinal();
 		mMaxMana = 0;
-		mMana = 10;
+		mMana = 100;
 
 		GSvector2 pos = mIsMy ?
 				new GSvector2( Define.TACTICIAN_MYPOS.x, Define.TACTICIAN_MYPOS.y ) :
@@ -41,8 +41,8 @@ public class Tactician extends CharacterBase{
 				new GSvector2( Define.TACTICIAN_RESIZE.x, Define.TACTICIAN_RESIZE.y ),
 				0, 0 );
 
-		mManaLabel.initialize( Define.CARD_NUM_TYPE.COST.ordinal() );
-		mHPLabel.initialize( Define.CARD_NUM_TYPE.HP.ordinal() );
+		mManaLabel.initialize( Define.CARD_NUM_TYPE.COST.ordinal(), Define.TACTICIAN_NUM_IMAGE_SIZE );
+		mHPLabel.initialize( Define.CARD_NUM_TYPE.HP.ordinal(), Define.TACTICIAN_NUM_IMAGE_SIZE );
 	}
 
 	// 更新
@@ -50,9 +50,9 @@ public class Tactician extends CharacterBase{
 
 		super.update();
 
-		double hpPosX = mPos.x + mSize.x * 0.3;
-		double manaPosX = mPos.x + mSize.x * 0.6;
-		double posY = mIsMy ? mPos.y - Define.CARD_NUM_IMAGE_SIZE : mPos.y + mSize.y;
+		double hpPosX = mPos.x;
+		double manaPosX = mPos.x + mSize.x - Define.TACTICIAN_NUM_IMAGE_SIZE * 1.5;
+		double posY = mIsMy ? mPos.y + mSize.y : mPos.y - Define.TACTICIAN_NUM_IMAGE_SIZE;
 
 		mManaLabel.updateNum( mMana, new GSvector2( manaPosX, posY ) );
 		mHPLabel.updateNum( mHP, new GSvector2( hpPosX, posY ) );

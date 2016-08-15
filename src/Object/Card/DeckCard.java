@@ -33,7 +33,8 @@ public class DeckCard extends Card{
 				new GSvector2( Define.CARD_SIZE.x, Define.CARD_SIZE.y ),
 				new GSvector2( Define.CARD_RESIZE.x, Define.CARD_RESIZE.y ),
 				Application.getObj().getCardManager( mIsMy ).getCardID(),
-				0 );
+				Define.CARD_TYPE.DECK.ordinal()
+				);
 
 		CharacterBase t = Application.getObj().getCharacterManager().getTactician( mIsMy );
 
@@ -43,10 +44,14 @@ public class DeckCard extends Card{
 	// 更新
 	public void update(){}
 
-	// 選択
-	public void select(){
+	// クリック
+	public void click(){
 
-		if( mDeckList.size() == 0 ) return;
+		if( mDeckList.size() == 0 ){
+
+			mSize.x = 0;
+			return;
+		}
 
 		CharacterBase card = mDeckList.get(0);
 
@@ -55,9 +60,12 @@ public class DeckCard extends Card{
 		mDeckList.remove(0);
 
 		if( mIsMy ){
-			((DeckCard)Application.getObj().getCardManager( false ).getCardList().get(0)).select();
+			((DeckCard)Application.getObj().getCardManager( false ).getCardList().get(0)).click();
 		}
 	}
+
+	// 選択
+	public void select(){}
 
 	// 選択解除
 	public void release(){}

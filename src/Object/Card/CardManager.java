@@ -63,14 +63,32 @@ public class CardManager {
 		mCardID = 1;
 	}
 
+	// ターン開始時の処理
+	public void startTurn(){
+
+		CharacterBase deck = null;
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			if( mCardList.get(i).getType() == Define.CARD_TYPE.DECK.ordinal() ){
+
+				deck = mCardList.get(i);
+				break;
+			}
+		}
+
+		
+	}
+
 	// 更新
 	public void update(){
 
 		// リスト更新
 		updateList( mCardList );
 
-		// 手札ソート
+		// ソート
 		sortHand();
+		sortField();
 
 		// 説明更新
 		if( mExplanation != null ){
@@ -116,11 +134,38 @@ public class CardManager {
 			// 手札のみ
 			if( mCardList.get(i).getType() != type.ordinal() ) continue;
 
-			((HandCard)mCardList.get(i)).sortPos( mHandPos[ index ] );
+			((Card)mCardList.get(i)).sortPos( mHandPos[ index ] );
 
 			index++;
 
 			if( index >= Define.MAX_HAND_CARD ) return;
+		}
+	}
+
+	// 戦場をソート
+	private void sortField(){
+
+		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
+		int fieldNum = searchTypeNum( type );
+		int index = (int)(Math.ceil( ( Define.MAX_FIELD_CARD - fieldNum ) / 2) );
+		double posY = mIsMy ? Define.FIELD_MYCARD_POSY : Define.FIELD_ENEMYCARD_POSY;
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			if( mCardList.get(i) == null ) continue;
+
+			// 戦場のみ
+			if( mCardList.get(i).getType() != type.ordinal() ) continue;
+
+			// 攻撃中はソートしない
+			if( ((SoldierCard)mCardList.get(i)).getAttackTimer() <= 0 ){
+
+				((Card)mCardList.get(i)).sortPos( new GSvector2( Define.FIELD_CARD_POSX[ index ], posY ) );
+			}
+
+			index++;
+
+			if( index >= Define.MAX_FIELD_CARD ) return;
 		}
 	}
 

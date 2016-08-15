@@ -4,14 +4,17 @@ package Object;
 import java.awt.Point;
 
 import Application.Application;
+import Application.Define;
 import Application.GSvector2;
 import Object.Card.CardManager;
+import Object.Character.CharacterBase;
 import Object.Character.CharacterManager;
 import Object.Effect.EffectManager;
 
 public class ObjectManager {
 
 	private Application mApp;
+	private CharacterBase mBackGround;
 	private CharacterManager mCharacterManager;
 	private CardManager mMyCardManager;
 	private CardManager mEnemyCardManager;
@@ -24,6 +27,7 @@ public class ObjectManager {
 	public ObjectManager( Application app ){
 
 		mApp = app;
+		mBackGround = new CharacterBase();
 		mCharacterManager = new CharacterManager();
 		mMyCardManager = new CardManager( true );
 		mEnemyCardManager = new CardManager( false );
@@ -35,6 +39,13 @@ public class ObjectManager {
 
 	// 初期化
 	public void initialize(){
+
+		mBackGround.initialize(
+				"backGround",
+				new GSvector2(),
+				new GSvector2( Define.WINDOW_SIZE.x, Define.WINDOW_SIZE.y ),
+				new GSvector2( Define.WINDOW_SIZE.x, Define.WINDOW_SIZE.y ),
+				0, 0);
 
 		mCharacterManager.initialize();
 		mMyCardManager.initialize();
@@ -60,6 +71,7 @@ public class ObjectManager {
 
 	// ゲッター
 	public Application getApplication(){ return mApp; }
+	public CharacterBase getBackGround(){ return mBackGround; }
 	public CharacterManager getCharacterManager(){ return mCharacterManager; }
 	public CardManager getCardManager( boolean isMy ){
 

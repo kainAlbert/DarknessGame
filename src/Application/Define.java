@@ -21,8 +21,8 @@ public interface Define {
 	double CARD_MAX_SPEED = 100.0;
 	double CARD_MIN_SPEED = 1.0;
 	int MOUSE_ON_TIME = 40;
-	GSvector2 MYDECK_POS = new GSvector2( WINDOW_SIZE.x - CARD_SIZE.x - 100, WINDOW_SIZE.y / 2 + 10 );
-	GSvector2 ENEMYDECK_POS = new GSvector2( WINDOW_SIZE.x - CARD_SIZE.x - 100, WINDOW_SIZE.y / 2 - 10 - CARD_SIZE.y );
+	GSvector2 MYDECK_POS = new GSvector2( WINDOW_SIZE.x - CARD_SIZE.x - 50, WINDOW_SIZE.y / 2 + 30 );
+	GSvector2 ENEMYDECK_POS = new GSvector2( WINDOW_SIZE.x - CARD_SIZE.x - 50, WINDOW_SIZE.y / 2 - CARD_SIZE.y - 30 );
 
 	// マウス関連
 	enum MOUSE_STATUS_TYPE{
@@ -34,8 +34,8 @@ public interface Define {
 	double FIELD_ENEMYHAND = CARD_SIZE.y * 0.8;
 	double FIELD_MYCARD_POSY = FIELD_MYHAND - CARD_SIZE.y;
 	double FIELD_ENEMYCARD_POSY = CARD_SIZE.y + 100;
-	double[] FIELD_CARD_POSX = { 280 ,380 ,480 ,580 ,680 };
-	int MAX_FIELD_CARD = 5;
+	double[] FIELD_CARD_POSX = { 260 ,360 ,460 ,560 ,660, 760 };
+	int MAX_FIELD_CARD = 6;
 
 	// カード情報関連
 	GSvector2 CARD_EXPLANATION_SIZE = new GSvector2( 400, 600 );
@@ -45,11 +45,12 @@ public interface Define {
 	double CARD_EXPLANATION_Y = ( WINDOW_SIZE.y - CARD_EXPLANATION_SIZE.y ) / 2;
 	int MAX_HAND_CARD = 10;
 	enum CARD_TYPE{
-			NONE, MYHAND, ENEMYHAND, MYFIELD, ENEMYFIELD
+			NONE, DECK, MYHAND, ENEMYHAND, MYFIELD, ENEMYFIELD
 	}
 
 	// カードの数値関連
 	int CARD_NUM_IMAGE_SIZE = 30;
+	int TACTICIAN_NUM_IMAGE_SIZE = 60;
 	GSvector2 CARD_NUM_IMAGE_RESIZE = new GSvector2( 64, 64 );
 	enum CARD_NUM_TYPE{
 		NONE, COST, ATTACK, HP
@@ -70,4 +71,11 @@ public interface Define {
 	String[] TACTICIAN_IMAGE_NAME = { "tactician/t_sonken", "tactician/t_syokaturyo", "tactician/t_sibai", "tactician/t_totaku" };
 	String[] DECK_FILE_NAME = { "go", "syoku", "gi", "gun" };
 	String CARD_LIST_FILE_NAME = "cardlist";
+
+	// ターン関連
+	int TURN_DISTANCE_TIME = 60;
+	GSvector2 TURN_IMAGE_SIZE = new GSvector2( 100, 100 );
+	GSvector2 TURN_IMAGE_RESIZE = new GSvector2( 128, 128 );
+	GSvector2 TURN_IMAGE_POS = new GSvector2( 80, WINDOW_SIZE.y / 2 - TURN_IMAGE_SIZE.y / 2 );
+
 }

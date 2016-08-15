@@ -74,6 +74,12 @@ public class Card extends CharacterBase{
 		if( Math.abs( mLastPos.y - mPos.y ) < mSpeed * 1.1 ) mPos.y = mLastPos.y;
 	}
 
+	// 位置ソート
+	public void sortPos( GSvector2 pos ){
+
+		mLastPos = new GSvector2( pos.x, pos.y );
+	}
+
 	// 選択
 	public void select(){
 

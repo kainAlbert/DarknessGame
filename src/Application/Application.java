@@ -19,6 +19,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	public static Panel mPanel;
 	public static ObjectManager mObj;		// オブジェクト管理者
+	public static Turn mTurn;
 	public static int mID;								// プレイヤーID
 
 	public Application() {
@@ -29,9 +30,11 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		//入力がないときは，"localhost"とする
 		if(ipAddress.equals("") ){ ipAddress = "localhost"; }
 
+		// パネル生成
 		mPanel = new Panel( this );
 		this.add(mPanel);
 
+		// パネルの設定
 		mPanel.setLayout(null);
 		mPanel.addMouseListener( this );
 		mPanel.addMouseMotionListener( this );
@@ -43,6 +46,9 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		// オブジェクト管理者生成
 		mObj = new ObjectManager( this );
+
+		// ターン
+		mTurn = new Turn();
 
 		// IDの初期化
 		mID = 0;
@@ -75,6 +81,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		app.setVisible(true);
 
 		//初期化
+		mTurn.initialize();
 		mObj.initialize();
 
 		while( true ){
@@ -83,6 +90,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 			setFPS();
 
 			// 更新
+			mTurn.update();
 			mObj.update();
 
 			// 再描画
@@ -120,6 +128,8 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
 		mObj.getCardManager( false ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
+
+		mTurn.click();
 	}
 
 	//マウスがオブジェクトに入ったときの処理
@@ -128,13 +138,18 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	//マウスがオブジェクトから出たときの処理
 	public void mouseExited(MouseEvent e) {}
 
-	public void mousePressed(MouseEvent e) {//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）
+	//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）
+	public void mousePressed(MouseEvent e) {
+
+		if( !mTurn.getIsMyTurn() ) return;
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.SELECT );
 	}
 
 	//マウスで押していたオブジェクトを離したときの処理
 	public void mouseReleased(MouseEvent e) {
+
+		if( !mTurn.getIsMyTurn() ) return;
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.RELEASE );
 
@@ -148,6 +163,8 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	//マウスでオブジェクトとをドラッグしているときの処理
 	public void mouseDragged(MouseEvent e) {
+
+		if( !mTurn.getIsMyTurn() ) return;
 
 		mObj.setMousePos( e.getPoint() );
 
@@ -169,7 +186,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	}
 
 	//マウスがオブジェクト上で移動したときの処理
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(MouseEvent e){
 
 		mObj.setMousePos( e.getPoint() );
 	}
@@ -180,5 +197,6 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	// ゲッター
 	public static Panel getPanel(){ return mPanel; }
 	public static ObjectManager getObj(){ return mObj; }
+	public static Turn getTurn(){ return mTurn; }
 	public static int getID(){ return mID; }
 }
