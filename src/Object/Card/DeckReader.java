@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import Application.Define;
 import Application.GSvector2;
@@ -51,8 +52,8 @@ public class DeckReader {
 				item = str.split("\t");
 
 				if( Integer.parseInt(item[0]) == -1 ){
-					
-					
+
+
 					break;
 				}
 
@@ -65,6 +66,25 @@ public class DeckReader {
 
 		}
 
-		return list;
+		return getRandomList( list );
+	}
+
+	// ランダムな順番にする
+	private static List<CharacterBase> getRandomList( List<CharacterBase> list ){
+
+		List<CharacterBase> rndList = new ArrayList<CharacterBase>();
+		Random rnd = new Random();
+		int rndNum = 0;
+
+		while( list.size() != 0 ){
+
+			rndNum = rnd.nextInt( list.size() );
+
+			rndList.add( list.get( rndNum ) );
+
+			list.remove( rndNum );
+		}
+
+		return rndList;
 	}
 }

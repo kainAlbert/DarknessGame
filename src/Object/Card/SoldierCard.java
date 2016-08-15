@@ -7,7 +7,6 @@ import Object.Collision;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
 import Object.Effect.AttackEffect;
-import Object.Effect.PointerEffect;
 
 public class SoldierCard extends Card{
 
@@ -23,13 +22,14 @@ public class SoldierCard extends Card{
 	}
 
 	// 初期化
-	public void initialize( int cardID, GSvector2 pos, GSvector2 lastPos ){
+	public void initialize( int cardID, GSvector2 pos, GSvector2 lastPos, int fieldNumber ){
 
 		super.initialize();
 
 		mPos = pos;
 		mLastPos = lastPos;
 		mType = mIsMy ? Define.CARD_TYPE.MYFIELD.ordinal() : Define.CARD_TYPE.ENEMYFIELD.ordinal();
+		mFieldNumber = fieldNumber;
 
 		super.initializeDetail( cardID );
 
@@ -94,11 +94,7 @@ public class SoldierCard extends Card{
 
 		if( !mIsMy ) return;
 
-		mIsSelect = true;
-
-		CharacterBase p = Application.getObj().getEffectManager().getPointer();
-
-		((PointerEffect)p).setFirstPos( new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 ) );
+		super.select();
 	}
 
 	// 選択解除
@@ -108,16 +104,10 @@ public class SoldierCard extends Card{
 
 		if( !mIsSelect ) return;
 
-		// 選択解除
-		mIsSelect = false;
+		super.release();
 
 		// マウス位置を取得
 		GSvector2 mousePos = Application.getObj().getMousePos();
-
-		// ポインターリセット
-		CharacterBase p = Application.getObj().getEffectManager().getPointer();
-
-		((PointerEffect)p).reset();
 
 		// 敵兵士に攻撃
 		if( attackEnemySoldier( mousePos ) ) return;
@@ -137,7 +127,9 @@ public class SoldierCard extends Card{
 
 		CharacterBase enemy = Application.getObj().getCardManager( !mIsMy ).searchID( enemyID );
 
+		// ダメージ交換
 		((SoldierCard)enemy).damage( mDetail.getAttack() );
+		damage( ((Card)enemy).getDetail().getAttack() );
 
 		mAttackTimer = Define.ATTACK_TIME;
 
@@ -170,16 +162,13 @@ public class SoldierCard extends Card{
 
 		if( !mIsMy ) return;
 
-		// マウス位置を取得
-		GSvector2 mousePos = Application.getObj().getMousePos();
-
-		CharacterBase p = Application.getObj().getEffectManager().getPointer();
-
-		((PointerEffect)p).setTargetPos( new GSvector2( mousePos.x, mousePos.y ) );
+		super.drag();
 	}
 
 	// ダメージを受ける
 	public void damage( int d ){
+
+		if( d == 0 ) return;
 
 		mDetail.damage( d );
 

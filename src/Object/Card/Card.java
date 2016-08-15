@@ -6,6 +6,7 @@ import Application.Direction;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Detail.DetailBase;
+import Object.Effect.PointerEffect;
 
 public class Card extends CharacterBase{
 
@@ -71,6 +72,38 @@ public class Card extends CharacterBase{
 		// 近い位置まできたら修正
 		if( Math.abs( mLastPos.x - mPos.x ) < mSpeed * 1.1 ) mPos.x = mLastPos.x;
 		if( Math.abs( mLastPos.y - mPos.y ) < mSpeed * 1.1 ) mPos.y = mLastPos.y;
+	}
+
+	// 選択
+	public void select(){
+
+		super.select();
+
+		CharacterBase p = Application.getObj().getEffectManager().getPointer();
+
+		((PointerEffect)p).setFirstPos( new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 ) );
+	}
+
+	// 選択解除
+	public void release(){
+
+		super.release();
+
+		// ポインターリセット
+		CharacterBase p = Application.getObj().getEffectManager().getPointer();
+
+		((PointerEffect)p).reset();
+	}
+
+	// ドラッグ
+	public void drag(){
+
+		// マウス位置を取得
+		GSvector2 mousePos = Application.getObj().getMousePos();
+
+		CharacterBase p = Application.getObj().getEffectManager().getPointer();
+
+		((PointerEffect)p).setTargetPos( new GSvector2( mousePos.x, mousePos.y ) );
 	}
 
 	// 死亡処理

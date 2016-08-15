@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import Object.Card.Card;
 import Object.Character.CharacterBase;
 import Object.Character.StringLabel;
+import Object.Character.Tactician;
 import Object.Detail.DetailBase;
 
 public class Panel extends JPanel{
@@ -32,6 +33,8 @@ public class Panel extends JPanel{
 		List<CharacterBase> myCardList = null;
 		List<CharacterBase> enemyCardList = null;
 		List<CharacterBase> effectList = null;
+		CharacterBase myTactician = null;
+		CharacterBase enemyTactician = null;
 		CharacterBase pointer = null;
 		CharacterBase cardExplanation = null;
 
@@ -40,6 +43,8 @@ public class Panel extends JPanel{
 			myCardList = Application.getObj().getCardManager(true).getCardList();
 			enemyCardList = Application.getObj().getCardManager(false).getCardList();
 			effectList = Application.getObj().getEffectManager().getEffectList();
+			myTactician = Application.getObj().getCharacterManager().getTactician(true);
+			enemyTactician = Application.getObj().getCharacterManager().getTactician(false);
 			pointer = Application.getObj().getEffectManager().getPointer();
 			cardExplanation = Application.getObj().getCardManager(true).getExplanation();
 		}catch( Exception e ){
@@ -50,8 +55,13 @@ public class Panel extends JPanel{
 		drawBack( g2 );
 
 		// 軍師描画
-		draw( g2, Application.getObj().getCharacterManager().getTactician(true) );
-		draw( g2, Application.getObj().getCharacterManager().getTactician(false) );
+		draw( g2, myTactician );
+		draw( g2, ((Tactician)myTactician).getHPLabel() );
+		draw( g2, ((Tactician)myTactician).getManaLabel() );
+
+		draw( g2, enemyTactician );
+		draw( g2, ((Tactician)enemyTactician).getHPLabel() );
+		draw( g2, ((Tactician)enemyTactician).getManaLabel() );
 
 		// 各カード描画
 		for( int i=0; i<myCardList.size(); i++ ){
@@ -64,9 +74,9 @@ public class Panel extends JPanel{
 			draw( g2, card );
 
 			// 数値描画
-			drawStr( g2, detail.getCostLabel() );
-			drawStr( g2, detail.getAttackLabel() );
-			drawStr( g2, detail.getHPLabel() );
+			draw( g2, detail.getCostLabel() );
+			draw( g2, detail.getAttackLabel() );
+			draw( g2, detail.getHPLabel() );
 		}
 		for( int i=0; i<enemyCardList.size(); i++ ){
 
@@ -78,9 +88,9 @@ public class Panel extends JPanel{
 			draw( g2, card );
 
 			// 数値描画
-			drawStr( g2, detail.getCostLabel() );
-			drawStr( g2, detail.getAttackLabel() );
-			drawStr( g2, detail.getHPLabel() );
+			draw( g2, detail.getCostLabel() );
+			draw( g2, detail.getAttackLabel() );
+			draw( g2, detail.getHPLabel() );
 		}
 
 		// エフェクト描画

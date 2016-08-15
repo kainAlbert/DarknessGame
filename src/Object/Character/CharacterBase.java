@@ -6,8 +6,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import Application.Application;
-import Application.Define;
 import Application.GSvector2;
 
 public class CharacterBase {
@@ -24,9 +22,7 @@ public class CharacterBase {
 	protected int mID;
 	protected boolean mIsDead;
 	protected int mType;
-	protected GSvector2 mFirstMousePos;
 	protected boolean mIsSelect;
-	protected boolean mIsMouseOn;
 	protected int mDamageTimer;
 
 	// コンストラクタ
@@ -59,9 +55,7 @@ public class CharacterBase {
 		mID = id;
 		mIsDead = false;
 		mType = type;
-		mFirstMousePos = new GSvector2();
 		mIsSelect = false;
-		mIsMouseOn = false;
 		mDamageTimer = 0;
 	}
 
@@ -77,27 +71,18 @@ public class CharacterBase {
 	// 選択
 	public void select(){
 
-		GSvector2 mousePos = Application.getObj().getMousePos();
-
-		mFirstMousePos.x = mousePos.x - mPos.x;
-		mFirstMousePos.y = mousePos.y - mPos.y;
 		mIsSelect = true;
 	}
 
 	// 選択解除
 	public void release(){
 
-		mFirstMousePos = new GSvector2();
 		mIsSelect = false;
 	}
 
 	// ドラッグ
 	public void drag(){
 
-		GSvector2 mousePos = Application.getObj().getMousePos();
-
-		mPos.x = mousePos.x - mFirstMousePos.x - Define.WINDOW_REVISION.x;
-		mPos.y = mousePos.y - mFirstMousePos.y - Define.WINDOW_REVISION.y;
 	}
 
 	// 衝突
@@ -119,9 +104,7 @@ public class CharacterBase {
 	public int getID(){ return mID; }
 	public boolean getIsDead(){ return mIsDead; }
 	public int getType(){ return mType; }
-	public GSvector2 getFirstMousePos(){ return mFirstMousePos; }
 	public boolean getIsSelect(){ return mIsSelect; }
-	public boolean getIsMouseOn(){ return mIsMouseOn; }
 	public int getDamageTimer(){ return mDamageTimer; }
 
 }

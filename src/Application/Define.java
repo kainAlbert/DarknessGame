@@ -21,9 +21,6 @@ public interface Define {
 	double CARD_MAX_SPEED = 100.0;
 	double CARD_MIN_SPEED = 1.0;
 	int MOUSE_ON_TIME = 40;
-	int CARD_NUM_SIZE = 28;
-	int CARD_NUM_IMAGE_SIZE = 30;
-	GSvector2 CARD_NUM_IMAGE_RESIZE = new GSvector2( 200, 200 );
 	GSvector2 MYDECK_POS = new GSvector2( WINDOW_SIZE.x - CARD_SIZE.x - 100, WINDOW_SIZE.y / 2 + 10 );
 	GSvector2 ENEMYDECK_POS = new GSvector2( WINDOW_SIZE.x - CARD_SIZE.x - 100, WINDOW_SIZE.y / 2 - 10 - CARD_SIZE.y );
 
@@ -49,6 +46,13 @@ public interface Define {
 	int MAX_HAND_CARD = 10;
 	enum CARD_TYPE{
 			NONE, MYHAND, ENEMYHAND, MYFIELD, ENEMYFIELD
+	}
+
+	// カードの数値関連
+	int CARD_NUM_IMAGE_SIZE = 30;
+	GSvector2 CARD_NUM_IMAGE_RESIZE = new GSvector2( 64, 64 );
+	enum CARD_NUM_TYPE{
+		NONE, COST, ATTACK, HP
 	}
 
 	// クリーチャー関連

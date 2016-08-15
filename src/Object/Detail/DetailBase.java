@@ -3,13 +3,13 @@ package Object.Detail;
 import Application.Define;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
-import Object.Character.StringLabel;
+import Object.Character.NumLabel;
 
 public class DetailBase extends CharacterBase{
 
-	protected StringLabel mCostLabel;
-	protected StringLabel mAttackLabel;
-	protected StringLabel mHPLabel;
+	protected NumLabel mCostLabel;
+	protected NumLabel mAttackLabel;
+	protected NumLabel mHPLabel;
 	protected int mCardID;
 	protected String mName;
 	protected int mCost;
@@ -25,9 +25,9 @@ public class DetailBase extends CharacterBase{
 		mIsMy = isMy;
 
 		// 各数字の文字ラベル生成
-		mCostLabel = new StringLabel();
-		mAttackLabel = new StringLabel();
-		mHPLabel = new StringLabel();
+		mCostLabel = new NumLabel();
+		mAttackLabel = new NumLabel();
+		mHPLabel = new NumLabel();
 	}
 
 	// 初期化
@@ -55,34 +55,18 @@ public class DetailBase extends CharacterBase{
 
 		// 親クラスの初期化
 		super.initialize( fileName, pos, size,
-				new GSvector2( Define.CARD_RESIZE.x / 2, Define.CARD_RESIZE.y / 2 ), 0, 0);
+				new GSvector2( Define.CARD_RESIZE.x / 2, Define.CARD_RESIZE.y / 2 ), 0, type);
 
-		mType = type;
-
-		mCostLabel.initialize( "attackNum",
-				new GSvector2( pos.x, pos.y ),
-				Define.CARD_NUM_SIZE,
-				new GSvector2( pos.x, pos.y ),
-				new GSvector2( Define.CARD_NUM_IMAGE_SIZE, Define.CARD_NUM_IMAGE_SIZE ),
-				new GSvector2( Define.CARD_NUM_IMAGE_RESIZE.x, Define.CARD_NUM_IMAGE_RESIZE.y ) );
-
-		mAttackLabel.initialize( "attackNum",
-				new GSvector2( pos.x, pos.y + size.y - Define.CARD_NUM_SIZE ),
-				Define.CARD_NUM_SIZE,
-				new GSvector2( pos.x, pos.y + size.y - Define.CARD_NUM_SIZE ),
-				new GSvector2( Define.CARD_NUM_IMAGE_SIZE, Define.CARD_NUM_IMAGE_SIZE ),
-				new GSvector2( Define.CARD_NUM_IMAGE_RESIZE.x, Define.CARD_NUM_IMAGE_RESIZE.y ) );
-
-		mHPLabel.initialize( "attackNum",
-				new GSvector2( pos.x + size.x - Define.CARD_NUM_SIZE, pos.y + size.y - Define.CARD_NUM_SIZE ),
-				Define.CARD_NUM_SIZE,
-				new GSvector2( pos.x + size.x - Define.CARD_NUM_SIZE, pos.y + size.y - Define.CARD_NUM_SIZE ),
-				new GSvector2( Define.CARD_NUM_IMAGE_SIZE, Define.CARD_NUM_IMAGE_SIZE ),
-				new GSvector2( Define.CARD_NUM_IMAGE_RESIZE.x, Define.CARD_NUM_IMAGE_RESIZE.y ) );
+		// 数値ラベルクラス初期化
+		mCostLabel.initialize( Define.CARD_NUM_TYPE.COST.ordinal() );
+		mAttackLabel.initialize( Define.CARD_NUM_TYPE.ATTACK.ordinal() );
+		mHPLabel.initialize( Define.CARD_NUM_TYPE.HP.ordinal() );
 	}
 
 	// 更新
 	public void update( GSvector2 pos, GSvector2 size ){
+
+		super.update();
 
 		mPos = pos;
 		mSize = size;
@@ -104,12 +88,14 @@ public class DetailBase extends CharacterBase{
 	public void damage( int d ){
 
 		mHP = Math.max( mHP - d, 0 );
+
+		mDamageTimer = Define.DAMAGE_TIME;
 	}
 
 	// ゲッター
-	public StringLabel getCostLabel(){ return mCostLabel; }
-	public StringLabel getAttackLabel(){ return mAttackLabel; }
-	public StringLabel getHPLabel(){ return mHPLabel; }
+	public NumLabel getCostLabel(){ return mCostLabel; }
+	public NumLabel getAttackLabel(){ return mAttackLabel; }
+	public NumLabel getHPLabel(){ return mHPLabel; }
 	public int getCardID(){ return mCardID; }
 	public String getName(){ return mName; }
 	public int getCost(){ return mCost; }
