@@ -44,6 +44,7 @@ public interface Define {
 	double CARD_EXPLANATION_LEFT_X = 0;
 	double CARD_EXPLANATION_Y = ( WINDOW_SIZE.y - CARD_EXPLANATION_SIZE.y ) / 2;
 	int MAX_HAND_CARD = 10;
+	int FIRST_HAND_CARD = 5;
 	enum CARD_TYPE{
 			NONE, DECK, MYHAND, ENEMYHAND, MYFIELD, ENEMYFIELD
 	}
@@ -73,9 +74,13 @@ public interface Define {
 	String CARD_LIST_FILE_NAME = "cardlist";
 
 	// ターン関連
-	int TURN_DISTANCE_TIME = 60;
-	GSvector2 TURN_IMAGE_SIZE = new GSvector2( 100, 100 );
-	GSvector2 TURN_IMAGE_RESIZE = new GSvector2( 128, 128 );
-	GSvector2 TURN_IMAGE_POS = new GSvector2( 80, WINDOW_SIZE.y / 2 - TURN_IMAGE_SIZE.y / 2 );
-
+	int TURN_DISTANCE_TIME = 90;
+	GSvector2 TURN_BUTTON_IMAGE_SIZE = new GSvector2( 100, 100 );
+	GSvector2 TURN_BUTTON_IMAGE_RESIZE = new GSvector2( 128, 128 );
+	GSvector2 TURN_BUTTON_IMAGE_POS = new GSvector2( 80, WINDOW_SIZE.y / 2 - TURN_BUTTON_IMAGE_SIZE.y / 2 );
+	GSvector2 TURN_STR_IMAGE_SIZE = new GSvector2( 300, 100 );
+	GSvector2 TURN_STR_IMAGE_RESIZE = new GSvector2( 256, 256 );
+	GSvector2 TURN_STR_IMAGE_POS = new GSvector2( -1000, WINDOW_SIZE.y / 2 - TURN_STR_IMAGE_SIZE.y / 2 );
+	double TURN_STR_MOVE = -30;
+	int TURN_STR_SIZE = 30;
 }

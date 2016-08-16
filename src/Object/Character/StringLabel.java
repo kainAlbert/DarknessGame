@@ -33,10 +33,12 @@ public class StringLabel {
 	public void initialize( String fileName, GSvector2 strPos, int strSize, GSvector2 imagePos, GSvector2 imageSize, GSvector2 imageReSize ){
 
 		// 画像読み込み
-		try{
-			mImage = ImageIO.read(new File("img/" + fileName + ".png"));
-		}catch( IOException e ){
-			e.printStackTrace();
+		if( !fileName.equals("") ){
+			try{
+				mImage = ImageIO.read(new File("img/" + fileName + ".png"));
+			}catch( IOException e ){
+				e.printStackTrace();
+			}
 		}
 
 		mStr = "";
@@ -47,37 +49,26 @@ public class StringLabel {
 		mImageReSize = imageReSize;
 	}
 
-	// 数字を設定
-	public void updateNum( int num, GSvector2 pos ){
+	// 文字設定
+	public void setStr( String str ){
 
-		mStr = String.valueOf( num );
-
-		mStrPos = new GSvector2( pos.x + mStrSize * 0.2, pos.y + mStrSize * 0.9 );
-		mImagePos = new GSvector2( pos.x, pos.y );
+		mStr = str;
 	}
 
-	// 数字を文字に変換
-	private String changeNumToString( String str ){
+	// 位置を設定
+	public void setPos( GSvector2 strPos, GSvector2 imagePos ){
 
-		if( !isNumber( str ) ) return str;
-
-		int num = Integer.parseInt(str);
-
-		if( num > 20 ) return "Ｘ";
-
-		final String numStr[] = { "0", "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫", "⑬", "⑭", "⑮", "⑯", "⑰", "⑱", "⑲", "⑳" };
-
-		return numStr[ num - 1 ];
+		mStrPos = strPos;
+		mImagePos = imagePos;
 	}
 
-	// 数値かどうか
-	public boolean isNumber( String val ) {
-		try {
-			Integer.parseInt(val);
-			return true;
-		} catch (NumberFormatException nfex) {
-			return false;
-		}
+	// 位置を移動
+	public void movePos( double moveX, double moveY ){
+
+		mStrPos.x += moveX;
+		mStrPos.y += moveY;
+		mImagePos.x += moveX;
+		mImagePos.y += moveY;
 	}
 
 	// ゲッター

@@ -66,18 +66,22 @@ public class CardManager {
 	// ターン開始時の処理
 	public void startTurn(){
 
-		CharacterBase deck = null;
+		if( !Application.getTurn().getIsMyTurn() ) return;
 
 		for( int i=0; i<mCardList.size(); i++ ){
 
+			// デッキ
 			if( mCardList.get(i).getType() == Define.CARD_TYPE.DECK.ordinal() ){
 
-				deck = mCardList.get(i);
-				break;
+				((DeckCard)mCardList.get(i)).drawCard();
+			}
+
+			// 兵士
+			if( mCardList.get(i).getType() == Define.CARD_TYPE.MYFIELD.ordinal() ){
+
+				((SoldierCard)mCardList.get(i)).reconstituteAttack();
 			}
 		}
-
-		
 	}
 
 	// 更新

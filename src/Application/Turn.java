@@ -2,15 +2,21 @@ package Application;
 
 import Object.Collision;
 import Object.Character.CharacterBase;
+import Object.Character.StringLabel;
+import Object.Character.Tactician;
 
-public class Turn extends CharacterBase{
+public class Turn{
 
+	private CharacterBase mButton;
+	private StringLabel mChangeTurnStr;
 	private boolean mIsMyTurn;
 	private int mTimer;
 
 	// コンストラクタ
 	public Turn(){
 
+		mButton = new CharacterBase();
+		mChangeTurnStr = new StringLabel();
 	}
 
 	// 初期化
@@ -24,7 +30,18 @@ public class Turn extends CharacterBase{
 
 		mIsMyTurn = true;
 
-		super.initialize( "turnEnd", Define.TURN_IMAGE_POS, Define.TURN_IMAGE_SIZE, Define.TURN_IMAGE_RESIZE, 0, 0);
+		// ボタン初期化
+		mButton.initialize( "turnEnd", Define.TURN_BUTTON_IMAGE_POS, Define.TURN_BUTTON_IMAGE_SIZE, Define.TURN_BUTTON_IMAGE_RESIZE, 0, 0);
+
+		// ターン変更時文字初期化
+		mChangeTurnStr.initialize(
+				"strFrame",
+				new GSvector2( Define.TURN_STR_IMAGE_POS.x, Define.TURN_STR_IMAGE_POS.y ),
+				Define.TURN_STR_SIZE,
+				new GSvector2( Define.TURN_STR_IMAGE_POS.x, Define.TURN_STR_IMAGE_POS.y ),
+				new GSvector2( Define.TURN_STR_IMAGE_SIZE.x, Define.TURN_STR_IMAGE_SIZE.y ),
+				new GSvector2( Define.TURN_STR_IMAGE_RESIZE.x, Define.TURN_STR_IMAGE_RESIZE.y )
+				);
 
 	}
 
@@ -32,6 +49,17 @@ public class Turn extends CharacterBase{
 	public void update(){
 
 		mTimer--;
+
+		if( mTimer <= 0 ){
+
+			if( !mIsMyTurn ) turnChange();
+			return;
+		}
+
+		if( mTimer < Define.TURN_DISTANCE_TIME / 2 || mTimer >= Define.TURN_DISTANCE_TIME - Define.TURN_DISTANCE_TIME / 4 ){
+
+			mChangeTurnStr.movePos( Define.TURN_STR_MOVE, 0 );
+		}
 	}
 
 	// クリック
@@ -41,20 +69,43 @@ public class Turn extends CharacterBase{
 
 		GSvector2 mousePos = Application.getObj().getMousePos();
 
-		if( !Collision.isCollisionSquareDot( mPos, mSize, mousePos ) ) return;
+		if( !Collision.isCollisionSquareDot( mButton.getPos(), mButton.getSize(), mousePos ) ) return;
 
-		turnEnd();
+		// ターン変更
+		turnChange();
 	}
 
-	// ターン終了
-	public void turnEnd(){
+	// ターン変更
+	public void turnChange(){
 
 		mIsMyTurn = !mIsMyTurn;
 
 		mTimer = Define.TURN_DISTANCE_TIME;
+
+		// ターン変更文字設定
+		mChangeTurnStr.setStr( mIsMyTurn ? "あなたのターンです" : "ターンを終了します" );
+		mChangeTurnStr.setPos(
+				new GSvector2( Define.WINDOW_SIZE.x + 20, Define.TURN_STR_IMAGE_POS.y + Define.TURN_STR_IMAGE_SIZE.y / 2 ),
+				new GSvector2( Define.WINDOW_SIZE.x, Define.TURN_STR_IMAGE_POS.y ) );
+
+		// 終了時の処理
+
+
+
+		// 開始時の処理
+		if( mIsMyTurn ){
+
+			// 手札を引く
+			Application.getObj().getCardManager( true ).startTurn();
+
+			// マナ回復
+			((Tactician)Application.getObj().getCharacterManager().getTactician( true )).startTurn();
+		}
 	}
 
 	// ゲッター
+	public CharacterBase getButton(){ return mButton; }
+	public StringLabel getChangeTurnStr(){ return mChangeTurnStr; }
 	public boolean getIsMyTurn(){ return mIsMyTurn; }
 	public int getTimer(){ return mTimer; }
 

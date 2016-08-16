@@ -13,6 +13,7 @@ public class SoldierCard extends Card{
 	private GSvector2 mTargetPos;
 	private GSvector2 mTargetSize;
 	private int mAttackTimer;
+	private boolean mIsAttack;
 
 	// コンストラクタ
 	public SoldierCard( boolean isMy ){
@@ -29,11 +30,12 @@ public class SoldierCard extends Card{
 		mType = mIsMy ? Define.CARD_TYPE.MYFIELD.ordinal() : Define.CARD_TYPE.ENEMYFIELD.ordinal();
 		mFieldNumber = fieldNumber;
 
-		super.initializeDetail( cardID );
-
 		mTargetPos = new GSvector2();
 		mTargetSize = new GSvector2();
 		mAttackTimer = 0;
+		mIsAttack = true;
+
+		super.initializeDetail( cardID );
 	}
 
 	// 更新
@@ -103,6 +105,9 @@ public class SoldierCard extends Card{
 
 		super.release();
 
+		// すでに攻撃したなら終了
+		if( mIsAttack ) return;
+
 		// マウス位置を取得
 		GSvector2 mousePos = Application.getObj().getMousePos();
 
@@ -129,6 +134,8 @@ public class SoldierCard extends Card{
 		damage( ((Card)enemy).getDetail().getAttack() );
 
 		mAttackTimer = Define.ATTACK_TIME;
+
+		mIsAttack = true;
 
 		mTargetPos = new GSvector2( enemy.getPos().x, enemy.getPos().y );
 
@@ -170,6 +177,12 @@ public class SoldierCard extends Card{
 		mDetail.damage( d );
 
 		mDamageTimer = Define.DAMAGE_TIME;
+	}
+
+	// 攻撃状態を元に戻す
+	public void reconstituteAttack(){
+
+		mIsAttack = false;
 	}
 
 	// ゲッター

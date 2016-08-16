@@ -12,6 +12,7 @@ import Object.Character.Tactician;
 public class DeckCard extends Card{
 
 	private List<CharacterBase> mDeckList;
+	private boolean mIsStartHand;
 
 	// コンストラクタ
 	public DeckCard( boolean isMy ){
@@ -39,13 +40,25 @@ public class DeckCard extends Card{
 		CharacterBase t = Application.getObj().getCharacterManager().getTactician( mIsMy );
 
 		mDeckList = DeckReader.readDeck( ((Tactician)t).getID(), mIsMy, new GSvector2( mPos.x, mPos.y ) );
+
+		mIsStartHand = false;
 	}
 
 	// 更新
-	public void update(){}
+	public void update(){
 
-	// クリック
-	public void click(){
+		if( mIsStartHand ) return;
+
+		for( int i=0; i<Define.FIRST_HAND_CARD; i++ ){
+
+			drawCard();
+		}
+
+		mIsStartHand = true;
+	}
+
+	// カードを引く
+	public void drawCard(){
 
 		if( mDeckList.size() == 0 ){
 
@@ -63,6 +76,9 @@ public class DeckCard extends Card{
 			((DeckCard)Application.getObj().getCardManager( false ).getCardList().get(0)).click();
 		}
 	}
+
+	// クリック
+	public void click(){}
 
 	// 選択
 	public void select(){}

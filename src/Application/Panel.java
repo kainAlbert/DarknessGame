@@ -55,7 +55,7 @@ public class Panel extends JPanel{
 		draw( g2, Application.getObj().getBackGround() );
 
 		// ターン終了ボタン描画
-		draw( g2, Application.getTurn() );
+		draw( g2, Application.getTurn().getButton() );
 
 		// 軍師描画
 		draw( g2, myTactician );
@@ -102,16 +102,19 @@ public class Panel extends JPanel{
 			draw( g2, effectList.get(i) );
 		}
 
-		// ポインター描画
-		draw( g2, pointer );
-
 		// カード説明描画
 		if( cardExplanation != null ) draw( g2, cardExplanation );
+
+		// ポインター描画
+		draw( g2, pointer );
 
 		AffineTransform af = new AffineTransform();
 
 		af.rotate( 0, Define.WINDOW_SIZE.x / 2, Define.WINDOW_SIZE.y / 2 );
 		g2.setTransform(af);
+
+		// ターン変更時文字描画
+		drawStr( g2, Application.getTurn().getChangeTurnStr() );
 	}
 
 	// 画像描画
@@ -192,7 +195,7 @@ public class Panel extends JPanel{
 				resizex2, resizey2,
 				mApp );
 
-		g2.setFont( new Font( "Meiryo", Font.BOLD, s.getStrSize() ));
+		g2.setFont( new Font( "Meiryo UI", Font.BOLD, s.getStrSize() ));
 
 		g2.drawString( s.getStr(), (int)s.getStrPos().x, (int)s.getStrPos().y );
 	}

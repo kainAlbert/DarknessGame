@@ -27,8 +27,8 @@ public class Tactician extends CharacterBase{
 
 		mHP = 10;
 		mID = id.ordinal();
-		mMaxMana = 0;
-		mMana = 100;
+		mMaxMana = 1;
+		mMana = 1;
 
 		GSvector2 pos = mIsMy ?
 				new GSvector2( Define.TACTICIAN_MYPOS.x, Define.TACTICIAN_MYPOS.y ) :
@@ -56,6 +56,13 @@ public class Tactician extends CharacterBase{
 
 		mManaLabel.updateNum( mMana, new GSvector2( manaPosX, posY ) );
 		mHPLabel.updateNum( mHP, new GSvector2( hpPosX, posY ) );
+	}
+
+	// ターン開始時の処理
+	public void startTurn(){
+
+		mMaxMana++;
+		mMana = mMaxMana;
 	}
 
 	// ダメージ
