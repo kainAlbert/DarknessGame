@@ -92,6 +92,12 @@ public class CharacterBase {
 	public void finish(){
 	}
 
+	// リサイズ変更
+	public void changeReSize( double factor ){
+
+		mReSize.x *= factor;
+	}
+
 	// ゲッター
 	public BufferedImage getImage(){ return mImage; }
 	public String getFileName(){ return mFileName; }

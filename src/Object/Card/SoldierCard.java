@@ -154,6 +154,8 @@ public class SoldierCard extends Card{
 
 		mAttackTimer = Define.ATTACK_TIME;
 
+		mIsAttack = true;
+
 		mTargetPos = new GSvector2( t.getPos().x, t.getPos().y );
 
 		mTargetSize = new GSvector2( t.getSize().x, t.getSize().y );

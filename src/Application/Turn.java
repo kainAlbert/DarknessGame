@@ -31,7 +31,12 @@ public class Turn{
 		mIsMyTurn = true;
 
 		// ボタン初期化
-		mButton.initialize( "turnEnd", Define.TURN_BUTTON_IMAGE_POS, Define.TURN_BUTTON_IMAGE_SIZE, Define.TURN_BUTTON_IMAGE_RESIZE, 0, 0);
+		mButton.initialize(
+				"turnEnd",
+				new GSvector2( Define.TURN_BUTTON_IMAGE_POS.x, Define.TURN_BUTTON_IMAGE_POS.y ),
+				new GSvector2( Define.TURN_BUTTON_IMAGE_SIZE.x, Define.TURN_BUTTON_IMAGE_SIZE.y ),
+				new GSvector2( Define.TURN_BUTTON_IMAGE_RESIZE.x, Define.TURN_BUTTON_IMAGE_RESIZE.y ),
+				0, 0);
 
 		// ターン変更時文字初期化
 		mChangeTurnStr.initialize(
@@ -89,7 +94,11 @@ public class Turn{
 				new GSvector2( Define.WINDOW_SIZE.x, Define.TURN_STR_IMAGE_POS.y ) );
 
 		// 終了時の処理
+		if( !mIsMyTurn ){
 
+			// ボタンのリサイズ変更
+			mButton.changeReSize( 2 );
+		}
 
 
 		// 開始時の処理
@@ -100,6 +109,9 @@ public class Turn{
 
 			// マナ回復
 			((Tactician)Application.getObj().getCharacterManager().getTactician( true )).startTurn();
+
+			// ボタンのリサイズ変更
+			mButton.changeReSize( 0.5 );
 		}
 	}
 

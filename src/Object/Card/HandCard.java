@@ -115,40 +115,30 @@ public class HandCard extends Card{
 		// マウス位置を取得
 		GSvector2 mousePos = Application.getObj().getMousePos();
 
-		// 自分のフィールドのカードの数を取得
-		int myFieldNum = Application.getObj().getCardManager( mIsMy ).searchTypeNum( Define.CARD_TYPE.MYFIELD );
-
-		// フィールドのカードの数が5未満か
-		boolean isFieldNum =  myFieldNum < Define.MAX_FIELD_CARD;
-
-		// 手を離した場所が手札の位置ではないか
-		boolean isPosY = mousePos.y < Define.FIELD_MYCARD_POSY + Define.CARD_SIZE.y;
-
-		// 手札にあるか
-		boolean isHand = mType == Define.CARD_TYPE.MYHAND.ordinal();
-
-		// マナが足りているか
+		// 軍師取得
 		CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( mIsMy );
 
-		boolean isMana = ((Tactician)tactician).getMana() >= mDetail.getCost();
+		// 条件確認
+		if( !mDetail.useCondition( mousePos, tactician, mType == Define.CARD_TYPE.MYHAND.ordinal() ) ) return;
 
-		// 条件を満たせばクリーチャーを置く
-		if( isPosY && isFieldNum && isHand && isMana ){
+		// マナを消費
+		((Tactician)tactician).useMana( mDetail.getCost() );
 
-			if( putCreature( mousePos, tactician ) ) return;
+		// 兵士召喚
+		if( mDetail.getIsSoldier() ){
+
+			putCreature( mousePos, tactician );
 		}
 
 		// 条件を満たせば呪文を使う
 		if( true ){
 
+			mIsDead = true;
 		}
 	}
 
 	// フィールドにカードを置く
-	private boolean putCreature( GSvector2 mousePos, CharacterBase tactician ){
-
-		// マナを消費
-		((Tactician)tactician).useMana( mDetail.getCost() );
+	private void putCreature( GSvector2 mousePos, CharacterBase tactician ){
 
 		// フィールドカードを生成
 		CharacterBase card = new SoldierCard( mIsMy );
@@ -163,8 +153,6 @@ public class HandCard extends Card{
 
 		// この手札は死亡させる
 		mIsDead = true;
-
-		return true;
 	}
 
 	// ドラッグ

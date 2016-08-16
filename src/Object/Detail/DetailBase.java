@@ -1,9 +1,11 @@
 package Object.Detail;
 
+import Application.Application;
 import Application.Define;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Character.NumLabel;
+import Object.Character.Tactician;
 
 public class DetailBase extends CharacterBase{
 
@@ -15,7 +17,7 @@ public class DetailBase extends CharacterBase{
 	protected int mCost;
 	protected int mAttack;
 	protected int mHP;
-	protected boolean mIsCreature;
+	protected boolean mIsSoldier;
 	protected String mExplanation;
 	protected boolean mIsMy;
 
@@ -42,7 +44,7 @@ public class DetailBase extends CharacterBase{
 		mName = str.mName;
 		mAttack = str.mAttack;
 		mHP = str.mHP;
-		mIsCreature = str.mIsCreature;
+		mIsSoldier = str.mIsSoldier;
 		mExplanation = str.mExplanation;
 
 		// 敵の場のカードでなければ裏面画像を使う
@@ -78,7 +80,7 @@ public class DetailBase extends CharacterBase{
 		mCostLabel.updateNum( mCost, new GSvector2( pos.x, pos.y ) );
 
 		// 兵士以外は表示しない
-		if( !mIsCreature ) return;
+		if( !mIsSoldier ) return;
 
 		mAttackLabel.updateNum( mAttack, new GSvector2( pos.x, pos.y + size.y - Define.CARD_NUM_IMAGE_SIZE ) );
 		mHPLabel.updateNum( mHP, new GSvector2( pos.x + size.x - Define.CARD_NUM_IMAGE_SIZE, pos.y + size.y - Define.CARD_NUM_IMAGE_SIZE ) );
@@ -92,6 +94,41 @@ public class DetailBase extends CharacterBase{
 		mDamageTimer = Define.DAMAGE_TIME;
 	}
 
+	// 使用条件
+	public boolean useCondition( GSvector2 mousePos, CharacterBase tactician, boolean isHand  ){
+
+		// 手を離した場所が手札の位置ではないか
+		boolean isPosY = mousePos.y < Define.FIELD_MYCARD_POSY + Define.CARD_SIZE.y;
+
+		// マナが足りているか
+		boolean isMana = ((Tactician)tactician).getMana() >= mCost;
+
+		// ひとつでも満たさなければfalse
+		if( !isPosY || !isHand || !isMana ) return false;
+
+		// 兵士召喚条件
+		if( mIsSoldier ) return soldierCondition();
+
+		// 呪文使用条件
+		return spellCondition();
+	}
+
+	// 兵士条件
+	protected boolean soldierCondition(){
+
+		// 自分のフィールドのカードの数を取得
+		int myFieldNum = Application.getObj().getCardManager( mIsMy ).searchTypeNum( Define.CARD_TYPE.MYFIELD );
+
+		// フィールドのカードの数が5未満か
+		return  myFieldNum < Define.MAX_FIELD_CARD;
+	}
+
+	// 呪文条件
+	protected boolean spellCondition(){
+
+		return true;
+	}
+
 	// ゲッター
 	public NumLabel getCostLabel(){ return mCostLabel; }
 	public NumLabel getAttackLabel(){ return mAttackLabel; }
@@ -101,6 +138,6 @@ public class DetailBase extends CharacterBase{
 	public int getCost(){ return mCost; }
 	public int getAttack(){ return mAttack; }
 	public int getHP(){ return mHP; }
-	public boolean getIsCreature(){ return mIsCreature; }
+	public boolean getIsSoldier(){ return mIsSoldier; }
 	public String getExplanation(){ return mExplanation; }
 }
