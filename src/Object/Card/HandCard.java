@@ -5,6 +5,7 @@ import Application.Define;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
+import Object.Detail.DetailReader;
 
 public class HandCard extends Card{
 
@@ -23,6 +24,9 @@ public class HandCard extends Card{
 		mIsHand = false;
 
 		super.initialize();
+
+		mDetail = DetailReader.getDetail( cardID, mIsMy );
+
 		super.initializeDetail( cardID );
 
 		mPos = pos;
@@ -58,9 +62,9 @@ public class HandCard extends Card{
 		CharacterBase card = new SoldierCard( mIsMy );
 
 		((SoldierCard)card).initialize(
-				mDetail.getCardID(),
-				new GSvector2( mPos.x, mPos.y ),
-				mFieldNumber);
+				mDetail,
+				new GSvector2( mPos.x, mPos.y )
+				);
 
 		// リストに追加
 		Application.getObj().getCardManager( mIsMy ).addCardList( card );
@@ -124,9 +128,6 @@ public class HandCard extends Card{
 		// マナを消費
 		((Tactician)tactician).useMana( mDetail.getCost() );
 
-		// カードをプレイ
-		mDetail.play();
-
 		// この手札は死亡させる
 		mIsDead = true;
 
@@ -134,6 +135,11 @@ public class HandCard extends Card{
 		if( mDetail.getIsSoldier() ){
 
 			putCreature( mousePos, tactician );
+		}
+
+		if( !mDetail.getIsSoldier() ){
+
+			mDetail.play();
 		}
 	}
 
@@ -144,9 +150,9 @@ public class HandCard extends Card{
 		CharacterBase card = new SoldierCard( mIsMy );
 
 		((SoldierCard)card).initialize(
-				mDetail.getCardID(),
-				new GSvector2( mPos.x, mPos.y ),
-				mFieldNumber );
+				mDetail,
+				new GSvector2( mPos.x, mPos.y )
+				);
 
 		// リストに追加
 		Application.getObj().getCardManager( mIsMy ).addCardList( card );

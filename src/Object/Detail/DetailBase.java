@@ -23,8 +23,10 @@ public class DetailBase extends CharacterBase{
 	protected boolean mIsSoldier;
 	protected String mExplanation;
 	protected boolean mIsMy;
-	protected int mAbility1;
-	protected int mAbility2;
+	protected Define.CARD_ABILITY mAbility1;
+	protected Define.CARD_ABILITY mAbility2;
+	protected boolean mIsPlay;
+	protected int mPlayTimer;
 
 	// コンストラクタ
 	public DetailBase( boolean isMy ){
@@ -41,6 +43,10 @@ public class DetailBase extends CharacterBase{
 	public void initialize( int cardID, GSvector2 pos, GSvector2 size, int type ){
 
 		mCardID = cardID;
+		mAbility1 = Define.CARD_ABILITY.NONE;
+		mAbility2 = Define.CARD_ABILITY.NONE;
+		mIsPlay = false;
+		mPlayTimer = Define.CARD_PLAY_WAIT;
 
 		// 詳細を読み込む
 		DetailStructure str = DetailReader.readDetail( cardID );
@@ -99,8 +105,23 @@ public class DetailBase extends CharacterBase{
 		mDamageTimer = Define.DAMAGE_TIME;
 	}
 
+	// 回復
+	public void care( int c ){
+
+		mHP = Math.min( mHP + c, Define.TACTICIAN_MAX_HP );
+	}
+
+	// パワー変更
+	public void powerChange( int changePower ){
+
+		mAttack += changePower;
+	}
+
 	// カードをプレイ
-	public void play(){}
+	public void play(){
+
+		mIsPlay = true;
+	}
 
 	// 使用条件
 	public boolean useCondition( GSvector2 mousePos, CharacterBase tactician, boolean isHand  ){
@@ -168,12 +189,20 @@ public class DetailBase extends CharacterBase{
 		// 軍師を取得
 		CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( isMy );
 
+		System.out.println( tactician.getPos().x + " " + tactician.getPos().y + " " + tactician.getSize().x + " " + tactician.getSize().y );
+
 		if( Collision.isCollisionSquareDot( tactician.getPos(), tactician.getSize(), mousePos ) ){
 
 			return tactician;
 		}
 
 		return null;
+	}
+
+	// 指定したアビリティか？
+	public boolean isAbility( Define.CARD_ABILITY abi ){
+
+		return mAbility1 == abi || mAbility2 == abi;
 	}
 
 	// ゲッター
@@ -187,4 +216,6 @@ public class DetailBase extends CharacterBase{
 	public int getHP(){ return mHP; }
 	public boolean getIsSoldier(){ return mIsSoldier; }
 	public String getExplanation(){ return mExplanation; }
+	public boolean getIsPlay(){ return mIsPlay; }
+
 }

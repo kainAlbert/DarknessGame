@@ -18,6 +18,10 @@ public class GoFlames extends DetailBase{
 	// プレイ
 	public void play(){
 
+		if( mIsPlay ) return;
+
+		mIsPlay = true;
+
 		// リストを取得
 		List<CharacterBase> list = Application.getObj().getCardManager( !mIsMy ).getCardList();
 
@@ -28,7 +32,7 @@ public class GoFlames extends DetailBase{
 		Define.CARD_TYPE myType = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
 
 		// 徐夫人の数だけ威力を上げる
-		int revision = Application.getObj().getCardManager( mIsMy ).searchIDNum( Define.CARD_ID.JOHUJIN, myType );
+		int revision = Application.getObj().getCardManager( mIsMy ).searchAbilityNum( Define.CARD_ABILITY.SPELL, myType );
 
 		for( int i=0; i<list.size(); i++ ){
 

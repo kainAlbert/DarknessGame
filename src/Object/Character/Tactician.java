@@ -7,6 +7,7 @@ public class Tactician extends CharacterBase{
 
 	private NumLabel mManaLabel;
 	private NumLabel mHPLabel;
+	private int mMaxHP;
 	private int mHP;
 	private boolean mIsMy;
 	private int mID;
@@ -25,10 +26,11 @@ public class Tactician extends CharacterBase{
 	// 初期化
 	public void initialize( Define.TACTICIAN_ID id ){
 
-		mHP = 10;
+		mHP = 15;// Define.TACTICIAN_MAX_HP;
+		mMaxHP = Define.TACTICIAN_MAX_HP;
 		mID = id.ordinal();
-		mMaxMana = 1;
-		mMana = 1;
+		mMaxMana = 10;
+		mMana = 10;
 
 		GSvector2 pos = mIsMy ?
 				new GSvector2( Define.TACTICIAN_MYPOS.x, Define.TACTICIAN_MYPOS.y ) :
@@ -65,12 +67,24 @@ public class Tactician extends CharacterBase{
 		mMana = mMaxMana;
 	}
 
+	// マナ加算
+	public void addMaxMana(){
+
+		mMaxMana++;
+	}
+
 	// ダメージ
 	public void damage( int d ){
 
 		mHP = Math.max( mHP - d, 0 );
 
 		mDamageTimer = Define.DAMAGE_TIME;
+	}
+
+	// 回復
+	public void care( int c ){
+
+		mHP = Math.min( mHP + c, Define.TACTICIAN_MAX_HP );
 	}
 
 	// マナを消費

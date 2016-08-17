@@ -6,13 +6,11 @@ import Application.Direction;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Detail.DetailBase;
-import Object.Detail.DetailReader;
 import Object.Effect.PointerEffect;
 
 public class Card extends CharacterBase{
 
 	protected DetailBase mDetail;
-	protected int mFieldNumber;
 	protected boolean mIsMy;
 
 	// コンストラクタ
@@ -20,7 +18,6 @@ public class Card extends CharacterBase{
 
 		mDetail = null;
 
-		mFieldNumber = 0;
 		mIsMy = isMy;
 	}
 
@@ -38,8 +35,6 @@ public class Card extends CharacterBase{
 
 	// 詳細初期化
 	public void initializeDetail( int cardID ){
-
-		mDetail = DetailReader.getDetail( cardID, mIsMy );
 
 		mDetail.initialize( cardID, new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ), mType );
 	}
@@ -123,6 +118,5 @@ public class Card extends CharacterBase{
 
 	// ゲッター
 	public DetailBase getDetail(){ return mDetail; }
-	public int getFieldNumber(){ return mFieldNumber; }
 	protected boolean getIsMy(){ return mIsMy; }
 }

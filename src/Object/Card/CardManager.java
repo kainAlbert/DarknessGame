@@ -85,21 +85,6 @@ public class CardManager {
 		}
 	}
 
-	// カードを引く
-	public void drawCard( int num ){
-
-		for( int i=0; i<mCardList.size(); i++ ){
-
-			// デッキ
-			if( mCardList.get(i).getType() != Define.CARD_TYPE.DECK.ordinal() ) return;
-
-			for( int j=0; j<num; j++ ){
-
-				((DeckCard)mCardList.get(i)).drawCard();
-			}
-		}
-	}
-
 	// 更新
 	public void update(){
 
@@ -189,6 +174,19 @@ public class CardManager {
 		}
 	}
 
+	// デッキを返す
+	public CharacterBase getDeck(){
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			if( mCardList.get(i).getType() != Define.CARD_TYPE.DECK.ordinal() ) continue;
+
+			return mCardList.get(i);
+		}
+
+		return null;
+	}
+
 	// リスト内タイプ数検索
 	public int searchTypeNum( Define.CARD_TYPE type ){
 
@@ -223,8 +221,8 @@ public class CardManager {
 		return -1;
 	}
 
-	// リスト内ID&タイプ検索
-	public int searchIDNum( Define.CARD_ID id, Define.CARD_TYPE type ){
+	// リスト内アビリティ&タイプ検索
+	public int searchAbilityNum( Define.CARD_ABILITY abi, Define.CARD_TYPE type ){
 
 		int num = 0;
 
@@ -234,7 +232,7 @@ public class CardManager {
 			DetailBase d = ((Card)c).getDetail();
 
 			// 指定したID&タイプなら加算
-			if( d.getCardID() != id.ordinal() || c.getType() != type.ordinal() ) continue;
+			if( !d.isAbility( abi ) || c.getType() != type.ordinal() ) continue;
 
 			num++;
 		}

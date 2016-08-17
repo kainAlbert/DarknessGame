@@ -44,7 +44,8 @@ public interface Define {
 	double CARD_EXPLANATION_LEFT_X = 0;
 	double CARD_EXPLANATION_Y = ( WINDOW_SIZE.y - CARD_EXPLANATION_SIZE.y ) / 2;
 	int MAX_HAND_CARD = 10;
-	int FIRST_HAND_CARD = 5;
+	int FIRST_HAND_CARD = 8;
+	int CARD_PLAY_WAIT = 60;
 	enum CARD_TYPE{
 			NONE, DECK, MYHAND, ENEMYHAND, MYFIELD, ENEMYFIELD
 	}
@@ -72,6 +73,7 @@ public interface Define {
 	String[] TACTICIAN_IMAGE_NAME = { "tactician/t_sonken", "tactician/t_syokaturyo", "tactician/t_sibai", "tactician/t_totaku" };
 	String[] DECK_FILE_NAME = { "go", "syoku", "gi", "gun" };
 	String CARD_LIST_FILE_NAME = "cardlist";
+	int TACTICIAN_MAX_HP = 30;
 
 	// ターン関連
 	int TURN_DISTANCE_TIME = 90;
@@ -104,6 +106,6 @@ public interface Define {
 
 	// カードアビリティ
 	enum CARD_ABILITY{
-
+		NONE, CHARGE, TAUNT, SPELL, BATTLECRY, DEATHRATTLE
 	}
 }

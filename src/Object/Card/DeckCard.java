@@ -93,5 +93,5 @@ public class DeckCard extends Card{
 	public void drag(){}
 
 	// ゲッター
-	public boolean getIsMy(){ return mIsMy; }
+	public List<CharacterBase> getList(){ return mDeckList; }
 }

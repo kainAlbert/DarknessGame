@@ -21,11 +21,15 @@ public class GoFireBall extends DetailBase{
 	// プレイ
 	public void play(){
 
+		if( mIsPlay ) return;
+
+		mIsPlay = true;
+
 		// タイプ
 		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
 
 		// 徐夫人の数だけ威力を上げる
-		int revision = Application.getObj().getCardManager( mIsMy ).searchIDNum( Define.CARD_ID.JOHUJIN, type );
+		int revision = Application.getObj().getCardManager( mIsMy ).searchAbilityNum( Define.CARD_ABILITY.SPELL, type );
 
 		mSelectCharacter.damage( mAttack + revision );
 	}

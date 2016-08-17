@@ -1,15 +1,15 @@
-package Object.Detail.DetailList.Go;
+package Object.Detail.DetailList.Syoku;
 
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Detail.DetailBase;
 
-public class GoTerror extends DetailBase{
+public class SyokuGigantic extends DetailBase{
 
 	private CharacterBase mSelectCharacter;
 
 	// コンストラクタ
-	public GoTerror( boolean isMy ) {
+	public SyokuGigantic( boolean isMy ) {
 
 		super( isMy );
 
@@ -19,11 +19,9 @@ public class GoTerror extends DetailBase{
 	// プレイ
 	public void play(){
 
-		if( mIsPlay ) return;
+		mSelectCharacter.care( 3 );
 
-		mIsPlay = true;
-
-		mSelectCharacter.damage( 99999 );
+		mSelectCharacter.powerChange( 3 );
 	}
 
 	// 条件
@@ -32,8 +30,13 @@ public class GoTerror extends DetailBase{
 		// 親クラス条件
 		if( !super.useCondition(mousePos, tactician, isHand) ) return false;
 
-		// 選択している敵兵士を取得
-		mSelectCharacter = getSelectSoldier( false );
+		// 選択している味方兵士を取得
+		mSelectCharacter = getSelectSoldier( true );
+
+		if( mSelectCharacter != null ) return true;
+
+		// 選択している味方軍師を取得
+		mSelectCharacter = getSelectTactician( true );
 
 		return mSelectCharacter != null;
 	}

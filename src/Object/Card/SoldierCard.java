@@ -6,6 +6,7 @@ import Application.GSvector2;
 import Object.Collision;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
+import Object.Detail.DetailBase;
 import Object.Effect.AttackEffect;
 
 public class SoldierCard extends Card{
@@ -22,26 +23,29 @@ public class SoldierCard extends Card{
 	}
 
 	// 初期化
-	public void initialize( int cardID, GSvector2 pos, int fieldNumber ){
+	public void initialize( DetailBase detail, GSvector2 pos ){
 
 		super.initialize();
 
 		mPos = pos;
 		mType = mIsMy ? Define.CARD_TYPE.MYFIELD.ordinal() : Define.CARD_TYPE.ENEMYFIELD.ordinal();
-		mFieldNumber = fieldNumber;
 
 		mTargetPos = new GSvector2();
 		mTargetSize = new GSvector2();
 		mAttackTimer = 0;
 		mIsAttack = true;
 
-		super.initializeDetail( cardID );
+		mDetail = detail;
+
+		super.initializeDetail( detail.getCardID() );
 	}
 
 	// 更新
 	public void update(){
 
 		super.update();
+
+		mDetail.play();
 
 		// 攻撃処理
 		attackAction();
@@ -91,6 +95,8 @@ public class SoldierCard extends Card{
 	// 選択
 	public void select(){
 
+		if( !mDetail.getIsPlay() ) return;
+
 		if( !mIsMy ) return;
 
 		super.select();
@@ -98,6 +104,8 @@ public class SoldierCard extends Card{
 
 	// 選択解除
 	public void release(){
+
+		if( !mDetail.getIsPlay() ) return;
 
 		if( !mIsMy ) return;
 
@@ -166,12 +174,14 @@ public class SoldierCard extends Card{
 	// ドラッグ
 	public void drag(){
 
+		if( !mDetail.getIsPlay() ) return;
+
 		if( !mIsMy ) return;
 
 		super.drag();
 	}
 
-	// ダメージを受ける
+	// ダメージ
 	public void damage( int d ){
 
 		if( d == 0 ) return;
@@ -179,6 +189,18 @@ public class SoldierCard extends Card{
 		mDetail.damage( d );
 
 		mDamageTimer = Define.DAMAGE_TIME;
+	}
+
+	// 回復
+	public void care( int c ){
+
+		mDetail.care( c );
+	}
+
+	// パワー変更
+	public void powerChange( int changePower ){
+
+		mDetail.powerChange( changePower );
 	}
 
 	// 攻撃状態を元に戻す

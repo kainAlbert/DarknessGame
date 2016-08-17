@@ -1,16 +1,16 @@
-package Object.Detail.DetailList.Go;
+package Object.Detail.DetailList.Syoku;
 
 import Application.Define;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Detail.DetailBase;
 
-public class GoSonsyoko extends DetailBase{
+public class SyokuKankogo extends DetailBase{
 
 	private CharacterBase mSelectCharacter;
 
 	// コンストラクタ
-	public GoSonsyoko( boolean isMy ) {
+	public SyokuKankogo( boolean isMy ) {
 
 		super( isMy );
 
@@ -36,7 +36,7 @@ public class GoSonsyoko extends DetailBase{
 
 		mIsPlay = true;
 
-		mSelectCharacter.damage( mAttack );
+		mSelectCharacter.care( 2 );
 	}
 
 	// 条件
@@ -45,12 +45,13 @@ public class GoSonsyoko extends DetailBase{
 		// 親クラス条件
 		if( !super.useCondition(mousePos, tactician, isHand) ) return false;
 
-		// 選択している敵兵士を取得
-		mSelectCharacter = getSelectSoldier( false );
+		// 選択している味方兵士を取得
+		mSelectCharacter = getSelectSoldier( true );
 
 		if( mSelectCharacter != null ) return true;
 
-		mSelectCharacter = getSelectTactician( false );
+		// 選択している味方軍師を取得
+		mSelectCharacter = getSelectTactician( true );
 
 		return mSelectCharacter != null;
 	}

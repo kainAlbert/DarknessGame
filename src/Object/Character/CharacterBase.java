@@ -92,6 +92,12 @@ public class CharacterBase {
 	// ダメージ
 	public void damage( int d ){}
 
+	// 回復
+	public void care( int c ){}
+
+	// パワー変更
+	public void powerChange( int changePower ){}
+
 	// リサイズ変更
 	public void changeReSize( double factor ){
 

@@ -2,7 +2,9 @@ package Object.Detail.DetailList.Go;
 
 import Application.Application;
 import Application.Define;
+import Application.GSvector2;
 import Object.Card.CardManager;
+import Object.Card.DeckCard;
 import Object.Detail.DetailBase;
 
 public class GoRikuson extends DetailBase{
@@ -14,8 +16,24 @@ public class GoRikuson extends DetailBase{
 		super( isMy );
 	}
 
+	// 初期化
+	public void initialize( int cardID, GSvector2 pos, GSvector2 size, int type ){
+
+		super.initialize(cardID, pos, size, type);
+
+		mAbility1 = Define.CARD_ABILITY.BATTLECRY;
+	}
+
 	// プレイ
 	public void play(){
+
+		if( mIsPlay ) return;
+
+		mPlayTimer--;
+
+		if( mPlayTimer > 0 ) return;
+
+		mIsPlay = true;
 
 		// タイプ取得
 		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
@@ -29,6 +47,6 @@ public class GoRikuson extends DetailBase{
 		if( handNum >= Define.MAX_HAND_CARD ) return;
 
 		// カードを引く
-		cm.drawCard( 1 );
+		((DeckCard)cm.getDeck()).drawCard();
 	}
 }

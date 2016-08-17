@@ -3,6 +3,7 @@ package Object.Detail.DetailList.Go;
 import Application.Application;
 import Application.Define;
 import Object.Card.CardManager;
+import Object.Card.DeckCard;
 import Object.Detail.DetailBase;
 
 public class GoIntellect extends DetailBase{
@@ -16,6 +17,10 @@ public class GoIntellect extends DetailBase{
 
 	// プレイ
 	public void play(){
+
+		if( mIsPlay ) return;
+
+		mIsPlay = true;
 
 		// タイプ取得
 		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
@@ -31,7 +36,7 @@ public class GoIntellect extends DetailBase{
 			if( handNum >= Define.MAX_HAND_CARD ) return;
 
 			// カードを引く
-			cm.drawCard( 1 );
+			((DeckCard)cm.getDeck()).drawCard();
 		}
 	}
 }
