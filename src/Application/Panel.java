@@ -30,8 +30,6 @@ public class Panel extends JPanel{
 
 		Graphics2D g2 = (Graphics2D)g;
 
-		List<CharacterBase> myCardList = null;
-		List<CharacterBase> enemyCardList = null;
 		List<CharacterBase> effectList = null;
 		CharacterBase myTactician = null;
 		CharacterBase enemyTactician = null;
@@ -40,8 +38,6 @@ public class Panel extends JPanel{
 
 		try{
 
-			myCardList = Application.getObj().getCardManager(true).getCardList();
-			enemyCardList = Application.getObj().getCardManager(false).getCardList();
 			effectList = Application.getObj().getEffectManager().getEffectList();
 			myTactician = Application.getObj().getCharacterManager().getTactician(true);
 			enemyTactician = Application.getObj().getCharacterManager().getTactician(false);
@@ -67,34 +63,8 @@ public class Panel extends JPanel{
 		draw( g2, ((Tactician)enemyTactician).getManaLabel() );
 
 		// 各カード描画
-		for( int i=0; i<myCardList.size(); i++ ){
-
-			CharacterBase card = myCardList.get(i);
-			DetailBase detail = ((Card)card).getDetail();
-
-			draw( g2, detail );
-
-			draw( g2, card );
-
-			// 数値描画
-			draw( g2, detail.getCostLabel() );
-			draw( g2, detail.getAttackLabel() );
-			draw( g2, detail.getHPLabel() );
-		}
-		for( int i=0; i<enemyCardList.size(); i++ ){
-
-			CharacterBase card = enemyCardList.get(i);
-			DetailBase detail = ((Card)card).getDetail();
-
-			draw( g2, detail );
-
-			draw( g2, card );
-
-			// 数値描画
-			draw( g2, detail.getCostLabel() );
-			draw( g2, detail.getAttackLabel() );
-			draw( g2, detail.getHPLabel() );
-		}
+		drawCard( g2, true );
+		drawCard( g2, false );
 
 		// エフェクト描画
 		for( int i=0; i<effectList.size(); i++ ){
@@ -115,6 +85,36 @@ public class Panel extends JPanel{
 
 		// ターン変更時文字描画
 		drawStr( g2, Application.getTurn().getChangeTurnStr() );
+	}
+
+	// カードの描画
+	private void drawCard( Graphics2D g2, boolean isMy ){
+
+		List<CharacterBase> list = null;
+
+		try{
+
+			list = Application.getObj().getCardManager(isMy).getCardList();
+		}catch( Exception e ){
+			return;
+		}
+
+		for( int i=0; i<list.size(); i++ ){
+
+			CharacterBase card = list.get(i);
+			DetailBase detail = ((Card)card).getDetail();
+
+			if( detail == null ) continue;
+
+			draw( g2, detail );
+
+			draw( g2, card );
+
+			// 数値描画
+			draw( g2, detail.getCostLabel() );
+			draw( g2, detail.getAttackLabel() );
+			draw( g2, detail.getHPLabel() );
+		}
 	}
 
 	// 画像描画

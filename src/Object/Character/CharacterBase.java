@@ -81,16 +81,16 @@ public class CharacterBase {
 	}
 
 	// ドラッグ
-	public void drag(){
-
-	}
+	public void drag(){}
 
 	// 衝突
 	public void collision(){}
 
 	// 死亡処理
-	public void finish(){
-	}
+	public void finish(){}
+
+	// ダメージ
+	public void damage( int d ){}
 
 	// リサイズ変更
 	public void changeReSize( double factor ){

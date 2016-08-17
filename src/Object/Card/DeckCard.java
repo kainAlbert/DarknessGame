@@ -8,6 +8,7 @@ import Application.Define;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
+import Object.Detail.DetailBase;
 
 public class DeckCard extends Card{
 
@@ -20,6 +21,8 @@ public class DeckCard extends Card{
 		super( isMy );
 
 		mDeckList = new ArrayList<CharacterBase>();
+
+		mDetail = new DetailBase( isMy );
 	}
 
 	// 初期化

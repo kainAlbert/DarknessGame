@@ -8,6 +8,7 @@ import Application.Define;
 import Application.GSvector2;
 import Object.Collision;
 import Object.Character.CharacterBase;
+import Object.Detail.DetailBase;
 
 public class CardManager {
 
@@ -80,6 +81,21 @@ public class CardManager {
 			if( mCardList.get(i).getType() == Define.CARD_TYPE.MYFIELD.ordinal() ){
 
 				((SoldierCard)mCardList.get(i)).reconstituteAttack();
+			}
+		}
+	}
+
+	// カードを引く
+	public void drawCard( int num ){
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			// デッキ
+			if( mCardList.get(i).getType() != Define.CARD_TYPE.DECK.ordinal() ) return;
+
+			for( int j=0; j<num; j++ ){
+
+				((DeckCard)mCardList.get(i)).drawCard();
 			}
 		}
 	}
@@ -187,7 +203,7 @@ public class CardManager {
 	}
 
 	// リスト内タイプ&位置検索
-	public int searchPosType( Define.CARD_TYPE type , GSvector2 pos ){
+	public int searchPosType( Define.CARD_TYPE type , GSvector2 mousePos ){
 
 		for( int i=0; i<mCardList.size(); i++ ){
 
@@ -197,8 +213,7 @@ public class CardManager {
 			if( c.getType() != type.ordinal() ) continue;
 
 			// 指定位置がカード内にあるか
-			if( c.getPos().x <= pos.x && c.getPos().x + c.getSize().x >= pos.x &&
-					c.getPos().y <= pos.y && c.getPos().y + c.getSize().y >= pos.y ){
+			if( Collision.isCollisionSquareDot( c.getPos(), c.getSize(), mousePos ) ){
 
 				// IDを返す
 				return c.getID();
@@ -206,6 +221,25 @@ public class CardManager {
 		}
 
 		return -1;
+	}
+
+	// リスト内ID&タイプ検索
+	public int searchIDNum( Define.CARD_ID id, Define.CARD_TYPE type ){
+
+		int num = 0;
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			CharacterBase c = mCardList.get(i);
+			DetailBase d = ((Card)c).getDetail();
+
+			// 指定したID&タイプなら加算
+			if( d.getCardID() != id.ordinal() || c.getType() != type.ordinal() ) continue;
+
+			num++;
+		}
+
+		return num;
 	}
 
 	// 指定したIDのカードを返す

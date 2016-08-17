@@ -6,6 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import Application.Define;
+import Object.Detail.DetailList.Go.GoLightning;
+import Object.Detail.DetailList.Go.GoRikuson;
+import Object.Detail.DetailList.Go.GoSonsyoko;
+import Object.Detail.DetailList.Go.GoSyuyu;
 
 public class DetailReader {
 
@@ -61,5 +65,25 @@ public class DetailReader {
 				);
 
 		return eStr;
+	}
+
+	// IDによってDetailを生成
+	public static DetailBase getDetail( int cardID, boolean isMy ){
+
+
+
+		switch( cardID ){
+
+		case 1:
+			return new GoSyuyu( isMy );
+		case 2:
+			return new GoRikuson( isMy );
+		case 3:
+			return new GoSonsyoko( isMy );
+		case 5:
+			return new GoLightning( isMy );
+		default:
+			return new DetailBase( isMy );
+		}
 	}
 }

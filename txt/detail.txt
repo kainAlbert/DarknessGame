@@ -1,0 +1,19 @@
+// コンストラクタ
+	public GoLightning( boolean isMy ) {
+		super( isMy );
+	}
+
+	// プレイ
+	public void play(){
+
+	}
+
+	// 条件
+	public boolean useCondition( GSvector2 mousePos, CharacterBase tactician, boolean isHand  ){
+
+		// 親クラス条件
+		if( super.useCondition(mousePos, tactician, isHand) ) return false;
+
+
+		return true;
+	}

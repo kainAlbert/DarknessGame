@@ -66,9 +66,9 @@ public class Tactician extends CharacterBase{
 	}
 
 	// ダメージ
-	public void damage( int damage ){
+	public void damage( int d ){
 
-		mHP = Math.max( mHP - damage, 0 );
+		mHP = Math.max( mHP - d, 0 );
 
 		mDamageTimer = Define.DAMAGE_TIME;
 	}

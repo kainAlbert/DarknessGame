@@ -1,8 +1,11 @@
 package Object.Detail;
 
+import java.util.List;
+
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
+import Object.Collision;
 import Object.Character.CharacterBase;
 import Object.Character.NumLabel;
 import Object.Character.Tactician;
@@ -20,6 +23,8 @@ public class DetailBase extends CharacterBase{
 	protected boolean mIsSoldier;
 	protected String mExplanation;
 	protected boolean mIsMy;
+	protected int mAbility1;
+	protected int mAbility2;
 
 	// コンストラクタ
 	public DetailBase( boolean isMy ){
@@ -94,6 +99,9 @@ public class DetailBase extends CharacterBase{
 		mDamageTimer = Define.DAMAGE_TIME;
 	}
 
+	// カードをプレイ
+	public void play(){}
+
 	// 使用条件
 	public boolean useCondition( GSvector2 mousePos, CharacterBase tactician, boolean isHand  ){
 
@@ -127,6 +135,45 @@ public class DetailBase extends CharacterBase{
 	protected boolean spellCondition(){
 
 		return true;
+	}
+
+	// 選択している兵士を返す
+	protected CharacterBase getSelectSoldier( boolean isMy ){
+
+		// マウス位置を取得
+		GSvector2 mousePos = Application.getObj().getMousePos();
+
+		// カードリスト取得
+		List<CharacterBase> list = Application.getObj().getCardManager( isMy ).getCardList();
+
+		// タイプ
+		int type = isMy ? Define.CARD_TYPE.MYFIELD.ordinal() : Define.CARD_TYPE.ENEMYFIELD.ordinal();
+
+		for( int i=0; i<list.size(); i++ ){
+
+			if( list.get(i).getType() != type ) continue;
+
+			if( Collision.isCollisionSquareDot( list.get(i).getPos(), list.get(i).getSize(), mousePos ) ) return list.get(i);
+		}
+
+		return null;
+	}
+
+	// 選択している軍師を返す
+	protected CharacterBase getSelectTactician( boolean isMy ){
+
+		// マウス位置を取得
+		GSvector2 mousePos = Application.getObj().getMousePos();
+
+		// 軍師を取得
+		CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( isMy );
+
+		if( Collision.isCollisionSquareDot( tactician.getPos(), tactician.getSize(), mousePos ) ){
+
+			return tactician;
+		}
+
+		return null;
 	}
 
 	// ゲッター

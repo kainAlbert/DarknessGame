@@ -124,16 +124,16 @@ public class HandCard extends Card{
 		// マナを消費
 		((Tactician)tactician).useMana( mDetail.getCost() );
 
+		// カードをプレイ
+		mDetail.play();
+
+		// この手札は死亡させる
+		mIsDead = true;
+
 		// 兵士召喚
 		if( mDetail.getIsSoldier() ){
 
 			putCreature( mousePos, tactician );
-		}
-
-		// 条件を満たせば呪文を使う
-		if( true ){
-
-			mIsDead = true;
 		}
 	}
 
@@ -150,9 +150,6 @@ public class HandCard extends Card{
 
 		// リストに追加
 		Application.getObj().getCardManager( mIsMy ).addCardList( card );
-
-		// この手札は死亡させる
-		mIsDead = true;
 	}
 
 	// ドラッグ
