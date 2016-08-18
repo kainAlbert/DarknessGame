@@ -96,16 +96,16 @@ public class CardManager {
 		sortField();
 
 		// 説明更新
-		if( mExplanation != null ){
+		if( mExplanation == null ) return;
 
-			mExplanation.update();
+		if( !((CardExplanation)mExplanation).getIsInitialize() ) return;
 
-			if( mExplanation.getIsDead() ){
+		mExplanation.update();
 
-				mExplanation.finish();
-				mExplanation = null;
-			}
-		}
+		if( !mExplanation.getIsDead() ) return;
+
+		mExplanation.finish();
+		mExplanation = null;
 	}
 
 	// リスト更新

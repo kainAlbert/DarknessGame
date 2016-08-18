@@ -15,6 +15,7 @@ public class CardExplanation extends CharacterBase{
 	private NumLabel mHPLabel;
 	private DetailStructure mStr;
 	private int mTimer;
+	private boolean mIsInitialize;
 
 	// コンストラクタ
 	public CardExplanation(){
@@ -24,11 +25,14 @@ public class CardExplanation extends CharacterBase{
 		mTimer = Define.CARD_EXPLANATION_TIME;
 
 		mDetailImage = new CharacterBase();
+		mStr = new DetailStructure();
 
-		// 各数字の文字ラベル生成
+		// 各ラベル生成
 		mCostLabel = new NumLabel();
 		mAttackLabel = new NumLabel();
 		mHPLabel = new NumLabel();
+
+		mIsInitialize = false;
 	}
 
 	// 初期化
@@ -49,14 +53,18 @@ public class CardExplanation extends CharacterBase{
 
 		mStr = DetailReader.readDetail( cardID );
 
-		// 数値ラベルクラス初期化
-		mCostLabel.initialize( Define.CARD_NUM_TYPE.COST.ordinal(), Define.CARD_NUM_IMAGE_SIZE );
-		mAttackLabel.initialize( Define.CARD_NUM_TYPE.ATTACK.ordinal(), Define.CARD_NUM_IMAGE_SIZE );
-		mHPLabel.initialize( Define.CARD_NUM_TYPE.HP.ordinal(), Define.CARD_NUM_IMAGE_SIZE );
+		// ラベルクラス初期化
+		mCostLabel.initialize( Define.CARD_NUM_TYPE.COST.ordinal(), Define.CARD_NUM_IMAGE_SIZE * 2 );
+		mAttackLabel.initialize( Define.CARD_NUM_TYPE.ATTACK.ordinal(), Define.CARD_NUM_IMAGE_SIZE * 2 );
+		mHPLabel.initialize( Define.CARD_NUM_TYPE.HP.ordinal(), Define.CARD_NUM_IMAGE_SIZE * 2 );
+
+		mIsInitialize = true;
 	}
 
 	// 更新
 	public void update(){
+
+		if( !mIsInitialize ) return;
 
 		super.update();
 
@@ -80,4 +88,5 @@ public class CardExplanation extends CharacterBase{
 	public NumLabel getCostLabel(){ return mCostLabel; }
 	public NumLabel getAttackLabel(){ return mAttackLabel; }
 	public NumLabel getHPLabel(){ return mHPLabel; }
+	public boolean getIsInitialize(){ return mIsInitialize; }
 }

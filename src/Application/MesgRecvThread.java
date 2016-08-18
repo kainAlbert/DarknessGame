@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import Object.GetMsg;
+import GetMsg.GetMsg;
 
 //メッセージ受信のためのスレッド
 	public class MesgRecvThread extends Thread {

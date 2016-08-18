@@ -91,9 +91,11 @@ public class Panel extends JPanel{
 		// カード説明描画
 		if( cardExplanation != null ){
 
+			// カード画像
 			draw( g2, ((CardExplanation)cardExplanation).getDetailImage() );
+			// 枠画像
 			draw( g2, cardExplanation );
-			// 数値描画
+			// 数値
 			draw( g2, ((CardExplanation)cardExplanation).getCostLabel() );
 			draw( g2, ((CardExplanation)cardExplanation).getAttackLabel() );
 			draw( g2, ((CardExplanation)cardExplanation).getHPLabel() );
@@ -199,25 +201,28 @@ public class Panel extends JPanel{
 
 			readImage = s.getImage();
 		}catch( Exception e ){
-			return;
+			e.printStackTrace();
 		}
 
-		if( readImage == null )return;
+		if( readImage != null ){
 
-		int posx = (int)s.getImagePos().x;
-		int posy = (int)s.getImagePos().y;
-		int scalex = (int)s.getImageSize().x + posx;
-		int scaley = (int)s.getImageSize().y + posy;
-		int resizex2 = (int)s.getImageReSize().x;
-		int resizey2 = (int)s.getImageReSize().y;
+			int posx = (int)s.getImagePos().x;
+			int posy = (int)s.getImagePos().y;
+			int scalex = (int)s.getImageSize().x + posx;
+			int scaley = (int)s.getImageSize().y + posy;
+			int resizex2 = (int)s.getImageReSize().x;
+			int resizey2 = (int)s.getImageReSize().y;
 
-		g2.drawImage(
-				readImage,
-				posx, posy,
-				scalex, scaley,
-				0, 0,
-				resizex2, resizey2,
-				mApp );
+			g2.drawImage(
+					readImage,
+					posx, posy,
+					scalex, scaley,
+					0, 0,
+					resizex2, resizey2,
+					mApp );
+		}
+
+		System.out.println(s.getStr() );
 
 		g2.setFont( new Font( "Meiryo UI", Font.BOLD, s.getStrSize() ));
 

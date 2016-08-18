@@ -21,4 +21,7 @@ public class DetailStructure {
 		mHP = hp;
 		mExplanation = explanation;
 	}
+
+	public DetailStructure() {
+	}
 }

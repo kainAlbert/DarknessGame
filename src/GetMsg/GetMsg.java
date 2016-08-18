@@ -1,4 +1,4 @@
-package Object;
+package GetMsg;
 
 public class GetMsg {
 
