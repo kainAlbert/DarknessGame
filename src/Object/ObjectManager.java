@@ -33,8 +33,6 @@ public class ObjectManager {
 		mEnemyCardManager = new CardManager( false );
 		mCollision = new Collision();
 		mEffectManager = new EffectManager();
-
-
 	}
 
 	// 初期化

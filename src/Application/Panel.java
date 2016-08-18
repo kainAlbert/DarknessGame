@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import Object.Card.Card;
+import Object.Card.CardExplanation;
 import Object.Character.CharacterBase;
 import Object.Character.StringLabel;
 import Object.Character.Tactician;
@@ -30,6 +31,7 @@ public class Panel extends JPanel{
 
 		Graphics2D g2 = (Graphics2D)g;
 
+		SelectTactician selectTactician = null;
 		List<CharacterBase> effectList = null;
 		CharacterBase myTactician = null;
 		CharacterBase enemyTactician = null;
@@ -38,12 +40,26 @@ public class Panel extends JPanel{
 
 		try{
 
+			selectTactician = Application.getSelectTactician();
 			effectList = Application.getObj().getEffectManager().getEffectList();
 			myTactician = Application.getObj().getCharacterManager().getTactician(true);
 			enemyTactician = Application.getObj().getCharacterManager().getTactician(false);
 			pointer = Application.getObj().getEffectManager().getPointer();
 			cardExplanation = Application.getObj().getCardManager(true).getExplanation();
 		}catch( Exception e ){
+			return;
+		}
+
+		// 軍師選択描画
+		if( !selectTactician.getIsSelect() ){
+
+			// 背景描画
+			drawBack(g2);
+
+			for( int i=0; i<4; i++ ){
+
+				draw( g2, selectTactician.getTactician(i) );
+			}
 			return;
 		}
 
@@ -73,7 +89,15 @@ public class Panel extends JPanel{
 		}
 
 		// カード説明描画
-		if( cardExplanation != null ) draw( g2, cardExplanation );
+		if( cardExplanation != null ){
+
+			draw( g2, ((CardExplanation)cardExplanation).getDetailImage() );
+			draw( g2, cardExplanation );
+			// 数値描画
+			draw( g2, ((CardExplanation)cardExplanation).getCostLabel() );
+			draw( g2, ((CardExplanation)cardExplanation).getAttackLabel() );
+			draw( g2, ((CardExplanation)cardExplanation).getHPLabel() );
+		}
 
 		// ポインター描画
 		draw( g2, pointer );

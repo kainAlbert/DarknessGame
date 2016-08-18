@@ -19,8 +19,13 @@ public class CharacterManager {
 	// 初期化
 	public void initialize(){
 
-		((Tactician)mMyTactician).initialize( Define.TACTICIAN_ID.SONKEN );
-		((Tactician)mEnemyTactician).initialize( Define.TACTICIAN_ID.SIBAI );
+		((Tactician)mEnemyTactician).initialize( Define.TACTICIAN_ID.TOTAKU );
+	}
+
+	// 軍師設定
+	public void setTactician( Define.TACTICIAN_ID id ){
+
+		((Tactician)mMyTactician).initialize( id );
 	}
 
 	// 更新

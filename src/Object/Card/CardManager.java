@@ -305,7 +305,7 @@ public class CardManager {
 	}
 
 	// カード説明を生成
-	public void createExplanation( int id, GSvector2 pos, GSvector2 size){
+	public void createExplanation( int cardID, GSvector2 pos ){
 
 		if( mExplanation != null ){
 
@@ -315,7 +315,7 @@ public class CardManager {
 
 		// 説明を生成
 		mExplanation = new CardExplanation();
-		((CardExplanation)mExplanation).initialize( id, pos, size );
+		((CardExplanation)mExplanation).initialize( cardID, pos );
 	}
 
 	// カードリストに追加

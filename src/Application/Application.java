@@ -19,6 +19,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	public static Panel mPanel;
 	public static ObjectManager mObj;		// オブジェクト管理者
+	public static SelectTactician mSelectTactician;
 	public static Turn mTurn;
 	public static int mID;								// プレイヤーID
 
@@ -46,6 +47,9 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		// オブジェクト管理者生成
 		mObj = new ObjectManager( this );
+
+		// 軍師選択
+		mSelectTactician = new SelectTactician();
 
 		// ターン
 		mTurn = new Turn();
@@ -79,6 +83,11 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		// 画面表示
 		app.setVisible(true);
+
+		while( !mSelectTactician.getIsSelect() ){
+
+			System.out.println("notStart");
+		}
 
 		//初期化
 		mTurn.initialize();
@@ -125,6 +134,12 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	//ボタンをクリックしたときの処理
 	public void mouseClicked(MouseEvent e) {
+
+		if( !mSelectTactician.getIsSelect() ){
+
+			mSelectTactician.click();
+			return;
+		}
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
 		mObj.getCardManager( false ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
@@ -197,6 +212,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	// ゲッター
 	public static Panel getPanel(){ return mPanel; }
 	public static ObjectManager getObj(){ return mObj; }
+	public static SelectTactician getSelectTactician(){ return mSelectTactician; }
 	public static Turn getTurn(){ return mTurn; }
 	public static int getID(){ return mID; }
 }

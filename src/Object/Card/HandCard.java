@@ -93,12 +93,6 @@ public class HandCard extends Card{
 		mType = mIsMy ? Define.CARD_TYPE.MYHAND.ordinal() : Define.CARD_TYPE.ENEMYHAND.ordinal();
 	}
 
-	// クリックした時
-	public void click(){
-
-		Application.getObj().getCardManager( mIsMy ).createExplanation( mID, mPos, mSize );
-	}
-
 	// 選択した時
 	public void select(){
 

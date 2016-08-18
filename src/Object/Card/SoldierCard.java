@@ -84,14 +84,6 @@ public class SoldierCard extends Card{
 		mIsDead = true;
 	}
 
-	// クリックした時
-	public void click(){
-
-		Application.getObj().getCardManager( true ).createExplanation( mID, mPos, mSize );
-
-		System.out.println("exp");
-	}
-
 	// 選択
 	public void select(){
 

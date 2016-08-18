@@ -78,6 +78,20 @@ public class Card extends CharacterBase{
 		mLastPos = new GSvector2( pos.x, pos.y );
 	}
 
+	// クリック
+	public void click(){
+
+		GSvector2 pos = new GSvector2( mPos.x - Define.CARD_EXPLANATION_SIZE.x, Define.CARD_EXPLANATION_Y );
+
+		// 画面半分より左にいるなら右に出す
+		if( mPos.x + mSize.x / 2 < Define.WINDOW_SIZE.x / 2 ){
+
+			pos.x = mPos.x + mSize.x;
+		}
+
+		Application.getObj().getCardManager( true ).createExplanation( mDetail.getCardID(), pos );
+	}
+
 	// 選択
 	public void select(){
 

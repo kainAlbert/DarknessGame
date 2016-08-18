@@ -52,8 +52,6 @@ public class DeckReader {
 				item = str.split("\t");
 
 				if( Integer.parseInt(item[0]) == -1 ){
-
-
 					break;
 				}
 
