@@ -6,6 +6,7 @@ import java.awt.Point;
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
+import Application.MesgRecvThread;
 import Object.Card.CardManager;
 import Object.Character.CharacterBase;
 import Object.Character.CharacterManager;
@@ -22,6 +23,9 @@ public class ObjectManager {
 	private EffectManager mEffectManager;
 
 	private GSvector2 mMousePos;
+	private boolean mIsStart;
+	private int mStartTimer;
+	private boolean mIsSendTactician;
 
 	// コンストラクタ
 	public ObjectManager( Application app ){
@@ -49,16 +53,56 @@ public class ObjectManager {
 		mMyCardManager.initialize();
 		mEnemyCardManager.initialize();
 		mEffectManager.initialize();
+
+		mIsStart = false;
+		mStartTimer = 0;
+		mIsSendTactician = false;
 	}
 
 	// 更新
 	public void update(){
+
+		if( !mIsStart ){
+
+			isNotStart();
+			return;
+		}
 
 		mCharacterManager.update();
 		mMyCardManager.update();
 		mEnemyCardManager.update();
 		mCollision.update();
 		mEffectManager.update();
+	}
+
+	// 開始するまで
+	private void isNotStart(){
+
+		if( mIsStart ) return;
+
+		mStartTimer++;
+
+		if( mStartTimer < 60 ) return;
+
+		mStartTimer = 0;
+
+		String msg = "";
+
+		// 軍師を送る
+		msg = Application.getID() + Define.MSG + Define.MSG_SET_TACTICIAN + Define.MSG + Application.getSelectTactician().getSelectID();
+		MesgRecvThread.outServer( msg );
+
+		// 開始ターンを送る
+		msg = Application.getID() + Define.MSG + Define.MSG_START_TURN + Define.MSG + ( Application.getTurn().getIsMyTurn() ? "true" : "false" );
+		MesgRecvThread.outServer( msg );
+
+		mIsSendTactician = true;
+	}
+
+	// 開始処理
+	public void setStart(){
+
+		mIsStart = true;
 	}
 
 	// マウス位置を設定
@@ -78,5 +122,7 @@ public class ObjectManager {
 	public Collision getCollision(){ return mCollision; }
 	public EffectManager getEffectManager(){ return mEffectManager; }
 	public GSvector2 getMousePos(){ return mMousePos; }
+	public boolean getIsStart(){ return mIsStart; }
+	public boolean getIsSendTactician(){ return mIsSendTactician; }
 
 }

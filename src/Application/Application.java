@@ -84,9 +84,18 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		// 画面表示
 		app.setVisible(true);
 
+		int timer = 0;
+
 		while( !mSelectTactician.getIsSelect() ){
 
-			System.out.println("notStart");
+			// FPS処理
+			setFPS();
+
+			timer++;
+			if( timer > 180 ){
+				System.out.println("notStart");
+				timer = 0;
+			}
 		}
 
 		//初期化
@@ -141,6 +150,8 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 			return;
 		}
 
+		if( !mObj.getIsStart() ) return;
+
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
 		mObj.getCardManager( false ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
 
@@ -156,6 +167,8 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）
 	public void mousePressed(MouseEvent e) {
 
+		if( !mObj.getIsStart() ) return;
+
 		if( !mTurn.getIsMyTurn() ) return;
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.SELECT );
@@ -163,6 +176,8 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	//マウスで押していたオブジェクトを離したときの処理
 	public void mouseReleased(MouseEvent e) {
+
+		if( !mObj.getIsStart() ) return;
 
 		if( !mTurn.getIsMyTurn() ) return;
 
@@ -178,6 +193,8 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 	//マウスでオブジェクトとをドラッグしているときの処理
 	public void mouseDragged(MouseEvent e) {
+
+		if( !mObj.getIsStart() ) return;
 
 		if( !mTurn.getIsMyTurn() ) return;
 

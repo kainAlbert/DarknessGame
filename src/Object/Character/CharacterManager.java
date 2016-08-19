@@ -19,13 +19,20 @@ public class CharacterManager {
 	// 初期化
 	public void initialize(){
 
-		((Tactician)mEnemyTactician).initialize( Define.TACTICIAN_ID.TOTAKU );
 	}
 
-	// 軍師設定
-	public void setTactician( Define.TACTICIAN_ID id ){
+	// 自分の軍師設定
+	public void setMyTactician( Define.TACTICIAN_ID id ){
 
 		((Tactician)mMyTactician).initialize( id );
+	}
+
+	// 敵の軍師設定
+	public void setEnemyTactician( Define.TACTICIAN_ID id ){
+
+		if( ((Tactician)mEnemyTactician).getHP() == Define.TACTICIAN_MAX_HP ) return;
+
+		((Tactician)mEnemyTactician).initialize( id );
 	}
 
 	// 更新

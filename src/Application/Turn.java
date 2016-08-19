@@ -25,10 +25,8 @@ public class Turn{
 		// 最初のターン決め
 		if( Application.getID() == 1 ){
 
-			mIsMyTurn = true;// Math.random() > 0.5;
+			mIsMyTurn = Math.random() > 0.5;
 		}
-
-		mIsMyTurn = true;
 
 		// ボタン初期化
 		mButton.initialize(
@@ -47,19 +45,18 @@ public class Turn{
 				new GSvector2( Define.TURN_STR_IMAGE_SIZE.x, Define.TURN_STR_IMAGE_SIZE.y ),
 				new GSvector2( Define.TURN_STR_IMAGE_RESIZE.x, Define.TURN_STR_IMAGE_RESIZE.y )
 				);
+	}
 
+	// 開始ターンを設定
+	public void setStartTurn( boolean isMyTurn ){
+
+		mIsMyTurn = isMyTurn;
 	}
 
 	// 更新
 	public void update(){
 
 		mTimer--;
-
-		if( mTimer <= 0 ){
-
-			if( !mIsMyTurn ) turnChange();
-			return;
-		}
 
 		if( mTimer < Define.TURN_DISTANCE_TIME / 2 || mTimer >= Define.TURN_DISTANCE_TIME - Define.TURN_DISTANCE_TIME / 4 ){
 
@@ -99,7 +96,6 @@ public class Turn{
 			// ボタンのリサイズ変更
 			mButton.changeReSize( 2 );
 		}
-
 
 		// 開始時の処理
 		if( mIsMyTurn ){

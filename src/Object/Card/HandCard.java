@@ -39,38 +39,10 @@ public class HandCard extends Card{
 
 		super.update();
 
-		enemyAction();
-
 		// 手札状態でない時の処理
 		if( mIsHand ) return;
 
 		updateNotHand();
-	}
-
-	// 敵だけの処理
-	private void enemyAction(){
-
-		if( mIsMy || !mIsHand ) return;
-
-		if( mPos.y != mLastPos.y ) return;
-
-		int fieldCardNum = Application.getObj().getCardManager( mIsMy ).searchTypeNum( Define.CARD_TYPE.ENEMYFIELD );
-
-		if( fieldCardNum >=  Define.MAX_FIELD_CARD ) return;
-
-		// フィールドカードを生成
-		CharacterBase card = new SoldierCard( mIsMy );
-
-		((SoldierCard)card).initialize(
-				mDetail,
-				new GSvector2( mPos.x, mPos.y )
-				);
-
-		// リストに追加
-		Application.getObj().getCardManager( mIsMy ).addCardList( card );
-
-		// この手札は死亡させる
-		mIsDead = true;
 	}
 
 	// 手札状態でない時の処理

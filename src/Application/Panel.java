@@ -222,8 +222,6 @@ public class Panel extends JPanel{
 					mApp );
 		}
 
-		System.out.println(s.getStr() );
-
 		g2.setFont( new Font( "Meiryo UI", Font.BOLD, s.getStrSize() ));
 
 		g2.drawString( s.getStr(), (int)s.getStrPos().x, (int)s.getStrPos().y );

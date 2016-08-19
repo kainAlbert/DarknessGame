@@ -109,4 +109,11 @@ public interface Define {
 	enum CARD_ABILITY{
 		NONE, CHARGE, TAUNT, SPELL, BATTLECRY, DEATHRATTLE
 	}
+
+	// メッセージ
+	String MSG = "###";
+	String MSG_START_TURN = "MsgStartTurn";
+	String MSG_SET_TACTICIAN = "MsgSetTactician";
+	String MSG_SET_START = "MsgSetStart";
+	String MSG_DRAW_CARD = "MsgDrawCard";
 }

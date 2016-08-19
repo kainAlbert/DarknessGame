@@ -6,6 +6,7 @@ import java.util.List;
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
+import Application.MesgRecvThread;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
 import Object.Detail.DetailBase;
@@ -50,7 +51,7 @@ public class DeckCard extends Card{
 	// 更新
 	public void update(){
 
-		if( mIsStartHand ) return;
+		if( mIsStartHand || !mIsMy ) return;
 
 		for( int i=0; i<Define.FIRST_HAND_CARD; i++ ){
 
@@ -75,8 +76,27 @@ public class DeckCard extends Card{
 
 		mDeckList.remove(0);
 
-		if( mIsMy ){
-			((DeckCard)Application.getObj().getCardManager( false ).getCardList().get(0)).click();
+		DetailBase d = ((Card)card).getDetail();
+		int cardID = d.getCardID();
+
+		// サーバーに送信
+		String msg = Application.getID() + Define.MSG + Define.MSG_DRAW_CARD + Define.MSG + cardID;
+		MesgRecvThread.outServer( msg );
+	}
+
+	// IDを指定してカードを引く
+	public void drawCard( int cardID ){
+
+		for( int i=0; i<mDeckList.size(); i++ ){
+
+			CharacterBase card = mDeckList.get(i);
+			DetailBase detail = ((Card)card).getDetail();
+
+			if( detail.getCardID() != cardID ) continue;
+
+			Application.getObj().getCardManager( mIsMy ).addCardList( card );
+
+			mDeckList.remove(i);
 		}
 	}
 

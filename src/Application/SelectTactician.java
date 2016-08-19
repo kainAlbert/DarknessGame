@@ -7,6 +7,7 @@ public class SelectTactician {
 
 	private CharacterBase[] mTactician;
 	private boolean mIsSelect;
+	private int mSelectID;
 
 	// コンストラクタ
 	public SelectTactician(){
@@ -50,7 +51,9 @@ public class SelectTactician {
 
 				mIsSelect = true;
 
-				Application.getObj().getCharacterManager().setTactician( id[i] );
+				mSelectID = i;
+
+				Application.getObj().getCharacterManager().setMyTactician( id[i] );
 				return;
 			}
 		}
@@ -59,4 +62,5 @@ public class SelectTactician {
 	// ゲッター
 	public CharacterBase getTactician( int i ){ return mTactician[i]; }
 	public boolean getIsSelect(){ return mIsSelect; }
+	public int getSelectID(){ return mSelectID; }
 }
