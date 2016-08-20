@@ -45,7 +45,7 @@ public interface Define {
 	double CARD_EXPLANATION_Y = ( WINDOW_SIZE.y - CARD_EXPLANATION_SIZE.y ) / 2;
 	int EXPLANATION_STR_SIZE = 30;
 	int MAX_HAND_CARD = 10;
-	int FIRST_HAND_CARD = 8;
+	int FIRST_HAND_CARD = 3;
 	int CARD_PLAY_WAIT = 60;
 	enum CARD_TYPE{
 			NONE, DECK, MYHAND, ENEMYHAND, MYFIELD, ENEMYFIELD
@@ -58,6 +58,8 @@ public interface Define {
 	enum CARD_NUM_TYPE{
 		NONE, COST, ATTACK, HP
 	}
+	int DAMAGECARE_NUM_SIZE = 120;
+	int DAMAGECARE_NUM_TIME = 60;
 
 	// クリーチャー関連
 	int ATTACK_TIME = 10;
@@ -81,11 +83,17 @@ public interface Define {
 	GSvector2 TURN_BUTTON_IMAGE_SIZE = new GSvector2( 100, 100 );
 	GSvector2 TURN_BUTTON_IMAGE_RESIZE = new GSvector2( 128, 128 );
 	GSvector2 TURN_BUTTON_IMAGE_POS = new GSvector2( 80, WINDOW_SIZE.y / 2 - TURN_BUTTON_IMAGE_SIZE.y / 2 );
-	GSvector2 TURN_STR_IMAGE_SIZE = new GSvector2( 300, 100 );
-	GSvector2 TURN_STR_IMAGE_RESIZE = new GSvector2( 256, 256 );
-	GSvector2 TURN_STR_IMAGE_POS = new GSvector2( -1000, WINDOW_SIZE.y / 2 - TURN_STR_IMAGE_SIZE.y / 2 );
-	double TURN_STR_MOVE = -30;
-	int TURN_STR_SIZE = 30;
+
+	// 文字関連
+	String STRING_FILE_NAME = "string";
+	GSvector2 STRING_SIZE = new GSvector2( 300, 100 );
+	GSvector2 STRING_RESIZE = new GSvector2( 300, 100 );
+	GSvector2 TURN_STRING_POS = new GSvector2( -1000, WINDOW_SIZE.y / 2 - STRING_SIZE.y / 2 );
+	double TURN_STRING_MOVE = -30;
+	int STRING_TIME = 60;
+	enum STRING_TYPE{
+		 MYTURN, ENDTURN, LOAD, PREPARATION, SELECT_ENEMY, SELECT_ENEMY_SOLDIER, SELECT_MY, SELECT_MY_SOLDIER, ATTACK_TAUNT, NOT_MANA
+	}
 
 	// カードID
 	enum CARD_ID{
@@ -102,7 +110,9 @@ public interface Define {
 		NOVICE_INFANTRY, MIDIUM_INFANTRY, HIGHER_INFANTRY,
 		NOVICE_CHARGE, MIDIUM_CHARGE, HIGHER_CHARGE,
 		NOVICE_SPEAR, MIDIUM_SPEAR, HIGHER_SPEAR,
-		ARROW_SHOT
+		ARROW_SHOT,
+		// 軍師
+		TACTICIAN_SONKEN, TACTICIAN_SYOKATURYO, TACTICIAN_SIBAI, TACTICIAN_TOTAKU
 	}
 
 	// カードアビリティ
@@ -111,9 +121,17 @@ public interface Define {
 	}
 
 	// メッセージ
-	String MSG = "###";
+	String MSG = "__";
 	String MSG_START_TURN = "MsgStartTurn";
 	String MSG_SET_TACTICIAN = "MsgSetTactician";
 	String MSG_SET_START = "MsgSetStart";
 	String MSG_DRAW_CARD = "MsgDrawCard";
+	String MSG_CHANGE_TURN = "MsgChangeTurn";
+	String MSG_PUT_HANDCARD = "MsgPutHandCard";
+	String MSG_PLAY_SPELL = "MsgPlaySpell";
+	String MSG_ATTACK = "MsgAttack";
 }
+
+
+
+

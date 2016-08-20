@@ -35,5 +35,17 @@ public class GetMsg {
 
 		// カードを引く
 		if( t[1].equals( Define.MSG_DRAW_CARD ) ){ MsgDeckCard.drawCard( t ); }
+
+		// ターン変更
+		if( t[1].equals( Define.MSG_CHANGE_TURN ) ){ MsgTurn.changeTurn(); }
+
+		// 手札からカードを出す
+		if( t[1].equals( Define.MSG_PUT_HANDCARD ) ){ MsgHandCard.putHandCard(t); }
+
+		// 呪文を使う
+		if( t[1].equals( Define.MSG_PLAY_SPELL ) ){ MsgHandCard.playSpell(t); }
+
+		// 兵士の攻撃
+		if( t[1].equals( Define.MSG_ATTACK ) ){ MsgSoldierCard.attack(t); }
 	}
 }

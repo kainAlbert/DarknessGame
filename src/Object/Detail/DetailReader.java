@@ -16,6 +16,16 @@ import Object.Detail.DetailList.Go.GoSekihekiBigFire;
 import Object.Detail.DetailList.Go.GoSonsyoko;
 import Object.Detail.DetailList.Go.GoSyuyu;
 import Object.Detail.DetailList.Go.GoTerror;
+import Object.Detail.DetailList.Other.OtherArrowShot;
+import Object.Detail.DetailList.Other.OtherHigherCharge;
+import Object.Detail.DetailList.Other.OtherHigherInfantry;
+import Object.Detail.DetailList.Other.OtherHigherSpear;
+import Object.Detail.DetailList.Other.OtherMidiumCharge;
+import Object.Detail.DetailList.Other.OtherMidiumInfantry;
+import Object.Detail.DetailList.Other.OtherMidiumSpear;
+import Object.Detail.DetailList.Other.OtherNoviceCharge;
+import Object.Detail.DetailList.Other.OtherNoviceInfantry;
+import Object.Detail.DetailList.Other.OtherNoviceSpear;
 import Object.Detail.DetailList.Syoku.SyokuGien;
 import Object.Detail.DetailList.Syoku.SyokuGigantic;
 import Object.Detail.DetailList.Syoku.SyokuKanginpei;
@@ -76,8 +86,7 @@ public class DetailReader {
 				Integer.parseInt(item[2]) == 1,
 				Integer.parseInt(item[3]),
 				Integer.parseInt(item[4]),
-				Integer.parseInt(item[5]),
-				item[6].equals("無し") ? "" : item[6]
+				Integer.parseInt(item[5])
 				);
 
 		return eStr;
@@ -90,6 +99,7 @@ public class DetailReader {
 
 		switch( cardID ){
 
+		// 呉
 		case 1:
 			return new GoSyuyu( isMy );
 		case 2:
@@ -110,6 +120,8 @@ public class DetailReader {
 			return new GoIntellect( isMy );
 		case 10:
 			return new GoTerror( isMy );
+
+		// 蜀
 		case 11:
 			return new SyokuRyubi( isMy );
 		case 12:
@@ -130,6 +142,31 @@ public class DetailReader {
 			return new SyokuGigantic( isMy );
 		case 20:
 			return new SyokuNature( isMy );
+
+		// 共通
+		case 41:
+			return new OtherNoviceInfantry( isMy );
+		case 42:
+			return new OtherMidiumInfantry( isMy );
+		case 43:
+			return new OtherHigherInfantry( isMy );
+		case 44:
+			return new OtherNoviceCharge( isMy );
+		case 45:
+			return new OtherMidiumCharge( isMy );
+		case 46:
+			return new OtherHigherCharge( isMy );
+		case 47:
+			return new OtherNoviceSpear( isMy );
+		case 48:
+			return new OtherMidiumSpear( isMy );
+		case 49:
+			return new OtherHigherSpear( isMy );
+		case 50:
+			return new OtherArrowShot( isMy );
+
+		// 軍師
+
 		default:
 			return new DetailBase( isMy );
 		}

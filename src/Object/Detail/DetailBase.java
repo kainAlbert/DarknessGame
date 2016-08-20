@@ -21,12 +21,12 @@ public class DetailBase extends CharacterBase{
 	protected int mAttack;
 	protected int mHP;
 	protected boolean mIsSoldier;
-	protected String mExplanation;
 	protected boolean mIsMy;
 	protected Define.CARD_ABILITY mAbility1;
 	protected Define.CARD_ABILITY mAbility2;
 	protected boolean mIsPlay;
 	protected int mPlayTimer;
+	protected CharacterBase mSelectCharacter;
 
 	// コンストラクタ
 	public DetailBase( boolean isMy ){
@@ -56,7 +56,9 @@ public class DetailBase extends CharacterBase{
 		mAttack = str.mAttack;
 		mHP = str.mHP;
 		mIsSoldier = str.mIsSoldier;
-		mExplanation = str.mExplanation;
+
+		// 軍師ならここで終了
+		if( cardID >= Define.CARD_ID.TACTICIAN_SONKEN.ordinal() ) return;
 
 		// 敵の場のカードでなければ裏面画像を使う
 		String fileName = "detail/" + mCardID;
@@ -133,7 +135,15 @@ public class DetailBase extends CharacterBase{
 		boolean isMana = ((Tactician)tactician).getMana() >= mCost;
 
 		// ひとつでも満たさなければfalse
-		if( !isPosY || !isHand || !isMana ) return false;
+		if( !isPosY || !isHand || !isMana ){
+
+			if( !isMana ){
+				Application.getStringLabel().setType( Define.STRING_TYPE.NOT_MANA );
+				Application.getStringLabel().setPos();
+			}
+
+			return false;
+		}
 
 		// 兵士召喚条件
 		if( mIsSoldier ) return soldierCondition();
@@ -189,8 +199,6 @@ public class DetailBase extends CharacterBase{
 		// 軍師を取得
 		CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( isMy );
 
-		System.out.println( tactician.getPos().x + " " + tactician.getPos().y + " " + tactician.getSize().x + " " + tactician.getSize().y );
-
 		if( Collision.isCollisionSquareDot( tactician.getPos(), tactician.getSize(), mousePos ) ){
 
 			return tactician;
@@ -205,6 +213,12 @@ public class DetailBase extends CharacterBase{
 		return mAbility1 == abi || mAbility2 == abi;
 	}
 
+	// 選択先を設定
+	public void setSelectCharacter( CharacterBase select ){
+
+		mSelectCharacter = select;
+	}
+
 	// ゲッター
 	public NumLabel getCostLabel(){ return mCostLabel; }
 	public NumLabel getAttackLabel(){ return mAttackLabel; }
@@ -215,7 +229,7 @@ public class DetailBase extends CharacterBase{
 	public int getAttack(){ return mAttack; }
 	public int getHP(){ return mHP; }
 	public boolean getIsSoldier(){ return mIsSoldier; }
-	public String getExplanation(){ return mExplanation; }
 	public boolean getIsPlay(){ return mIsPlay; }
+	public CharacterBase getSelectCharacter(){ return mSelectCharacter; }
 
 }

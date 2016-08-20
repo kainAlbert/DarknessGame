@@ -2,21 +2,19 @@ package Application;
 
 import Object.Collision;
 import Object.Character.CharacterBase;
-import Object.Character.StringLabel;
 import Object.Character.Tactician;
 
 public class Turn{
 
 	private CharacterBase mButton;
-	private StringLabel mChangeTurnStr;
 	private boolean mIsMyTurn;
 	private int mTimer;
+	private boolean mIsFirstTurnChange;
 
 	// コンストラクタ
 	public Turn(){
 
 		mButton = new CharacterBase();
-		mChangeTurnStr = new StringLabel();
 	}
 
 	// 初期化
@@ -36,21 +34,17 @@ public class Turn{
 				new GSvector2( Define.TURN_BUTTON_IMAGE_RESIZE.x, Define.TURN_BUTTON_IMAGE_RESIZE.y ),
 				0, 0);
 
-		// ターン変更時文字初期化
-		mChangeTurnStr.initialize(
-				"strFrame",
-				new GSvector2( Define.TURN_STR_IMAGE_POS.x, Define.TURN_STR_IMAGE_POS.y ),
-				Define.TURN_STR_SIZE,
-				new GSvector2( Define.TURN_STR_IMAGE_POS.x, Define.TURN_STR_IMAGE_POS.y ),
-				new GSvector2( Define.TURN_STR_IMAGE_SIZE.x, Define.TURN_STR_IMAGE_SIZE.y ),
-				new GSvector2( Define.TURN_STR_IMAGE_RESIZE.x, Define.TURN_STR_IMAGE_RESIZE.y )
-				);
+		changeButton();
+
+		mIsFirstTurnChange = false;
 	}
 
 	// 開始ターンを設定
 	public void setStartTurn( boolean isMyTurn ){
 
 		mIsMyTurn = isMyTurn;
+
+		changeButton();
 	}
 
 	// 更新
@@ -58,9 +52,11 @@ public class Turn{
 
 		mTimer--;
 
+		if( mTimer <= 0 ) return;
+
 		if( mTimer < Define.TURN_DISTANCE_TIME / 2 || mTimer >= Define.TURN_DISTANCE_TIME - Define.TURN_DISTANCE_TIME / 4 ){
 
-			mChangeTurnStr.movePos( Define.TURN_STR_MOVE, 0 );
+			Application.getStringLabel().movePosX( Define.TURN_STRING_MOVE );
 		}
 	}
 
@@ -72,6 +68,10 @@ public class Turn{
 		GSvector2 mousePos = Application.getObj().getMousePos();
 
 		if( !Collision.isCollisionSquareDot( mButton.getPos(), mButton.getSize(), mousePos ) ) return;
+
+		// ターン変更を送信
+		String msg = Application.getID() + Define.MSG + Define.MSG_CHANGE_TURN;
+		MesgRecvThread.outServer( msg );
 
 		// ターン変更
 		turnChange();
@@ -85,16 +85,13 @@ public class Turn{
 		mTimer = Define.TURN_DISTANCE_TIME;
 
 		// ターン変更文字設定
-		mChangeTurnStr.setStr( mIsMyTurn ? "あなたのターンです" : "ターンを終了します" );
-		mChangeTurnStr.setPos(
-				new GSvector2( Define.WINDOW_SIZE.x + 20, Define.TURN_STR_IMAGE_POS.y + Define.TURN_STR_IMAGE_SIZE.y / 2 ),
-				new GSvector2( Define.WINDOW_SIZE.x, Define.TURN_STR_IMAGE_POS.y ) );
+		changeTurnStr();
 
 		// 終了時の処理
 		if( !mIsMyTurn ){
 
 			// ボタンのリサイズ変更
-			mButton.changeReSize( 2 );
+			changeButton();
 		}
 
 		// 開始時の処理
@@ -103,17 +100,36 @@ public class Turn{
 			// 手札を引く
 			Application.getObj().getCardManager( true ).startTurn();
 
-			// マナ回復
-			((Tactician)Application.getObj().getCharacterManager().getTactician( true )).startTurn();
-
 			// ボタンのリサイズ変更
-			mButton.changeReSize( 0.5 );
+			changeButton();
 		}
+
+		if( mIsFirstTurnChange ){
+
+			// マナ回復
+			((Tactician)Application.getObj().getCharacterManager().getTactician( mIsMyTurn )).startTurn();
+			return;
+		}
+
+		mIsFirstTurnChange = true;
+	}
+
+	// ボタンリサイズ変更
+	private void changeButton(){
+
+		mButton.changeReSizeX( Define.TURN_BUTTON_IMAGE_RESIZE.x * ( mIsMyTurn ? 1 : 2 ) );
+	}
+
+	// ターン変更文字設定
+	private void changeTurnStr(){
+
+		// ターン変更文字設定
+		Application.getStringLabel().setType( mIsMyTurn ? Define.STRING_TYPE.MYTURN : Define.STRING_TYPE.ENDTURN );
+		Application.getStringLabel().setPos( new GSvector2( Define.WINDOW_SIZE.x, Define.TURN_STRING_POS.y ) );
 	}
 
 	// ゲッター
 	public CharacterBase getButton(){ return mButton; }
-	public StringLabel getChangeTurnStr(){ return mChangeTurnStr; }
 	public boolean getIsMyTurn(){ return mIsMyTurn; }
 	public int getTimer(){ return mTimer; }
 

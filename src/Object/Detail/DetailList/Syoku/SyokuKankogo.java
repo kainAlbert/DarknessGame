@@ -7,8 +7,6 @@ import Object.Detail.DetailBase;
 
 public class SyokuKankogo extends DetailBase{
 
-	private CharacterBase mSelectCharacter;
-
 	// コンストラクタ
 	public SyokuKankogo( boolean isMy ) {
 

@@ -8,6 +8,7 @@ import Application.Define;
 import Application.GSvector2;
 import Application.MesgRecvThread;
 import Object.Card.CardManager;
+import Object.Card.EnemyManager;
 import Object.Character.CharacterBase;
 import Object.Character.CharacterManager;
 import Object.Effect.EffectManager;
@@ -19,6 +20,7 @@ public class ObjectManager {
 	private CharacterManager mCharacterManager;
 	private CardManager mMyCardManager;
 	private CardManager mEnemyCardManager;
+	private EnemyManager mEnemyManager;
 	private Collision mCollision;
 	private EffectManager mEffectManager;
 
@@ -35,6 +37,7 @@ public class ObjectManager {
 		mCharacterManager = new CharacterManager();
 		mMyCardManager = new CardManager( true );
 		mEnemyCardManager = new CardManager( false );
+		mEnemyManager = new EnemyManager();
 		mCollision = new Collision();
 		mEffectManager = new EffectManager();
 	}
@@ -51,7 +54,6 @@ public class ObjectManager {
 
 		mCharacterManager.initialize();
 		mMyCardManager.initialize();
-		mEnemyCardManager.initialize();
 		mEffectManager.initialize();
 
 		mIsStart = false;
@@ -86,23 +88,30 @@ public class ObjectManager {
 
 		mStartTimer = 0;
 
-		String msg = "";
-
 		// 軍師を送る
-		msg = Application.getID() + Define.MSG + Define.MSG_SET_TACTICIAN + Define.MSG + Application.getSelectTactician().getSelectID();
-		MesgRecvThread.outServer( msg );
+		String msgTactician = Application.getID() + Define.MSG + Define.MSG_SET_TACTICIAN + Define.MSG + Application.getSelectTactician().getSelectID();
+		MesgRecvThread.outServer( msgTactician );
+
+		if( Application.getID() != 1 ) return;
 
 		// 開始ターンを送る
-		msg = Application.getID() + Define.MSG + Define.MSG_START_TURN + Define.MSG + ( Application.getTurn().getIsMyTurn() ? "true" : "false" );
-		MesgRecvThread.outServer( msg );
+		String msgTurn = Application.getID() + Define.MSG + Define.MSG_START_TURN + Define.MSG + ( Application.getTurn().getIsMyTurn() ? "false" : "true" );
+		MesgRecvThread.outServer( msgTurn );
 
-		mIsSendTactician = true;
+		// 準備中の文字
+		Application.getStringLabel().setType( Define.STRING_TYPE.PREPARATION);
+		Application.getStringLabel().setPos();
 	}
+
+	// 軍師送信完了
+	public void sendTactician(){ mIsSendTactician = true; }
 
 	// 開始処理
 	public void setStart(){
 
 		mIsStart = true;
+
+		Application.getStringLabel().setPos( new GSvector2( -1000, -1000 ) );
 	}
 
 	// マウス位置を設定
@@ -119,6 +128,7 @@ public class ObjectManager {
 
 		return isMy ? mMyCardManager : mEnemyCardManager;
 	}
+	public EnemyManager getEnemyManager(){ return mEnemyManager; }
 	public Collision getCollision(){ return mCollision; }
 	public EffectManager getEffectManager(){ return mEffectManager; }
 	public GSvector2 getMousePos(){ return mMousePos; }

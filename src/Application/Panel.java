@@ -1,6 +1,5 @@
 package Application;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -11,8 +10,8 @@ import javax.swing.JPanel;
 
 import Object.Card.Card;
 import Object.Card.CardExplanation;
+import Object.Card.DeckCard;
 import Object.Character.CharacterBase;
-import Object.Character.StringLabel;
 import Object.Character.Tactician;
 import Object.Detail.DetailBase;
 
@@ -91,9 +90,7 @@ public class Panel extends JPanel{
 		// カード説明描画
 		if( cardExplanation != null ){
 
-			// カード画像
-			draw( g2, ((CardExplanation)cardExplanation).getDetailImage() );
-			// 枠画像
+			// 本体画像
 			draw( g2, cardExplanation );
 			// 数値
 			draw( g2, ((CardExplanation)cardExplanation).getCostLabel() );
@@ -104,13 +101,8 @@ public class Panel extends JPanel{
 		// ポインター描画
 		draw( g2, pointer );
 
-		AffineTransform af = new AffineTransform();
-
-		af.rotate( 0, Define.WINDOW_SIZE.x / 2, Define.WINDOW_SIZE.y / 2 );
-		g2.setTransform(af);
-
-		// ターン変更時文字描画
-		drawStr( g2, Application.getTurn().getChangeTurnStr() );
+		// 文字画像描画
+		draw( g2, Application.getStringLabel() );
 	}
 
 	// カードの描画
@@ -140,6 +132,12 @@ public class Panel extends JPanel{
 			draw( g2, detail.getCostLabel() );
 			draw( g2, detail.getAttackLabel() );
 			draw( g2, detail.getHPLabel() );
+
+			// デッキの数
+			if( card.getType() == Define.CARD_TYPE.DECK.ordinal() ){
+
+				draw( g2, ((DeckCard)card).getNumLabel() );
+			}
 		}
 	}
 
@@ -186,45 +184,9 @@ public class Panel extends JPanel{
 				resizex1, resizey1,
 				resizex2, resizey2,
 				mApp );
-	}
 
-	// 文字描画
-	private void drawStr( Graphics g2, StringLabel s ){
-
-		if( s == null ) return;
-
-		if( s.getStr().equals("") ) return;
-
-		BufferedImage readImage = null;
-
-		try{
-
-			readImage = s.getImage();
-		}catch( Exception e ){
-			e.printStackTrace();
-		}
-
-		if( readImage != null ){
-
-			int posx = (int)s.getImagePos().x;
-			int posy = (int)s.getImagePos().y;
-			int scalex = (int)s.getImageSize().x + posx;
-			int scaley = (int)s.getImageSize().y + posy;
-			int resizex2 = (int)s.getImageReSize().x;
-			int resizey2 = (int)s.getImageReSize().y;
-
-			g2.drawImage(
-					readImage,
-					posx, posy,
-					scalex, scaley,
-					0, 0,
-					resizex2, resizey2,
-					mApp );
-		}
-
-		g2.setFont( new Font( "Meiryo UI", Font.BOLD, s.getStrSize() ));
-
-		g2.drawString( s.getStr(), (int)s.getStrPos().x, (int)s.getStrPos().y );
+		af.rotate( 0, Define.WINDOW_SIZE.x / 2, Define.WINDOW_SIZE.y / 2 );
+		g2.setTransform(af);
 	}
 
 	// 背景描画

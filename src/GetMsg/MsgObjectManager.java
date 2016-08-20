@@ -14,6 +14,8 @@ public class MsgObjectManager {
 
 		if( obj.getIsStart() ) return;
 
+		if( !obj.getIsSendTactician() ) return;
+
 		obj.setStart();
 
 		// 準備完了を知らせる

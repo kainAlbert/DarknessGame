@@ -8,8 +8,6 @@ import Object.Detail.DetailBase;
 
 public class GoSekihekiBigFire extends DetailBase{
 
-	private CharacterBase mSelectCharacter;
-
 	// コンストラクタ
 	public GoSekihekiBigFire( boolean isMy ) {
 
@@ -34,17 +32,32 @@ public class GoSekihekiBigFire extends DetailBase{
 		mSelectCharacter.damage( mAttack + revision );
 	}
 
+
 	// 条件
 	public boolean useCondition( GSvector2 mousePos, CharacterBase tactician, boolean isHand  ){
 
 		// 親クラス条件
 		if( !super.useCondition(mousePos, tactician, isHand) ) return false;
 
+		if( !condition() ){
+
+			Application.getStringLabel().setType( Define.STRING_TYPE.SELECT_ENEMY );
+			Application.getStringLabel().setPos();
+			return false;
+		}
+
+		return true;
+	}
+
+	// 条件
+	private boolean condition(){
+
 		// 選択している敵兵士を取得
 		mSelectCharacter = getSelectSoldier( false );
 
 		if( mSelectCharacter != null ) return true;
 
+		// 選択している軍師を取得
 		mSelectCharacter = getSelectTactician( false );
 
 		return mSelectCharacter != null;

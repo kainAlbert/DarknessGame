@@ -11,7 +11,6 @@ import Object.Effect.PointerEffect;
 public class Card extends CharacterBase{
 
 	protected DetailBase mDetail;
-	protected boolean mIsMy;
 
 	// コンストラクタ
 	public Card( boolean isMy ){
@@ -89,7 +88,7 @@ public class Card extends CharacterBase{
 			pos.x = mPos.x + mSize.x;
 		}
 
-		Application.getObj().getCardManager( true ).createExplanation( mDetail.getCardID(), pos );
+		Application.getObj().getCardManager( true ).createExplanation( mDetail.getCardID(), pos, 1 );
 	}
 
 	// 選択
@@ -132,5 +131,4 @@ public class Card extends CharacterBase{
 
 	// ゲッター
 	public DetailBase getDetail(){ return mDetail; }
-	protected boolean getIsMy(){ return mIsMy; }
 }

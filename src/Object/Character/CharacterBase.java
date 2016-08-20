@@ -6,7 +6,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import Application.Application;
 import Application.GSvector2;
+import Object.Effect.DamageCareEffect;
 
 public class CharacterBase {
 
@@ -24,6 +26,8 @@ public class CharacterBase {
 	protected int mType;
 	protected boolean mIsSelect;
 	protected int mDamageTimer;
+	protected boolean mIsMy;
+	protected int mFieldNumber;
 
 	// コンストラクタ
 	public CharacterBase(){
@@ -57,6 +61,7 @@ public class CharacterBase {
 		mType = type;
 		mIsSelect = false;
 		mDamageTimer = 0;
+		mFieldNumber = 0;
 	}
 
 	// 更新
@@ -86,23 +91,39 @@ public class CharacterBase {
 	// 衝突
 	public void collision(){}
 
+	// 死亡させる
+	public void doDead(){ mIsDead = true; }
+
 	// 死亡処理
 	public void finish(){}
 
 	// ダメージ
-	public void damage( int d ){}
+	public void damage( int d ){
+
+		CharacterBase e = new DamageCareEffect( new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 ), d, true );
+
+		Application.getObj().getEffectManager().addEffectList( e );
+	}
 
 	// 回復
-	public void care( int c ){}
+	public void care( int c ){
+
+		CharacterBase e = new DamageCareEffect( new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 ), c, false );
+
+		Application.getObj().getEffectManager().addEffectList( e );
+	}
 
 	// パワー変更
 	public void powerChange( int changePower ){}
 
 	// リサイズ変更
-	public void changeReSize( double factor ){
+	public void changeReSizeX( double reSizeX ){
 
-		mReSize.x *= factor;
+		mReSize.x = reSizeX;
 	}
+
+	// フィールド番号設定
+	public void setFieldNumber( int number ){ mFieldNumber = number; }
 
 	// ゲッター
 	public BufferedImage getImage(){ return mImage; }
@@ -118,5 +139,7 @@ public class CharacterBase {
 	public int getType(){ return mType; }
 	public boolean getIsSelect(){ return mIsSelect; }
 	public int getDamageTimer(){ return mDamageTimer; }
+	public boolean getIsMy(){ return mIsMy; }
+	public int getFieldNumber(){ return mFieldNumber; }
 
 }

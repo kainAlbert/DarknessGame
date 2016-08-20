@@ -6,8 +6,6 @@ import Object.Detail.DetailBase;
 
 public class SyokuGigantic extends DetailBase{
 
-	private CharacterBase mSelectCharacter;
-
 	// コンストラクタ
 	public SyokuGigantic( boolean isMy ) {
 

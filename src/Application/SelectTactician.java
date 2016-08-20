@@ -53,7 +53,11 @@ public class SelectTactician {
 
 				mSelectID = i;
 
+				Application.getStringLabel().setType( Define.STRING_TYPE.LOAD);
+				Application.getStringLabel().setPos();
+
 				Application.getObj().getCharacterManager().setMyTactician( id[i] );
+
 				return;
 			}
 		}

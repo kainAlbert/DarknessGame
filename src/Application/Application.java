@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import Object.ObjectManager;
+import Object.Character.StringLabel;
 
 public class Application extends JFrame implements MouseListener,MouseMotionListener {
 	/**
@@ -21,6 +22,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	public static ObjectManager mObj;		// オブジェクト管理者
 	public static SelectTactician mSelectTactician;
 	public static Turn mTurn;
+	public static StringLabel mStringLabel;
 	public static int mID;								// プレイヤーID
 
 	public Application() {
@@ -47,6 +49,9 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		// オブジェクト管理者生成
 		mObj = new ObjectManager( this );
+
+		// 文字画像生成
+		mStringLabel = new StringLabel();
 
 		// 軍師選択
 		mSelectTactician = new SelectTactician();
@@ -81,6 +86,9 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		// アプリケーションを生成
 		Application app = new Application();
 
+		// 文字画像初期化
+		mStringLabel.initialize();
+
 		// 画面表示
 		app.setVisible(true);
 
@@ -110,6 +118,7 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 			// 更新
 			mTurn.update();
 			mObj.update();
+			mStringLabel.update();
 
 			// 再描画
 			app.repaint();
@@ -201,20 +210,6 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		mObj.setMousePos( e.getPoint() );
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.DRAG );
-
-		//		System.out.println(theMLoc);//デバッグ（確認用）に，取得したマウスの位置をコンソールに出力する
-		//		Point theBtnLocation = theButton.getLocation();//クリックしたボタンを座標を取得する
-		//		theBtnLocation.x += theMLoc.x-15;//ボタンの真ん中当たりにマウスカーソルがくるように補正する
-		//		theBtnLocation.y += theMLoc.y-15;//ボタンの真ん中当たりにマウスカーソルがくるように補正する
-		//		theButton.setLocation(theBtnLocation);//マウスの位置にあわせてオブジェクトを移動する
-		//
-		//		//送信情報を作成する（受信時には，この送った順番にデータを取り出す．スペースがデータの区切りとなる）
-		//		String msg = "MOVE"+" "+theArrayIndex+" "+theBtnLocation.x+" "+theBtnLocation.y;
-		//
-		//		//サーバに情報を送る
-		//		MesgRecvThread.outServer(msg);
-		//
-		//		repaint();//オブジェクトの再描画を行う
 	}
 
 	//マウスがオブジェクト上で移動したときの処理
@@ -231,5 +226,6 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	public static ObjectManager getObj(){ return mObj; }
 	public static SelectTactician getSelectTactician(){ return mSelectTactician; }
 	public static Turn getTurn(){ return mTurn; }
+	public static StringLabel getStringLabel(){ return mStringLabel; }
 	public static int getID(){ return mID; }
 }

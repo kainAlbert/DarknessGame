@@ -72,7 +72,7 @@ public class CardManager {
 		for( int i=0; i<mCardList.size(); i++ ){
 
 			// デッキ
-			if( mCardList.get(i).getType() == Define.CARD_TYPE.DECK.ordinal() ){
+			if(  mCardList.get(i).getType() == Define.CARD_TYPE.DECK.ordinal() ){
 
 				((DeckCard)mCardList.get(i)).drawCard();
 			}
@@ -168,6 +168,8 @@ public class CardManager {
 				((Card)mCardList.get(i)).sortPos( new GSvector2( Define.FIELD_CARD_POSX[ index ], posY ) );
 			}
 
+			mCardList.get(i).setFieldNumber( index );
+
 			index++;
 
 			if( index >= Define.MAX_FIELD_CARD ) return;
@@ -251,6 +253,19 @@ public class CardManager {
 		return null;
 	}
 
+	// 指定したID&タイプのカードを返す
+	public CharacterBase searchIDType( int cardID, Define.CARD_TYPE type ){
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			DetailBase detail = ((Card)mCardList.get(i)).getDetail();
+
+			if( detail.getCardID() == cardID && mCardList.get(i).getType() == type.ordinal() ) return mCardList.get(i);
+		}
+
+		return null;
+	}
+
 	// マウスの挙動
 	public void mouseMove( Define.MOUSE_STATUS_TYPE type ){
 
@@ -305,7 +320,7 @@ public class CardManager {
 	}
 
 	// カード説明を生成
-	public void createExplanation( int cardID, GSvector2 pos ){
+	public void createExplanation( int cardID, GSvector2 pos, double factor ){
 
 		if( mExplanation != null ){
 
@@ -315,7 +330,7 @@ public class CardManager {
 
 		// 説明を生成
 		mExplanation = new CardExplanation();
-		((CardExplanation)mExplanation).initialize( cardID, pos );
+		((CardExplanation)mExplanation).initialize( cardID, pos, factor );
 	}
 
 	// カードリストに追加

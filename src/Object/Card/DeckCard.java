@@ -8,11 +8,13 @@ import Application.Define;
 import Application.GSvector2;
 import Application.MesgRecvThread;
 import Object.Character.CharacterBase;
+import Object.Character.NumLabel;
 import Object.Character.Tactician;
 import Object.Detail.DetailBase;
 
 public class DeckCard extends Card{
 
+	private NumLabel mNumLabel;
 	private List<CharacterBase> mDeckList;
 	private boolean mIsStartHand;
 
@@ -20,6 +22,8 @@ public class DeckCard extends Card{
 	public DeckCard( boolean isMy ){
 
 		super( isMy );
+
+		mNumLabel = new NumLabel();
 
 		mDeckList = new ArrayList<CharacterBase>();
 
@@ -41,6 +45,8 @@ public class DeckCard extends Card{
 				Define.CARD_TYPE.DECK.ordinal()
 				);
 
+		mNumLabel.initialize( Define.CARD_NUM_TYPE.ATTACK.ordinal(), Define.CARD_NUM_IMAGE_SIZE );
+
 		CharacterBase t = Application.getObj().getCharacterManager().getTactician( mIsMy );
 
 		mDeckList = DeckReader.readDeck( ((Tactician)t).getID(), mIsMy, new GSvector2( mPos.x, mPos.y ) );
@@ -50,6 +56,8 @@ public class DeckCard extends Card{
 
 	// 更新
 	public void update(){
+
+		mNumLabel.updateNum( mDeckList.size(), new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 - Define.CARD_NUM_IMAGE_SIZE / 2 ) );
 
 		if( mIsStartHand || !mIsMy ) return;
 
@@ -79,7 +87,7 @@ public class DeckCard extends Card{
 		DetailBase d = ((Card)card).getDetail();
 		int cardID = d.getCardID();
 
-		// サーバーに送信
+		// カードを引くを送信
 		String msg = Application.getID() + Define.MSG + Define.MSG_DRAW_CARD + Define.MSG + cardID;
 		MesgRecvThread.outServer( msg );
 	}
@@ -97,6 +105,8 @@ public class DeckCard extends Card{
 			Application.getObj().getCardManager( mIsMy ).addCardList( card );
 
 			mDeckList.remove(i);
+
+			return;
 		}
 	}
 
@@ -113,5 +123,6 @@ public class DeckCard extends Card{
 	public void drag(){}
 
 	// ゲッター
+	public NumLabel getNumLabel(){ return mNumLabel; }
 	public List<CharacterBase> getList(){ return mDeckList; }
 }

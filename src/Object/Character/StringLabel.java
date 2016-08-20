@@ -1,82 +1,66 @@
 package Object.Character;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
+import Application.Define;
 import Application.GSvector2;
 
-public class StringLabel {
+public class StringLabel extends CharacterBase{
 
-	private BufferedImage mImage;
-	private String mStr;
-	private GSvector2 mStrPos;
-	private int mStrSize;
-	private GSvector2 mImagePos;
-	private GSvector2 mImageSize;
-	private GSvector2 mImageReSize;
+	private int mTimer;
 
 	// コンストラクタ
 	public StringLabel(){
 
-		mStr = "";
-		mStrPos = new GSvector2();
-		mStrSize = 12;
-		mImagePos = new GSvector2();
-		mImageSize = new GSvector2();
-		mImageReSize = new GSvector2();
+		super();
 	}
 
 	// 初期化
-	public void initialize( String fileName, GSvector2 strPos, int strSize, GSvector2 imagePos, GSvector2 imageSize, GSvector2 imageReSize ){
+	public void initialize(){
 
-		// 画像読み込み
-		if( !fileName.equals("") ){
-			try{
-				mImage = ImageIO.read(new File("img/" + fileName + ".png"));
-			}catch( IOException e ){
-				e.printStackTrace();
-			}
-		}
+		super.initialize(
+				Define.STRING_FILE_NAME,
+				new GSvector2( -1000, -1000 ),
+				new GSvector2( Define.STRING_SIZE.x, Define.STRING_SIZE.y ),
+				new GSvector2( Define.STRING_RESIZE.x, Define.STRING_RESIZE.y ),
+				0, 0 );
 
-		mStr = "";
-		mStrPos = strPos;
-		mStrSize = strSize;
-		mImagePos = imagePos;
-		mImageSize = imageSize;
-		mImageReSize = imageReSize;
+		mTimer = 0;
 	}
 
-	// 文字設定
-	public void setStr( String str ){
+	// 更新
+	public void update(){
 
-		mStr = str;
+		if( mTimer <= 0 ) return;
+
+		mTimer--;
+
+		if( mTimer <= 0 ) mPos.x = -1000;
 	}
 
-	// 位置を設定
-	public void setPos( GSvector2 strPos, GSvector2 imagePos ){
+	// タイプ設定
+	public void setType( Define.STRING_TYPE type ){
 
-		mStrPos = strPos;
-		mImagePos = imagePos;
+		mReSize.y = Define.STRING_RESIZE.y * ( type.ordinal() + 1 );
 	}
 
 	// 位置を移動
-	public void movePos( double moveX, double moveY ){
+	public void movePosX( double moveX ){
 
-		mStrPos.x += moveX;
-		mStrPos.y += moveY;
-		mImagePos.x += moveX;
-		mImagePos.y += moveY;
+		mPos.x += moveX;
 	}
 
-	// ゲッター
-	public BufferedImage getImage(){ return mImage; }
-	public String getStr(){ return mStr; }
-	public GSvector2 getStrPos(){ return mStrPos; }
-	public int getStrSize(){ return mStrSize; }
-	public GSvector2 getImagePos(){ return mImagePos; }
-	public GSvector2 getImageSize(){ return mImageSize; }
-	public GSvector2 getImageReSize(){ return mImageReSize; }
+	// 位置を設定
+	public void setPos( GSvector2 pos ){
+
+		mPos = pos;
+
+		mTimer = Define.STRING_TIME;
+	}
+
+	// 真ん中に位置を設定
+	public void setPos(){
+
+		mPos = new GSvector2( Define.WINDOW_SIZE.x / 2 - mSize.x / 2, Define.WINDOW_SIZE.y / 2 - mSize.y / 2 );
+
+		mTimer = Define.STRING_TIME;
+	}
 }

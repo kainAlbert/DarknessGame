@@ -3,9 +3,9 @@ package Object.Card;
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
+import Application.MesgRecvThread;
 import Object.Collision;
 import Object.Character.CharacterBase;
-import Object.Character.Tactician;
 import Object.Detail.DetailBase;
 import Object.Effect.AttackEffect;
 
@@ -27,8 +27,10 @@ public class SoldierCard extends Card{
 
 		super.initialize();
 
+		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
+
 		mPos = pos;
-		mType = mIsMy ? Define.CARD_TYPE.MYFIELD.ordinal() : Define.CARD_TYPE.ENEMYFIELD.ordinal();
+		mType = type.ordinal();
 
 		mTargetPos = new GSvector2();
 		mTargetSize = new GSvector2();
@@ -38,6 +40,13 @@ public class SoldierCard extends Card{
 		mDetail = detail;
 
 		super.initializeDetail( detail.getCardID() );
+
+		boolean isCharge = mDetail.isAbility( Define.CARD_ABILITY.CHARGE );
+
+		CharacterBase kakuka = Application.getObj().getCardManager( mIsMy ).searchIDType( Define.CARD_ID.KAKUKA.ordinal(), type);
+
+		if( isCharge || kakuka != null ) mIsAttack = false;
+
 	}
 
 	// 更新
@@ -121,25 +130,30 @@ public class SoldierCard extends Card{
 	// 敵クリーチャーに攻撃
 	private boolean attackEnemySoldier( GSvector2 mousePos ){
 
+		CardManager cm = Application.getObj().getCardManager( !mIsMy );
+
 		// マウスの位置に敵がいるか
-		int enemyID = Application.getObj().getCardManager( !mIsMy ).searchPosType( Define.CARD_TYPE.ENEMYFIELD, new GSvector2( mousePos.x, mousePos.y ) );
+		int enemyID = cm.searchPosType( Define.CARD_TYPE.ENEMYFIELD, new GSvector2( mousePos.x, mousePos.y ) );
 
 		// いなければ終了
 		if( enemyID == -1 ) return false;
 
-		CharacterBase enemy = Application.getObj().getCardManager( !mIsMy ).searchID( enemyID );
+		CharacterBase enemy = cm.searchID( enemyID );
 
-		// ダメージ交換
-		((SoldierCard)enemy).damage( mDetail.getAttack() );
-		damage( ((Card)enemy).getDetail().getAttack() );
+		// 敵のアビリティに挑発がなければ
+		if( !((Card)enemy).getDetail().isAbility( Define.CARD_ABILITY.TAUNT ) ){
 
-		mAttackTimer = Define.ATTACK_TIME;
+			// 戦場に他の挑発がいれば攻撃できない
+			int tauntNum = cm.searchAbilityNum( Define.CARD_ABILITY.TAUNT, Define.CARD_TYPE.ENEMYFIELD );
 
-		mIsAttack = true;
+			if( tauntNum > 0 ) return false;
+		}
 
-		mTargetPos = new GSvector2( enemy.getPos().x, enemy.getPos().y );
+		// 攻撃
+		attackEnemy( enemy );
 
-		mTargetSize = new GSvector2( enemy.getSize().x, enemy.getSize().y );
+		String msg = Application.getID() + Define.MSG + Define.MSG_ATTACK + Define.MSG + mFieldNumber + Define.MSG + enemy.getFieldNumber();
+		MesgRecvThread.outServer( msg );
 
 		return true;
 	}
@@ -152,15 +166,31 @@ public class SoldierCard extends Card{
 		// マウス位置に軍師がいなければ終了
 		if( !Collision.isCollisionSquareDot( t.getPos(), t.getSize(), mousePos ) ) return;
 
+		// 攻撃
+		attackEnemy( t );
+
+		String msg = Application.getID() + Define.MSG + Define.MSG_ATTACK + Define.MSG + mFieldNumber + Define.MSG + t.getFieldNumber();
+		MesgRecvThread.outServer( msg );
+	}
+
+	// 敵に攻撃
+	public void attackEnemy( CharacterBase enemy ){
+
+		// ダメージ交換
+		enemy.damage( mDetail.getAttack() );
+
+		if( enemy.getType() != Define.CARD_TYPE.NONE.ordinal() ){
+
+			damage( ((Card)enemy).getDetail().getAttack() );
+		}
+
 		mAttackTimer = Define.ATTACK_TIME;
 
 		mIsAttack = true;
 
-		mTargetPos = new GSvector2( t.getPos().x, t.getPos().y );
+		mTargetPos = new GSvector2( enemy.getPos().x, enemy.getPos().y );
 
-		mTargetSize = new GSvector2( t.getSize().x, t.getSize().y );
-
-		((Tactician)Application.getObj().getCharacterManager().getTactician( !mIsMy )).damage( mDetail.getAttack() );
+		mTargetSize = new GSvector2( enemy.getSize().x, enemy.getSize().y );
 	}
 
 	// ドラッグ
@@ -181,12 +211,16 @@ public class SoldierCard extends Card{
 		mDetail.damage( d );
 
 		mDamageTimer = Define.DAMAGE_TIME;
+
+		super.damage(d);
 	}
 
 	// 回復
 	public void care( int c ){
 
 		mDetail.care( c );
+
+		super.care(c);
 	}
 
 	// パワー変更

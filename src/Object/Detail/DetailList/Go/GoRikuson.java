@@ -27,6 +27,8 @@ public class GoRikuson extends DetailBase{
 	// プレイ
 	public void play(){
 
+		if( !mIsMy ) return;
+
 		if( mIsPlay ) return;
 
 		mPlayTimer--;
@@ -36,7 +38,7 @@ public class GoRikuson extends DetailBase{
 		mIsPlay = true;
 
 		// タイプ取得
-		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
+		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYHAND : Define.CARD_TYPE.ENEMYHAND;
 
 		// カード管理者取得
 		CardManager cm = Application.getObj().getCardManager( mIsMy );

@@ -3,6 +3,7 @@ package Object.Card;
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
+import Application.MesgRecvThread;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
 import Object.Detail.DetailReader;
@@ -65,6 +66,14 @@ public class HandCard extends Card{
 		mType = mIsMy ? Define.CARD_TYPE.MYHAND.ordinal() : Define.CARD_TYPE.ENEMYHAND.ordinal();
 	}
 
+	// クリック
+	public void click(){
+
+		if( !mIsMy ) return;
+
+		super.click();
+	}
+
 	// 選択した時
 	public void select(){
 
@@ -100,17 +109,18 @@ public class HandCard extends Card{
 		// 兵士召喚
 		if( mDetail.getIsSoldier() ){
 
-			putCreature( mousePos, tactician );
+			putCreature();
 		}
 
+		// 呪文
 		if( !mDetail.getIsSoldier() ){
 
-			mDetail.play();
+			playSpell();
 		}
 	}
 
 	// フィールドにカードを置く
-	private void putCreature( GSvector2 mousePos, CharacterBase tactician ){
+	private void putCreature(){
 
 		// フィールドカードを生成
 		CharacterBase card = new SoldierCard( mIsMy );
@@ -122,6 +132,37 @@ public class HandCard extends Card{
 
 		// リストに追加
 		Application.getObj().getCardManager( mIsMy ).addCardList( card );
+
+		sendPlayCard( Define.MSG_PUT_HANDCARD );
+	}
+
+	// 呪文を使用
+	private void playSpell(){
+
+		mDetail.play();
+
+		sendPlayCard( Define.MSG_PLAY_SPELL );
+	}
+
+	// カードの使用を送信
+	private void sendPlayCard( String msgType ){
+
+		CharacterBase selectCharacter = mDetail.getSelectCharacter();
+
+		// 選択先のID
+		String fieldNumber = "null";
+
+		// 選択先の敵か味方か
+		String isMy = "null";
+
+		if( selectCharacter != null ){
+
+			fieldNumber = String.valueOf( selectCharacter.getFieldNumber() );
+			isMy = selectCharacter.getIsMy() ? "false" : "true";
+		}
+
+		String msg = Application.getID() + Define.MSG + msgType + Define.MSG + mDetail.getCardID() + Define.MSG + fieldNumber + Define.MSG + isMy;
+		MesgRecvThread.outServer( msg );
 	}
 
 	// ドラッグ

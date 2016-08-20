@@ -8,8 +8,6 @@ import Object.Detail.DetailBase;
 
 public class GoLightning extends DetailBase{
 
-	private CharacterBase mSelectCharacter;
-
 	// コンストラクタ
 	public GoLightning( boolean isMy ) {
 
@@ -43,6 +41,11 @@ public class GoLightning extends DetailBase{
 		// 選択している敵兵士を取得
 		mSelectCharacter = getSelectSoldier( false );
 
-		return mSelectCharacter != null;
+		if( mSelectCharacter != null ) return true;
+
+		Application.getStringLabel().setType( Define.STRING_TYPE.SELECT_ENEMY_SOLDIER );
+		Application.getStringLabel().setPos();
+
+		return false;
 	}
 }

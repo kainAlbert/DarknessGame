@@ -1,12 +1,12 @@
 package Object.Detail.DetailList.Go;
 
+import Application.Application;
+import Application.Define;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Detail.DetailBase;
 
 public class GoTerror extends DetailBase{
-
-	private CharacterBase mSelectCharacter;
 
 	// コンストラクタ
 	public GoTerror( boolean isMy ) {
@@ -35,6 +35,11 @@ public class GoTerror extends DetailBase{
 		// 選択している敵兵士を取得
 		mSelectCharacter = getSelectSoldier( false );
 
-		return mSelectCharacter != null;
+		if( mSelectCharacter != null ) return true;
+
+		Application.getStringLabel().setType( Define.STRING_TYPE.SELECT_ENEMY_SOLDIER );
+		Application.getStringLabel().setPos();
+
+		return false;
 	}
 }

@@ -8,10 +8,9 @@ public class DetailStructure {
 	public int mCost;
 	public int mAttack;
 	public int mHP;
-	public String mExplanation;
 
 	// コンストラクタ
-	public DetailStructure( int cardID, String name, boolean isSoldier, int cost, int attack, int hp, String explanation ){
+	public DetailStructure( int cardID, String name, boolean isSoldier, int cost, int attack, int hp ){
 
 		mCardID = cardID;
 		mName = name;
@@ -19,7 +18,6 @@ public class DetailStructure {
 		mCost = cost;
 		mAttack = attack;
 		mHP = hp;
-		mExplanation = explanation;
 	}
 
 	public DetailStructure() {
