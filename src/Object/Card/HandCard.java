@@ -40,10 +40,24 @@ public class HandCard extends Card{
 
 		super.update();
 
+		// カードリサイズ変更
+		changeReSize();
+
 		// 手札状態でない時の処理
 		if( mIsHand ) return;
 
 		updateNotHand();
+	}
+
+	// カードリサイズ変更
+	private void changeReSize(){
+
+		// 味方のみ
+		if( !mIsMy ) return;
+
+		CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( true );
+
+		mReSize.x = Define.CARD_RESIZE.x * ( ((Tactician)tactician).getMana() < mDetail.getCost() ? 1 : 2 );
 	}
 
 	// 手札状態でない時の処理

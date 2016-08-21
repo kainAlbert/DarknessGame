@@ -53,7 +53,7 @@ public class Panel extends JPanel{
 		if( !selectTactician.getIsSelect() ){
 
 			// 背景描画
-			drawBack(g2);
+			draw( g2, selectTactician.getBack() );
 
 			for( int i=0; i<4; i++ ){
 

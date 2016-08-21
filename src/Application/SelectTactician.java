@@ -6,6 +6,7 @@ import Object.Character.CharacterBase;
 public class SelectTactician {
 
 	private CharacterBase[] mTactician;
+	private CharacterBase mBack;
 	private boolean mIsSelect;
 	private int mSelectID;
 
@@ -15,10 +16,10 @@ public class SelectTactician {
 		mTactician = new CharacterBase[4];
 
 		GSvector2[] pos = {
-				new GSvector2( ( Define.WINDOW_SIZE.x / 2 - Define.TACTICIAN_SIZE.x ) / 2, ( Define.WINDOW_SIZE.y / 2 - Define.TACTICIAN_SIZE.y ) / 2 ),
-				new GSvector2( ( Define.WINDOW_SIZE.x / 2 - Define.TACTICIAN_SIZE.x ) / 2 + Define.WINDOW_SIZE.x / 2, ( Define.WINDOW_SIZE.y / 2 - Define.TACTICIAN_SIZE.y ) / 2 ),
-				new GSvector2( ( Define.WINDOW_SIZE.x / 2 - Define.TACTICIAN_SIZE.x ) / 2, ( Define.WINDOW_SIZE.y / 2 - Define.TACTICIAN_SIZE.y ) / 2 + Define.WINDOW_SIZE.y / 2 ),
-				new GSvector2( ( Define.WINDOW_SIZE.x / 2 - Define.TACTICIAN_SIZE.x ) / 2 + Define.WINDOW_SIZE.x / 2, ( Define.WINDOW_SIZE.y / 2 - Define.TACTICIAN_SIZE.y ) / 2 + Define.WINDOW_SIZE.y / 2 )
+				new GSvector2( ( Define.WINDOW_SIZE.x / 2 - Define.TACTICIAN_SIZE.x ) / 2, Define.WINDOW_SIZE.y / 2 - Define.TACTICIAN_SIZE.y - 50 ),
+				new GSvector2( ( Define.WINDOW_SIZE.x / 2 - Define.TACTICIAN_SIZE.x ) / 2 + Define.WINDOW_SIZE.x / 2, Define.WINDOW_SIZE.y / 2 - Define.TACTICIAN_SIZE.y - 50 ),
+				new GSvector2( ( Define.WINDOW_SIZE.x / 2 - Define.TACTICIAN_SIZE.x ) / 2, Define.WINDOW_SIZE.y / 2 + 30 ),
+				new GSvector2( ( Define.WINDOW_SIZE.x / 2 - Define.TACTICIAN_SIZE.x ) / 2 + Define.WINDOW_SIZE.x / 2, Define.WINDOW_SIZE.y / 2 + 30 )
 		};
 
 		for( int i=0; i<mTactician.length; i++ ){
@@ -31,6 +32,14 @@ public class SelectTactician {
 					new GSvector2( Define.TACTICIAN_RESIZE.x, Define.TACTICIAN_RESIZE.y ),
 					0, 0);
 		}
+
+		mBack = new CharacterBase();
+		mBack.initialize(
+				"selectTactician",
+				new GSvector2(),
+				new GSvector2( Define.WINDOW_SIZE.x, Define.WINDOW_SIZE.y ),
+				new GSvector2( Define.WINDOW_SIZE.x, Define.WINDOW_SIZE.y ),
+				0, 0 );
 
 		mIsSelect = false;
 	}
@@ -65,6 +74,7 @@ public class SelectTactician {
 
 	// ゲッター
 	public CharacterBase getTactician( int i ){ return mTactician[i]; }
+	public CharacterBase getBack(){ return mBack; }
 	public boolean getIsSelect(){ return mIsSelect; }
 	public int getSelectID(){ return mSelectID; }
 }

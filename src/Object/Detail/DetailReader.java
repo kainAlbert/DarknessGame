@@ -6,6 +6,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import Application.Define;
+import Application.DefineCardID;
+import Object.Detail.DetailList.Gi.GiAblation;
+import Object.Detail.DetailList.Gi.GiCallCharge;
+import Object.Detail.DetailList.Gi.GiHoga;
+import Object.Detail.DetailList.Gi.GiKakoton;
+import Object.Detail.DetailList.Gi.GiKakuka;
+import Object.Detail.DetailList.Gi.GiOi;
+import Object.Detail.DetailList.Gi.GiShooting;
+import Object.Detail.DetailList.Gi.GiSoso;
+import Object.Detail.DetailList.Gi.GiTyoko;
+import Object.Detail.DetailList.Gi.GiWeaken;
 import Object.Detail.DetailList.Go.GoFireBall;
 import Object.Detail.DetailList.Go.GoFlames;
 import Object.Detail.DetailList.Go.GoIntellect;
@@ -16,6 +27,16 @@ import Object.Detail.DetailList.Go.GoSekihekiBigFire;
 import Object.Detail.DetailList.Go.GoSonsyoko;
 import Object.Detail.DetailList.Go.GoSyuyu;
 import Object.Detail.DetailList.Go.GoTerror;
+import Object.Detail.DetailList.Gun.GunCatastrophe;
+import Object.Detail.DetailList.Gun.GunEnsyo;
+import Object.Detail.DetailList.Gun.GunGensi;
+import Object.Detail.DetailList.Gun.GunKojun;
+import Object.Detail.DetailList.Gun.GunKosonsan;
+import Object.Detail.DetailList.Gun.GunRiju;
+import Object.Detail.DetailList.Gun.GunRyohu;
+import Object.Detail.DetailList.Gun.GunSyukuyu;
+import Object.Detail.DetailList.Gun.GunTyokaku;
+import Object.Detail.DetailList.Gun.GunTyosen;
 import Object.Detail.DetailList.Other.OtherArrowShot;
 import Object.Detail.DetailList.Other.OtherHigherCharge;
 import Object.Detail.DetailList.Other.OtherHigherInfantry;
@@ -36,6 +57,10 @@ import Object.Detail.DetailList.Syoku.SyokuNature;
 import Object.Detail.DetailList.Syoku.SyokuReinforcement;
 import Object.Detail.DetailList.Syoku.SyokuRyubi;
 import Object.Detail.DetailList.Syoku.SyokuTyohi;
+import Object.Detail.DetailList.Tactician.TacticianSibai;
+import Object.Detail.DetailList.Tactician.TacticianSonken;
+import Object.Detail.DetailList.Tactician.TacticianSyokaturyo;
+import Object.Detail.DetailList.Tactician.TacticianTotaku;
 
 public class DetailReader {
 
@@ -100,72 +125,124 @@ public class DetailReader {
 		switch( cardID ){
 
 		// 呉
-		case 1:
+		case DefineCardID.SYUYU:
 			return new GoSyuyu( isMy );
-		case 2:
+		case DefineCardID.RIKUSON:
 			return new GoRikuson( isMy );
-		case 3:
+		case DefineCardID.SONSYOKO:
 			return new GoSonsyoko( isMy );
-		case 4:
+		case DefineCardID.JOHUJIN:
 			return new GoJohujin( isMy );
-		case 5:
+		case DefineCardID.LIGHTNING:
 			return new GoLightning( isMy );
-		case 6:
+		case DefineCardID.FIREBALL:
 			return new GoFireBall( isMy );
-		case 7:
+		case DefineCardID.FLAMES:
 			return new GoFlames( isMy );
-		case 8:
+		case DefineCardID.SEKIHEKI_LARGE_FIRE:
 			return new GoSekihekiBigFire( isMy );
-		case 9:
+		case DefineCardID.INTELLECT:
 			return new GoIntellect( isMy );
-		case 10:
+		case DefineCardID.TERROR:
 			return new GoTerror( isMy );
 
 		// 蜀
-		case 11:
+		case DefineCardID.RYUBI:
 			return new SyokuRyubi( isMy );
-		case 12:
+		case DefineCardID.KANU:
 			return new SyokuKanu( isMy );
-		case 13:
+		case DefineCardID.TYOHI:
 			return new SyokuTyohi( isMy );
-		case 14:
+		case DefineCardID.KOTYU:
 			return new SyokuKotyu( isMy );
-		case 15:
+		case DefineCardID.GIEN:
 			return new SyokuGien( isMy );
-		case 16:
+		case DefineCardID.KANGINPEI:
 			return new SyokuKanginpei( isMy );
-		case 17:
+		case DefineCardID.KANKOGO:
 			return new SyokuKankogo( isMy );
-		case 18:
+		case DefineCardID.REINFORCEMENT:
 			return new SyokuReinforcement( isMy );
-		case 19:
+		case DefineCardID.GIGANTIC:
 			return new SyokuGigantic( isMy );
-		case 20:
+		case DefineCardID.NATURE:
 			return new SyokuNature( isMy );
 
+		// 魏
+		case DefineCardID.SOSO:
+			return new GiSoso( isMy );
+		case DefineCardID.KAKOTON:
+			return new GiKakoton( isMy );
+		case DefineCardID.TYOKO:
+			return new GiTyoko( isMy );
+		case DefineCardID.KAKUKA:
+			return new GiKakuka( isMy );
+		case DefineCardID.HOGA:
+			return new GiHoga( isMy );
+		case DefineCardID.OI:
+			return new GiOi( isMy );
+		case DefineCardID.WEAKEN:
+			return new GiWeaken( isMy );
+		case DefineCardID.CALL_CHARGE:
+			return new GiCallCharge( isMy );
+		case DefineCardID.SHOOTING:
+			return new GiShooting( isMy );
+		case DefineCardID.ABLATION:
+			return new GiAblation( isMy );
+
+		// 群
+		case DefineCardID.RYOHU:
+			return new GunRyohu( isMy );
+		case DefineCardID.TYOKAKU:
+			return new GunTyokaku( isMy );
+		case DefineCardID.KOJUN:
+			return new GunKojun( isMy );
+		case DefineCardID.RIJU:
+			return new GunRiju( isMy );
+		case DefineCardID.SYUKUYU:
+			return new GunSyukuyu( isMy );
+		case DefineCardID.GENSI:
+			return new GunGensi( isMy );
+		case DefineCardID.KOSONSAN:
+			return new GunKosonsan( isMy );
+		case DefineCardID.ENSYO:
+			return new GunEnsyo( isMy );
+		case DefineCardID.TYOSEN:
+			return new GunTyosen( isMy );
+		case DefineCardID.CATASTROPHE:
+			return new GunCatastrophe( isMy );
+
 		// 共通
-		case 41:
+		case DefineCardID.NOVICE_INFANTRY:
 			return new OtherNoviceInfantry( isMy );
-		case 42:
+		case DefineCardID.MIDIUM_INFANTRY:
 			return new OtherMidiumInfantry( isMy );
-		case 43:
+		case DefineCardID.HIGHER_INFANTRY:
 			return new OtherHigherInfantry( isMy );
-		case 44:
+		case DefineCardID.NOVICE_CHARGE:
 			return new OtherNoviceCharge( isMy );
-		case 45:
+		case DefineCardID.MIDIUM_CHARGE:
 			return new OtherMidiumCharge( isMy );
-		case 46:
+		case DefineCardID.HIGHER_CHARGE:
 			return new OtherHigherCharge( isMy );
-		case 47:
+		case DefineCardID.NOVICE_SPEAR:
 			return new OtherNoviceSpear( isMy );
-		case 48:
+		case DefineCardID.MIDIUM_SPEAR:
 			return new OtherMidiumSpear( isMy );
-		case 49:
+		case DefineCardID.HIGHER_SPEAR:
 			return new OtherHigherSpear( isMy );
-		case 50:
+		case DefineCardID.ARROW_SHOT:
 			return new OtherArrowShot( isMy );
 
 		// 軍師
+		case DefineCardID.TACTICIAN_SONKEN:
+			return new TacticianSonken( isMy );
+		case DefineCardID.TACTICIAN_SYOKATURYO:
+			return new TacticianSyokaturyo( isMy );
+		case DefineCardID.TACTICIAN_SIBAI:
+			return new TacticianSibai( isMy );
+		case DefineCardID.TACTICIAN_TOTAKU:
+			return new TacticianTotaku( isMy );
 
 		default:
 			return new DetailBase( isMy );

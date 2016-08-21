@@ -4,8 +4,11 @@ import java.util.List;
 
 import Application.Application;
 import Application.Define;
+import Application.DefineCardID;
 import Application.GSvector2;
 import Object.Collision;
+import Object.Card.CardManager;
+import Object.Card.SoldierCard;
 import Object.Character.CharacterBase;
 import Object.Character.NumLabel;
 import Object.Character.Tactician;
@@ -19,6 +22,7 @@ public class DetailBase extends CharacterBase{
 	protected String mName;
 	protected int mCost;
 	protected int mAttack;
+	protected int mRevisionAttack;
 	protected int mHP;
 	protected boolean mIsSoldier;
 	protected boolean mIsMy;
@@ -47,6 +51,7 @@ public class DetailBase extends CharacterBase{
 		mAbility2 = Define.CARD_ABILITY.NONE;
 		mIsPlay = false;
 		mPlayTimer = Define.CARD_PLAY_WAIT;
+		mRevisionAttack = 0;
 
 		// 詳細を読み込む
 		DetailStructure str = DetailReader.readDetail( cardID );
@@ -58,7 +63,12 @@ public class DetailBase extends CharacterBase{
 		mIsSoldier = str.mIsSoldier;
 
 		// 軍師ならここで終了
-		if( cardID >= Define.CARD_ID.TACTICIAN_SONKEN.ordinal() ) return;
+		if( cardID >= DefineCardID.TACTICIAN_SONKEN ){
+
+			mPos = pos;
+			mSize = size;
+			return;
+		}
 
 		// 敵の場のカードでなければ裏面画像を使う
 		String fileName = "detail/" + mCardID;
@@ -95,7 +105,7 @@ public class DetailBase extends CharacterBase{
 		// 兵士以外は表示しない
 		if( !mIsSoldier ) return;
 
-		mAttackLabel.updateNum( mAttack, new GSvector2( pos.x, pos.y + size.y - Define.CARD_NUM_IMAGE_SIZE ) );
+		mAttackLabel.updateNum( Math.max( mAttack + mRevisionAttack, 0 ), new GSvector2( pos.x, pos.y + size.y - Define.CARD_NUM_IMAGE_SIZE ) );
 		mHPLabel.updateNum( mHP, new GSvector2( pos.x + size.x - Define.CARD_NUM_IMAGE_SIZE, pos.y + size.y - Define.CARD_NUM_IMAGE_SIZE ) );
 	}
 
@@ -116,7 +126,19 @@ public class DetailBase extends CharacterBase{
 	// パワー変更
 	public void powerChange( int changePower ){
 
-		mAttack += changePower;
+		mAttack = Math.max( mAttack + changePower, 0 );
+	}
+
+	// このターンのみの攻撃力アップを設定
+	public void setRevisionAttack( int num ){
+
+		mRevisionAttack += num;
+	}
+
+	// このターンのみの攻撃力アップを初期化
+	public void initRevisionAttack(){
+
+		mRevisionAttack = 0;
 	}
 
 	// カードをプレイ
@@ -126,22 +148,22 @@ public class DetailBase extends CharacterBase{
 	}
 
 	// 使用条件
+	public boolean useCondition(){ return true; }
+
+	// 使用条件
 	public boolean useCondition( GSvector2 mousePos, CharacterBase tactician, boolean isHand  ){
 
 		// 手を離した場所が手札の位置ではないか
 		boolean isPosY = mousePos.y < Define.FIELD_MYCARD_POSY + Define.CARD_SIZE.y;
 
-		// マナが足りているか
-		boolean isMana = ((Tactician)tactician).getMana() >= mCost;
-
 		// ひとつでも満たさなければfalse
-		if( !isPosY || !isHand || !isMana ){
+		if( !isPosY || !isHand ) return false;
 
-			if( !isMana ){
-				Application.getStringLabel().setType( Define.STRING_TYPE.NOT_MANA );
-				Application.getStringLabel().setPos();
-			}
+		// マナ不足
+		if( ((Tactician)tactician).getMana() < mCost ){
 
+			Application.getStringLabel().setType( Define.STRING_TYPE.NOT_MANA );
+			Application.getStringLabel().setPos();
 			return false;
 		}
 
@@ -207,6 +229,72 @@ public class DetailBase extends CharacterBase{
 		return null;
 	}
 
+	// 軍師か兵士を選択する条件
+	protected boolean getConditionTorS( boolean isMy ){
+
+		if( !isSelectTorS( isMy ) ){
+
+			Application.getStringLabel().setType( isMy ? Define.STRING_TYPE.SELECT_MY : Define.STRING_TYPE.SELECT_ENEMY );
+			Application.getStringLabel().setPos();
+			return false;
+		}
+
+		return true;
+	}
+
+	// 軍師か兵士を選択したか
+	private boolean isSelectTorS( boolean isMy ){
+
+		// 選択している敵兵士を取得
+		mSelectCharacter = getSelectSoldier( isMy );
+
+		if( mSelectCharacter != null ) return true;
+
+		// 選択している軍師を取得
+		mSelectCharacter = getSelectTactician( isMy );
+
+		return mSelectCharacter != null;
+	}
+
+	// 兵士を選択する条件
+	protected boolean getConditionS( boolean isMy ){
+
+		// 選択している敵兵士を取得
+		mSelectCharacter = getSelectSoldier( isMy );
+
+		if( mSelectCharacter != null ) return true;
+
+		Application.getStringLabel().setType( isMy ? Define.STRING_TYPE.SELECT_MY_SOLDIER : Define.STRING_TYPE.SELECT_ENEMY_SOLDIER );
+		Application.getStringLabel().setPos();
+
+		return false;
+	}
+
+	// 指定したIDの兵士を召喚
+	protected void createSoldier( int cardID, boolean isMy ){
+
+		CardManager cm = Application.getObj().getCardManager( isMy );
+
+		// タイプ
+		Define.CARD_TYPE type = isMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
+
+		// Detail生成
+		DetailBase detail = DetailReader.getDetail( cardID, isMy );
+
+		detail.initialize( cardID, new GSvector2( mPos.x, mPos.y ), new GSvector2( mSize.x, mSize.y ), type.ordinal() );
+
+		// フィールドカードを生成
+		CharacterBase card = new SoldierCard( isMy );
+
+		((SoldierCard)card).initialize(
+				detail,
+				new GSvector2( mPos.x, mPos.y )
+				);
+
+		// リストに追加
+		cm.addCardList( card );
+	}
+
 	// 指定したアビリティか？
 	public boolean isAbility( Define.CARD_ABILITY abi ){
 
@@ -226,7 +314,7 @@ public class DetailBase extends CharacterBase{
 	public int getCardID(){ return mCardID; }
 	public String getName(){ return mName; }
 	public int getCost(){ return mCost; }
-	public int getAttack(){ return mAttack; }
+	public int getAttack(){ return Math.max( mAttack + mRevisionAttack, 0 ); }
 	public int getHP(){ return mHP; }
 	public boolean getIsSoldier(){ return mIsSoldier; }
 	public boolean getIsPlay(){ return mIsPlay; }

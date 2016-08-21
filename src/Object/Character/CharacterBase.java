@@ -61,7 +61,7 @@ public class CharacterBase {
 		mType = type;
 		mIsSelect = false;
 		mDamageTimer = 0;
-		mFieldNumber = 0;
+		mFieldNumber = -1;
 	}
 
 	// 更新

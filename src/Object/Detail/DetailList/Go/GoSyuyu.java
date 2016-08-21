@@ -2,6 +2,7 @@ package Object.Detail.DetailList.Go;
 
 import Application.Application;
 import Application.Define;
+import Application.DefineCardID;
 import Application.GSvector2;
 import Object.Card.CardManager;
 import Object.Card.HandCard;
@@ -51,7 +52,7 @@ public class GoSyuyu extends DetailBase{
 
 			// 手札に赤壁の大火を加える
 			CharacterBase card = new HandCard( mIsMy );
-			((HandCard)card).initialize( Define.CARD_ID.SEKIHEKI_LARGE_FIRE.ordinal(), new GSvector2( Define.WINDOW_SIZE.x / 2, Define.WINDOW_SIZE.y / 2 ) );
+			((HandCard)card).initialize( DefineCardID.SEKIHEKI_LARGE_FIRE, new GSvector2( Define.WINDOW_SIZE.x / 2, Define.WINDOW_SIZE.y / 2 ) );
 
 			cm.addCardList( card );
 		}

@@ -6,6 +6,7 @@ import Object.Character.CharacterBase;
 public class ImpactEffect extends CharacterBase{
 
 	private int mTimer;
+	private int mFactor;
 
 	// コンストラクタ
 	public ImpactEffect( GSvector2 pos, double size ){
@@ -20,6 +21,7 @@ public class ImpactEffect extends CharacterBase{
 				0, 0 );
 
 		mTimer = 0;
+		mFactor = size <= Define.TACTICIAN_SIZE.x ? 1 : 3;
 	}
 
 	// 更新
@@ -27,7 +29,7 @@ public class ImpactEffect extends CharacterBase{
 
 		mTimer ++;
 
-		if( mTimer < Define.IMPACT_EFFECT_TIME ) return;
+		if( mTimer < Define.IMPACT_EFFECT_TIME * mFactor ) return;
 
 		mTimer = 0;
 

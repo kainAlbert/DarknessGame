@@ -72,11 +72,7 @@ public class DeckCard extends Card{
 	// カードを引く
 	public void drawCard(){
 
-		if( mDeckList.size() == 0 ){
-
-			mSize.x = 0;
-			return;
-		}
+		if( mDeckList.size() == 0 ) return;
 
 		CharacterBase card = mDeckList.get(0);
 

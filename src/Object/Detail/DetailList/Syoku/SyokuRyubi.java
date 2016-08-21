@@ -4,6 +4,7 @@ import java.util.List;
 
 import Application.Application;
 import Application.Define;
+import Application.DefineCardID;
 import Application.GSvector2;
 import Object.Card.Card;
 import Object.Card.CardManager;
@@ -61,16 +62,17 @@ public class SyokuRyubi extends DetailBase{
 			// すでに出ていたら何もしない
 			if( card.getType() == type.ordinal() ) continue;
 
-			if( detail.getCardID() == Define.CARD_ID.KANU.ordinal() || detail.getCardID() == Define.CARD_ID.TYOHI.ordinal() ){
+			if( detail.getCardID() == DefineCardID.KANU || detail.getCardID() == DefineCardID.TYOHI ){
 
 				CharacterBase c = new SoldierCard( mIsMy );
 
-				((SoldierCard)c).initialize( detail, pos);
+				((SoldierCard)c).initialize( detail, pos );
 
 				// リストに追加
 				Application.getObj().getCardManager( mIsMy ).addCardList( c );
 
 				list.remove(i);
+				continue;
 			}
 		}
 	}
@@ -109,7 +111,7 @@ public class SyokuRyubi extends DetailBase{
 
 			if( c.getType() != type.ordinal() ) continue;
 
-			if( d.getCardID() == Define.CARD_ID.KANU.ordinal() || d.getCardID() == Define.CARD_ID.TYOHI.ordinal() ){
+			if( d.getCardID() == DefineCardID.KANU || d.getCardID() == DefineCardID.TYOHI ){
 
 				num++;
 			}

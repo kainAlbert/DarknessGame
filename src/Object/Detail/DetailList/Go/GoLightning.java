@@ -26,7 +26,7 @@ public class GoLightning extends DetailBase{
 		// タイプ
 		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
 
-		// 徐夫人の数だけ威力を上げる
+		// 呪文ダメージ+1の数だけ威力を上げる
 		int revision = Application.getObj().getCardManager( mIsMy ).searchAbilityNum( Define.CARD_ABILITY.SPELL, type );
 
 		mSelectCharacter.damage( mAttack + revision );
@@ -38,14 +38,7 @@ public class GoLightning extends DetailBase{
 		// 親クラス条件
 		if( !super.useCondition(mousePos, tactician, isHand) ) return false;
 
-		// 選択している敵兵士を取得
-		mSelectCharacter = getSelectSoldier( false );
-
-		if( mSelectCharacter != null ) return true;
-
-		Application.getStringLabel().setType( Define.STRING_TYPE.SELECT_ENEMY_SOLDIER );
-		Application.getStringLabel().setPos();
-
-		return false;
+		// 敵兵士を1体選択しているか
+		return getConditionS( false );
 	}
 }

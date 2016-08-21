@@ -4,6 +4,7 @@ import java.util.List;
 
 import Application.Application;
 import Application.Define;
+import Application.DefineCardID;
 import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
@@ -86,30 +87,67 @@ public class EnemyManager {
 	// 攻撃
 	public void attackEnemy( int enemyFieldNumber, int attackFieldNumber ){
 
-		CharacterBase enemy = getSelectCharacter( enemyFieldNumber, false );
-		CharacterBase attackCharacter = getSelectCharacter( attackFieldNumber, true );
+		while( true ){
 
-		((SoldierCard)enemy).attackEnemy( attackCharacter );
+			try{
+				CharacterBase enemy = getSelectCharacter( enemyFieldNumber, false );
+				CharacterBase attackCharacter = getSelectCharacter( attackFieldNumber, true );
+
+				((SoldierCard)enemy).attackEnemy( attackCharacter );
+				break;
+			}catch( Exception e ){
+				Application.getObj().getCardManager( false ).sortField();
+
+				e.printStackTrace();
+			}
+		}
 	}
 
-	// 選択先を返す
-	private CharacterBase getSelectCharacter( int fieldNumber, boolean isMy ){
+		// ヒーローパワー
+		public void usePower( String fieldNumber, String isMy ){
 
-		List<CharacterBase> list = Application.getObj().getCardManager( isMy ).getCardList();
+			CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( false );
 
-		for( int i=0; i<list.size(); i++ ){
+			// Detail
+			DetailBase detail = ((Tactician)tactician).getDetail();
 
-			if( list.get(i).getFieldNumber() == fieldNumber ) return list.get(i);
+			if( !fieldNumber.equals("null") ){
+
+				detail.setSelectCharacter( getSelectCharacter( Integer.parseInt(fieldNumber), isMy.equals("true") ) );
+			}
+
+			((Tactician)tactician).playPower();
+
+			// 説明を出す
+			showExplanation( detail.getCardID() );
 		}
 
-		return Application.getObj().getCharacterManager().getTactician(isMy);
+		// 選択先を返す
+		private CharacterBase getSelectCharacter( int fieldNumber, boolean isMy ){
+
+			List<CharacterBase> list = Application.getObj().getCardManager( isMy ).getCardList();
+
+			for( int i=0; i<list.size(); i++ ){
+
+				if( list.get(i).getFieldNumber() == fieldNumber ) return list.get(i);
+			}
+
+			return Application.getObj().getCharacterManager().getTactician(isMy);
+		}
+
+		// 使用カードの詳細を出す
+		private void showExplanation( int cardID ){
+
+			CardManager cm = Application.getObj().getCardManager( true );
+
+			GSvector2 pos = new GSvector2( Define.WINDOW_SIZE.x / 2, -Define.CARD_EXPLANATION_SIZE.y );
+
+			// 軍師は左から
+			if( cardID >= DefineCardID.TACTICIAN_SONKEN ){
+
+				pos = new GSvector2( -Define.CARD_EXPLANATION_SIZE.x, Define.WINDOW_SIZE.y / 2 );
+			}
+
+			cm.createExplanation( cardID, pos, 0.5 );
+		}
 	}
-
-	// 使用カードの詳細を出す
-	private void showExplanation( int cardID ){
-
-		CardManager cm = Application.getObj().getCardManager( true );
-
-		cm.createExplanation( cardID, new GSvector2( Define.WINDOW_SIZE.x / 2, -Define.CARD_EXPLANATION_SIZE.y ), 0.5 );
-	}
-}

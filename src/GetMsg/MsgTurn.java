@@ -7,7 +7,7 @@ public class MsgTurn {
 	// 開始ターン設定
 	public static void setStartTurn( String[] t ){
 
-		if( !Application.getObj().getIsSendTactician() ) return;
+		if( !MsgTactician.mIsGetTactician ) return;
 
 		if( !Application.getSelectTactician().getIsSelect() ) return;
 

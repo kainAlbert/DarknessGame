@@ -60,7 +60,11 @@ public class DeckReader {
 
 				list.add( card );
 
-			}catch( Exception e ){}
+			}catch( Exception e ){
+
+				e.printStackTrace();
+			}
+
 
 		}
 

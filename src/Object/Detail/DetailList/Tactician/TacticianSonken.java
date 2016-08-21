@@ -2,8 +2,6 @@ package Object.Detail.DetailList.Tactician;
 
 import Application.Application;
 import Application.Define;
-import Application.GSvector2;
-import Object.Character.CharacterBase;
 import Object.Detail.DetailBase;
 
 public class TacticianSonken extends DetailBase{
@@ -18,33 +16,34 @@ public class TacticianSonken extends DetailBase{
 	// プレイ
 	public void play(){
 
-		if( mIsPlay ) return;
+		int num = mHP > 15 ? 1 : 2;
 
-		mIsPlay = true;
+		mSelectCharacter.damage( num );
+	}
 
-		// タイプ
-		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
+	// 回復
+	public void care( int c ){
 
-		// 徐夫人の数だけ威力を上げる
-		int revision = Application.getObj().getCardManager( mIsMy ).searchAbilityNum( Define.CARD_ABILITY.SPELL, type );
-
-		mSelectCharacter.damage( mAttack + revision );
+		mHP = c;
 	}
 
 	// 条件
-	public boolean useCondition( GSvector2 mousePos, CharacterBase tactician, boolean isHand  ){
+	public boolean useCondition(){
 
-		// 親クラス条件
-		if( !super.useCondition(mousePos, tactician, isHand) ) return false;
+		if( !condition() ){
 
-		// 選択している敵兵士を取得
-		mSelectCharacter = getSelectSoldier( false );
+			Application.getStringLabel().setType( Define.STRING_TYPE.SELECT_ENEMY );
+			Application.getStringLabel().setPos();
+			return false;
+		}
 
-		if( mSelectCharacter != null ) return true;
+		return true;
+	}
 
-		Application.getStringLabel().setType( Define.STRING_TYPE.SELECT_ENEMY_SOLDIER );
-		Application.getStringLabel().setPos();
+	// 条件
+	private boolean condition(){
 
-		return false;
+		// 敵を1体選択しているか
+		return getConditionTorS( false );
 	}
 }

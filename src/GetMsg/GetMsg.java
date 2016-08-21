@@ -28,7 +28,7 @@ public class GetMsg {
 		if( t[1].equals( Define.MSG_START_TURN ) ){ MsgTurn.setStartTurn(t); }
 
 		// 軍師設定
-		if( t[1].equals( Define.MSG_SET_TACTICIAN ) ){ MsgSelectTactician.setTactician(t); }
+		if( t[1].equals( Define.MSG_SET_TACTICIAN ) ){ MsgTactician.setTactician(t); }
 
 		// ゲーム開始
 		if( t[1].equals( Define.MSG_SET_START ) ){ MsgObjectManager.start(); }
@@ -47,5 +47,9 @@ public class GetMsg {
 
 		// 兵士の攻撃
 		if( t[1].equals( Define.MSG_ATTACK ) ){ MsgSoldierCard.attack(t); }
+
+		// ヒーローパワー
+		if( t[1].equals( Define.MSG_TACTICIAN_POWER ) ){ MsgTactician.userPower(t); }
+
 	}
 }

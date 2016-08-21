@@ -67,12 +67,10 @@ public class CardManager {
 	// ターン開始時の処理
 	public void startTurn(){
 
-		if( !Application.getTurn().getIsMyTurn() ) return;
-
 		for( int i=0; i<mCardList.size(); i++ ){
 
 			// デッキ
-			if(  mCardList.get(i).getType() == Define.CARD_TYPE.DECK.ordinal() ){
+			if( mIsMy && mCardList.get(i).getType() == Define.CARD_TYPE.DECK.ordinal() ){
 
 				((DeckCard)mCardList.get(i)).drawCard();
 			}
@@ -81,6 +79,28 @@ public class CardManager {
 			if( mCardList.get(i).getType() == Define.CARD_TYPE.MYFIELD.ordinal() ){
 
 				((SoldierCard)mCardList.get(i)).reconstituteAttack();
+			}
+
+			if( mCardList.get(i).getType() == Define.CARD_TYPE.MYFIELD.ordinal() || mCardList.get(i).getType() == Define.CARD_TYPE.ENEMYFIELD.ordinal() ){
+
+				DetailBase detail = ((Card)mCardList.get(i)).getDetail();
+
+				((DetailBase)detail).initRevisionAttack();
+			}
+		}
+	}
+
+	// ターン終了時の処理
+	public void endTurn(){
+
+		for( int i=0; i<mCardList.size(); i++ ){
+
+			// 兵士
+			if( mCardList.get(i).getType() == Define.CARD_TYPE.MYFIELD.ordinal() || mCardList.get(i).getType() == Define.CARD_TYPE.ENEMYFIELD.ordinal() ){
+
+				DetailBase detail = ((Card)mCardList.get(i)).getDetail();
+
+				((DetailBase)detail).initRevisionAttack();
 			}
 		}
 	}
@@ -139,16 +159,21 @@ public class CardManager {
 			// 手札のみ
 			if( mCardList.get(i).getType() != type.ordinal() ) continue;
 
-			((Card)mCardList.get(i)).sortPos( mHandPos[ index ] );
+			try{
 
-			index++;
+				((Card)mCardList.get(i)).sortPos( mHandPos[ index ] );
 
-			if( index >= Define.MAX_HAND_CARD ) return;
+				index++;
+
+				if( index >= Define.MAX_HAND_CARD ) return;
+			}catch( Exception e ){
+				e.printStackTrace();
+			}
 		}
 	}
 
 	// 戦場をソート
-	private void sortField(){
+	public void sortField(){
 
 		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD;
 		int fieldNum = searchTypeNum( type );
@@ -162,13 +187,13 @@ public class CardManager {
 			// 戦場のみ
 			if( mCardList.get(i).getType() != type.ordinal() ) continue;
 
+			mCardList.get(i).setFieldNumber( index );
+
 			// 攻撃中はソートしない
 			if( ((SoldierCard)mCardList.get(i)).getAttackTimer() <= 0 ){
 
 				((Card)mCardList.get(i)).sortPos( new GSvector2( Define.FIELD_CARD_POSX[ index ], posY ) );
 			}
-
-			mCardList.get(i).setFieldNumber( index );
 
 			index++;
 

@@ -2,7 +2,10 @@ package Object.Character;
 
 import Application.Application;
 import Application.Define;
+import Application.DefineCardID;
 import Application.GSvector2;
+import Application.MesgRecvThread;
+import Object.Collision;
 import Object.Detail.DetailBase;
 import Object.Detail.DetailReader;
 import Object.Effect.PointerEffect;
@@ -17,6 +20,7 @@ public class Tactician extends CharacterBase{
 	private int mID;
 	private int mMaxMana;
 	private int mMana;
+	private boolean mUsePower;
 
 	// コンストラクタ
 	public Tactician( boolean isMy ){
@@ -35,6 +39,7 @@ public class Tactician extends CharacterBase{
 		mID = id.ordinal();
 		mMaxMana = 1;
 		mMana = 1;
+		mUsePower = false;
 
 		GSvector2 pos = mIsMy ? new GSvector2( Define.TACTICIAN_MYPOS.x, Define.TACTICIAN_MYPOS.y ) :
 			new GSvector2( Define.TACTICIAN_ENEMYPOS.x, Define.TACTICIAN_ENEMYPOS.y );
@@ -46,13 +51,11 @@ public class Tactician extends CharacterBase{
 				new GSvector2( Define.TACTICIAN_RESIZE.x, Define.TACTICIAN_RESIZE.y ),
 				0, 0 );
 
-
-
 		int[] cardID = {
-				Define.CARD_ID.TACTICIAN_SONKEN.ordinal(),
-				Define.CARD_ID.TACTICIAN_SYOKATURYO.ordinal(),
-				Define.CARD_ID.TACTICIAN_SIBAI.ordinal(),
-				Define.CARD_ID.TACTICIAN_TOTAKU.ordinal()
+				DefineCardID.TACTICIAN_SONKEN,
+				DefineCardID.TACTICIAN_SYOKATURYO,
+				DefineCardID.TACTICIAN_SIBAI,
+				DefineCardID.TACTICIAN_TOTAKU
 		};
 
 		// Detail生成
@@ -107,6 +110,8 @@ public class Tactician extends CharacterBase{
 		mDamageTimer = Define.DAMAGE_TIME;
 
 		super.damage(d);
+
+		if( mHP <= 0 ) Application.getObj().setEnd();
 	}
 
 	// 回復
@@ -126,6 +131,8 @@ public class Tactician extends CharacterBase{
 	// クリック
 	public void click(){
 
+		if( !Collision.isCollisionSquareDot( mPos, mSize, Application.getObj().getMousePos() ) ) return;
+
 		GSvector2 pos = new GSvector2( mPos.x + mSize.x, Define.CARD_EXPLANATION_Y );
 
 		Application.getObj().getCardManager( true ).createExplanation( mDetail.getCardID(), pos, 1 );
@@ -133,6 +140,8 @@ public class Tactician extends CharacterBase{
 
 	// 選択
 	public void select(){
+
+		if( !Collision.isCollisionSquareDot( mPos, mSize, Application.getObj().getMousePos() ) ) return;
 
 		super.select();
 
@@ -144,16 +153,84 @@ public class Tactician extends CharacterBase{
 	// 選択解除
 	public void release(){
 
+		if( !mIsSelect ) return;
+
 		super.release();
 
 		// ポインターリセット
 		CharacterBase p = Application.getObj().getEffectManager().getPointer();
 
 		((PointerEffect)p).reset();
+
+		// ヒーローパワー使用条件
+		if( !useCondition() ) return;
+
+		// ヒーローパワー使用を送信
+		CharacterBase selectCharacter = mDetail.getSelectCharacter();
+
+		// 選択先のID
+		String fieldNumber = "null";
+
+		// 選択先の敵か味方か
+		String isMy = "null";
+
+		if( selectCharacter != null ){
+
+			fieldNumber = String.valueOf( selectCharacter.getFieldNumber() );
+			isMy = selectCharacter.getIsMy() ? "false" : "true";
+		}
+
+		String msg = Application.getID() + Define.MSG + Define.MSG_TACTICIAN_POWER + Define.MSG + fieldNumber + Define.MSG + isMy;
+		MesgRecvThread.outServer( msg );
+
+		playPower();
+	}
+
+	// ヒーローパワー条件
+	public boolean useCondition(){
+
+		// マウスが自分と被っていればfalse
+		if( Collision.isCollisionSquareDot( mPos, mSize, Application.getObj().getMousePos() ) ) return false;
+
+		// 使用済み
+		if( mUsePower ){
+
+			Application.getStringLabel().setType( Define.STRING_TYPE.ALREADY_ATTACK );
+			Application.getStringLabel().setPos();
+			return false;
+		}
+
+		// マナ不足
+		if( mMana < Define.TACTICIAN_POWER_MANA ){
+
+			Application.getStringLabel().setType( Define.STRING_TYPE.NOT_MANA );
+			Application.getStringLabel().setPos();
+			return false;
+		}
+
+		return mDetail.useCondition();
+	}
+
+	// ヒーローパワープレイ
+	public void playPower(){
+
+		// マナを消費
+		useMana( Define.TACTICIAN_POWER_MANA );
+
+		// 使用済みにする
+		mUsePower = true;
+
+		// 体力設定
+		mDetail.care( mHP );
+
+		// プレイ
+		mDetail.play();
 	}
 
 	// ドラッグ
 	public void drag(){
+
+		if( !mIsSelect ) return;
 
 		// マウス位置を取得
 		GSvector2 mousePos = Application.getObj().getMousePos();
@@ -163,7 +240,14 @@ public class Tactician extends CharacterBase{
 		((PointerEffect)p).setTargetPos( new GSvector2( mousePos.x, mousePos.y ) );
 	}
 
+	// ヒーローパワーを使用可能にする
+	public void usePower(){ mUsePower = false; }
+
+	// 見えなくする
+	public void notShow(){ mSize.x = 0; }
+
 	// ゲッター
+	public DetailBase getDetail(){ return mDetail; }
 	public NumLabel getManaLabel(){ return mManaLabel; }
 	public NumLabel getHPLabel(){ return mHPLabel; }
 	public int getHP(){ return mHP; }

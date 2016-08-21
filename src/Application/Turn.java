@@ -82,13 +82,15 @@ public class Turn{
 
 		mIsMyTurn = !mIsMyTurn;
 
-		mTimer = Define.TURN_DISTANCE_TIME;
-
 		// ターン変更文字設定
 		changeTurnStr();
 
 		// 終了時の処理
 		if( !mIsMyTurn ){
+
+			// ターン終了処理
+			Application.getObj().getCardManager( true ).endTurn();
+			Application.getObj().getCardManager( false ).endTurn();
 
 			// ボタンのリサイズ変更
 			changeButton();
@@ -97,8 +99,14 @@ public class Turn{
 		// 開始時の処理
 		if( mIsMyTurn ){
 
-			// 手札を引く
+			// ターン開始処理
 			Application.getObj().getCardManager( true ).startTurn();
+			Application.getObj().getCardManager( false ).startTurn();
+
+			// ヒーローパワーを使用可能にする
+			CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( true );
+
+			((Tactician)tactician).usePower();
 
 			// ボタンのリサイズ変更
 			changeButton();
@@ -121,7 +129,9 @@ public class Turn{
 	}
 
 	// ターン変更文字設定
-	private void changeTurnStr(){
+	public void changeTurnStr(){
+
+		mTimer = Define.TURN_DISTANCE_TIME;
 
 		// ターン変更文字設定
 		Application.getStringLabel().setType( mIsMyTurn ? Define.STRING_TYPE.MYTURN : Define.STRING_TYPE.ENDTURN );

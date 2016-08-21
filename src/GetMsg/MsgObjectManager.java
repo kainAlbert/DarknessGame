@@ -14,7 +14,7 @@ public class MsgObjectManager {
 
 		if( obj.getIsStart() ) return;
 
-		if( !obj.getIsSendTactician() ) return;
+		if( !MsgTactician.mIsGetTactician ) return;
 
 		obj.setStart();
 

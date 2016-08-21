@@ -28,14 +28,7 @@ public class SyokuGigantic extends DetailBase{
 		// 親クラス条件
 		if( !super.useCondition(mousePos, tactician, isHand) ) return false;
 
-		// 選択している味方兵士を取得
-		mSelectCharacter = getSelectSoldier( true );
-
-		if( mSelectCharacter != null ) return true;
-
-		// 選択している味方軍師を取得
-		mSelectCharacter = getSelectTactician( true );
-
-		return mSelectCharacter != null;
+		// 味方兵士を1体選択しているか
+		return getConditionS( true );
 	}
 }

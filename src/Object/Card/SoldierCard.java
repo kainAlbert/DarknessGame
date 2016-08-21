@@ -2,6 +2,7 @@ package Object.Card;
 
 import Application.Application;
 import Application.Define;
+import Application.DefineCardID;
 import Application.GSvector2;
 import Application.MesgRecvThread;
 import Object.Collision;
@@ -43,7 +44,7 @@ public class SoldierCard extends Card{
 
 		boolean isCharge = mDetail.isAbility( Define.CARD_ABILITY.CHARGE );
 
-		CharacterBase kakuka = Application.getObj().getCardManager( mIsMy ).searchIDType( Define.CARD_ID.KAKUKA.ordinal(), type);
+		CharacterBase kakuka = Application.getObj().getCardManager( mIsMy ).searchIDType( DefineCardID.KAKUKA, type);
 
 		if( isCharge || kakuka != null ) mIsAttack = false;
 
@@ -56,11 +57,30 @@ public class SoldierCard extends Card{
 
 		mDetail.play();
 
+		// カードリサイズ変更
+		changeReSize();
+
 		// 攻撃処理
 		attackAction();
 
 		// 死亡処理
 		deadAction();
+	}
+
+	// カードリサイズ変更
+	private void changeReSize(){
+
+		// 味方は攻撃していなければリサイズ変更
+		if( mIsMy ){
+
+			mReSize.x = Define.CARD_RESIZE.x * ( mIsAttack ? 1 : 2 );
+		}
+
+		// 敵は挑発を持っていればリサイズ変更
+		if( !mIsMy ){
+
+			mReSize.x = Define.CARD_RESIZE.x * ( mDetail.isAbility( Define.CARD_ABILITY.TAUNT ) ? 2 : 1 );
+		}
 	}
 
 	// 攻撃処理
@@ -93,6 +113,12 @@ public class SoldierCard extends Card{
 		mIsDead = true;
 	}
 
+	// 死亡
+	public void finish(){
+
+		mDetail.finish();
+	}
+
 	// 選択
 	public void select(){
 
@@ -115,13 +141,21 @@ public class SoldierCard extends Card{
 		super.release();
 
 		// すでに攻撃したなら終了
-		if( mIsAttack ) return;
+		if( mIsAttack ){
+
+			Application.getStringLabel().setType( Define.STRING_TYPE.ALREADY_ATTACK );
+			Application.getStringLabel().setPos();
+			return;
+		}
 
 		// マウス位置を取得
 		GSvector2 mousePos = Application.getObj().getMousePos();
 
 		// 敵兵士に攻撃
 		if( attackEnemySoldier( mousePos ) ) return;
+
+		// 呂布は軍師に攻撃できない
+		if( mDetail.getCardID() == DefineCardID.RYOHU ) return;
 
 		// 敵軍師に攻撃
 		attackEnemyTactician( mousePos );
@@ -144,9 +178,7 @@ public class SoldierCard extends Card{
 		if( !((Card)enemy).getDetail().isAbility( Define.CARD_ABILITY.TAUNT ) ){
 
 			// 戦場に他の挑発がいれば攻撃できない
-			int tauntNum = cm.searchAbilityNum( Define.CARD_ABILITY.TAUNT, Define.CARD_TYPE.ENEMYFIELD );
-
-			if( tauntNum > 0 ) return false;
+			if( isTaunt() ) return false;
 		}
 
 		// 攻撃
@@ -166,6 +198,9 @@ public class SoldierCard extends Card{
 		// マウス位置に軍師がいなければ終了
 		if( !Collision.isCollisionSquareDot( t.getPos(), t.getSize(), mousePos ) ) return;
 
+		// 挑発がいれば攻撃できない
+		if( isTaunt() ) return;
+
 		// 攻撃
 		attackEnemy( t );
 
@@ -173,8 +208,30 @@ public class SoldierCard extends Card{
 		MesgRecvThread.outServer( msg );
 	}
 
+	// 挑発がいるかどうか
+	private boolean isTaunt(){
+
+		// 戦場に挑発がいれば攻撃できない
+		int tauntNum = Application.getObj().getCardManager( false ).searchAbilityNum( Define.CARD_ABILITY.TAUNT, Define.CARD_TYPE.ENEMYFIELD );
+
+		if( tauntNum == 0 ) return false;
+
+		Application.getStringLabel().setType( Define.STRING_TYPE.ATTACK_TAUNT );
+		Application.getStringLabel().setPos();
+
+		return true;
+	}
+
 	// 敵に攻撃
 	public void attackEnemy( CharacterBase enemy ){
+
+		// 攻撃補正
+		int revision = 0;
+
+		if( mDetail.getCardID() == DefineCardID.TYOKO || mDetail.getCardID() == DefineCardID.HOGA ) revision = 2;
+		if( mDetail.getCardID() == DefineCardID.RYOHU ) revision = 5;
+
+		mDetail.setRevisionAttack( revision );
 
 		// ダメージ交換
 		enemy.damage( mDetail.getAttack() );

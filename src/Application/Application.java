@@ -159,10 +159,12 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 			return;
 		}
 
-		if( !mObj.getIsStart() ) return;
+		if( !mObj.getIsStart() || mObj.getIsEnd() ) return;
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
 		mObj.getCardManager( false ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
+		mObj.getCharacterManager().getTactician(true).click();
+		mObj.getCharacterManager().getTactician(false).click();
 
 		mTurn.click();
 	}
@@ -176,40 +178,36 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 	//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）
 	public void mousePressed(MouseEvent e) {
 
-		if( !mObj.getIsStart() ) return;
+		if( !mObj.getIsStart() || mObj.getIsEnd() ) return;
 
 		if( !mTurn.getIsMyTurn() ) return;
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.SELECT );
+		mObj.getCharacterManager().getTactician(true).select();
 	}
 
 	//マウスで押していたオブジェクトを離したときの処理
 	public void mouseReleased(MouseEvent e) {
 
-		if( !mObj.getIsStart() ) return;
+		if( !mObj.getIsStart() || mObj.getIsEnd() ) return;
 
 		if( !mTurn.getIsMyTurn() ) return;
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.RELEASE );
-
-		//		mObj.getCM().changeForce(  Integer.parseInt(theArrayIndex), mID );
-
-		//		String msg = mID + Define.STR_D + Define.STR_CHANGE_FORCE + Define.STR_D + theArrayIndex;
-		//
-		//		// サーバーに送信
-		//		MesgRecvThread.outServer(msg);
+		mObj.getCharacterManager().getTactician(true).release();
 	}
 
 	//マウスでオブジェクトとをドラッグしているときの処理
 	public void mouseDragged(MouseEvent e) {
 
-		if( !mObj.getIsStart() ) return;
+		if( !mObj.getIsStart() || mObj.getIsEnd() ) return;
 
 		if( !mTurn.getIsMyTurn() ) return;
 
 		mObj.setMousePos( e.getPoint() );
 
 		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.DRAG );
+		mObj.getCharacterManager().getTactician(true).drag();
 	}
 
 	//マウスがオブジェクト上で移動したときの処理
