@@ -51,5 +51,10 @@ public class GetMsg {
 		// ヒーローパワー
 		if( t[1].equals( Define.MSG_TACTICIAN_POWER ) ){ MsgTactician.userPower(t); }
 
+		// ポインター関連
+		if( t[1].equals( Define.MSG_POINTER_FIRST ) ){ MsgPointer.pointerFirst( t ); }
+		if( t[1].equals( Define.MSG_POINTER_TARGET ) ){ MsgPointer.pointerTarget( t ); }
+		if( t[1].equals( Define.MSG_POINTER_RESET ) ){ MsgPointer.pointerReset(); }
+
 	}
 }

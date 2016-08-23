@@ -4,6 +4,7 @@ import Application.Application;
 import Application.Define;
 import Application.Direction;
 import Application.GSvector2;
+import Application.MesgRecvThread;
 import Object.Character.CharacterBase;
 import Object.Detail.DetailBase;
 import Object.Effect.PointerEffect;
@@ -98,7 +99,12 @@ public class Card extends CharacterBase{
 
 		CharacterBase p = Application.getObj().getEffectManager().getPointer();
 
-		((PointerEffect)p).setFirstPos( new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 ) );
+		GSvector2 pos = new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 );
+
+		((PointerEffect)p).setFirstPos( pos );
+
+		String msg = Application.getID() + Define.MSG + Define.MSG_POINTER_FIRST + Define.MSG + pos.x + Define.MSG + pos.y;
+		MesgRecvThread.outServer( msg );
 	}
 
 	// 選択解除
@@ -110,6 +116,9 @@ public class Card extends CharacterBase{
 		CharacterBase p = Application.getObj().getEffectManager().getPointer();
 
 		((PointerEffect)p).reset();
+
+		String msg = Application.getID() + Define.MSG + Define.MSG_POINTER_RESET;
+		MesgRecvThread.outServer( msg );
 	}
 
 	// ドラッグ
@@ -121,6 +130,9 @@ public class Card extends CharacterBase{
 		CharacterBase p = Application.getObj().getEffectManager().getPointer();
 
 		((PointerEffect)p).setTargetPos( new GSvector2( mousePos.x, mousePos.y ) );
+
+		String msg = Application.getID() + Define.MSG + Define.MSG_POINTER_TARGET + Define.MSG + mousePos.x + Define.MSG + mousePos.y;
+		MesgRecvThread.outServer( msg );
 	}
 
 	// 死亡処理

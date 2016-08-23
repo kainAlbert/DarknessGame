@@ -49,7 +49,7 @@ public class PointerEffect extends CharacterBase{
 		double revisionY = ( mFirstPos.y - mTargetPos.y ) / 2;
 
 		mPos.x = mTargetPos.x - Define.POINTER_EFFECT_SIZE_X / 2 + revisionX;
-		mPos.y = mTargetPos.y - mSize.y / 1.8 + revisionY;
+		mPos.y = mTargetPos.y - mSize.y / 1.9 + revisionY;
 
 
 		// 角度設定

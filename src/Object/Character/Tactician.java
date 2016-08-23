@@ -147,7 +147,12 @@ public class Tactician extends CharacterBase{
 
 		CharacterBase p = Application.getObj().getEffectManager().getPointer();
 
-		((PointerEffect)p).setFirstPos( new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 ) );
+		GSvector2 pos = new GSvector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 );
+
+		((PointerEffect)p).setFirstPos( pos );
+
+		String msg = Application.getID() + Define.MSG + Define.MSG_POINTER_FIRST + Define.MSG + pos.x + Define.MSG + pos.y;
+		MesgRecvThread.outServer( msg );
 	}
 
 	// 選択解除
@@ -161,6 +166,9 @@ public class Tactician extends CharacterBase{
 		CharacterBase p = Application.getObj().getEffectManager().getPointer();
 
 		((PointerEffect)p).reset();
+
+		String msgPointer = Application.getID() + Define.MSG + Define.MSG_POINTER_RESET;
+		MesgRecvThread.outServer( msgPointer );
 
 		// ヒーローパワー使用条件
 		if( !useCondition() ) return;
@@ -180,8 +188,8 @@ public class Tactician extends CharacterBase{
 			isMy = selectCharacter.getIsMy() ? "false" : "true";
 		}
 
-		String msg = Application.getID() + Define.MSG + Define.MSG_TACTICIAN_POWER + Define.MSG + fieldNumber + Define.MSG + isMy;
-		MesgRecvThread.outServer( msg );
+		String msgPower = Application.getID() + Define.MSG + Define.MSG_TACTICIAN_POWER + Define.MSG + fieldNumber + Define.MSG + isMy;
+		MesgRecvThread.outServer( msgPower );
 
 		playPower();
 	}
@@ -238,6 +246,9 @@ public class Tactician extends CharacterBase{
 		CharacterBase p = Application.getObj().getEffectManager().getPointer();
 
 		((PointerEffect)p).setTargetPos( new GSvector2( mousePos.x, mousePos.y ) );
+
+		String msg = Application.getID() + Define.MSG + Define.MSG_POINTER_TARGET + Define.MSG + mousePos.x + Define.MSG + mousePos.y;
+		MesgRecvThread.outServer( msg );
 	}
 
 	// ヒーローパワーを使用可能にする

@@ -115,6 +115,9 @@ public interface Define {
 	String MSG_PLAY_SPELL = "MsgPlaySpell";
 	String MSG_ATTACK = "MsgAttack";
 	String MSG_TACTICIAN_POWER = "MsgTacticianPower";
+	String MSG_POINTER_FIRST = "MsgPointerFirst";
+	String MSG_POINTER_TARGET = "MsgPointerTarget";
+	String MSG_POINTER_RESET = "MsgPointerReset";
 
 	// 終了処理
 	int END_TIMER = 300;

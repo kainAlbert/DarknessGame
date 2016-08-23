@@ -9,6 +9,7 @@ import Application.GSvector2;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
 import Object.Detail.DetailBase;
+import Object.Effect.PointerEffect;
 
 public class EnemyManager {
 
@@ -103,51 +104,75 @@ public class EnemyManager {
 		}
 	}
 
-		// ヒーローパワー
-		public void usePower( String fieldNumber, String isMy ){
+	// ヒーローパワー
+	public void usePower( String fieldNumber, String isMy ){
 
-			CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( false );
+		CharacterBase tactician = Application.getObj().getCharacterManager().getTactician( false );
 
-			// Detail
-			DetailBase detail = ((Tactician)tactician).getDetail();
+		// Detail
+		DetailBase detail = ((Tactician)tactician).getDetail();
 
-			if( !fieldNumber.equals("null") ){
+		if( !fieldNumber.equals("null") ){
 
-				detail.setSelectCharacter( getSelectCharacter( Integer.parseInt(fieldNumber), isMy.equals("true") ) );
-			}
-
-			((Tactician)tactician).playPower();
-
-			// 説明を出す
-			showExplanation( detail.getCardID() );
+			detail.setSelectCharacter( getSelectCharacter( Integer.parseInt(fieldNumber), isMy.equals("true") ) );
 		}
 
-		// 選択先を返す
-		private CharacterBase getSelectCharacter( int fieldNumber, boolean isMy ){
+		((Tactician)tactician).playPower();
 
-			List<CharacterBase> list = Application.getObj().getCardManager( isMy ).getCardList();
-
-			for( int i=0; i<list.size(); i++ ){
-
-				if( list.get(i).getFieldNumber() == fieldNumber ) return list.get(i);
-			}
-
-			return Application.getObj().getCharacterManager().getTactician(isMy);
-		}
-
-		// 使用カードの詳細を出す
-		private void showExplanation( int cardID ){
-
-			CardManager cm = Application.getObj().getCardManager( true );
-
-			GSvector2 pos = new GSvector2( Define.WINDOW_SIZE.x / 2, -Define.CARD_EXPLANATION_SIZE.y );
-
-			// 軍師は左から
-			if( cardID >= DefineCardID.TACTICIAN_SONKEN ){
-
-				pos = new GSvector2( -Define.CARD_EXPLANATION_SIZE.x, Define.WINDOW_SIZE.y / 2 );
-			}
-
-			cm.createExplanation( cardID, pos, 0.5 );
-		}
+		// 説明を出す
+		showExplanation( detail.getCardID() );
 	}
+
+	// 選択先を返す
+	private CharacterBase getSelectCharacter( int fieldNumber, boolean isMy ){
+
+		List<CharacterBase> list = Application.getObj().getCardManager( isMy ).getCardList();
+
+		for( int i=0; i<list.size(); i++ ){
+
+			if( list.get(i).getFieldNumber() == fieldNumber ) return list.get(i);
+		}
+
+		return Application.getObj().getCharacterManager().getTactician(isMy);
+	}
+
+	// 使用カードの詳細を出す
+	private void showExplanation( int cardID ){
+
+		CardManager cm = Application.getObj().getCardManager( true );
+
+		GSvector2 pos = new GSvector2( Define.WINDOW_SIZE.x / 2, -Define.CARD_EXPLANATION_SIZE.y );
+
+		// 軍師は左から
+		if( cardID >= DefineCardID.TACTICIAN_SONKEN ){
+
+			pos = new GSvector2( -Define.CARD_EXPLANATION_SIZE.x, Define.WINDOW_SIZE.y / 2 );
+		}
+
+		cm.createExplanation( cardID, pos, 0.5 );
+	}
+
+	// ポインター初期位置
+	public void pointerFirst( double posx, double posy ){
+
+		CharacterBase p = Application.getObj().getEffectManager().getPointer();
+
+		((PointerEffect)p).setFirstPos( new GSvector2( posx, posy ) );
+	}
+
+	// ポインターターゲット
+	public void pointerTarget( double posx, double posy ){
+
+		CharacterBase p = Application.getObj().getEffectManager().getPointer();
+
+		((PointerEffect)p).setTargetPos( new GSvector2( posx, posy ) );
+	}
+
+	// ポインターリセット
+	public void pointerReset(){
+
+		CharacterBase p = Application.getObj().getEffectManager().getPointer();
+
+		((PointerEffect)p).reset();
+	}
+}
