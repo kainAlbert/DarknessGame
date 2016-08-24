@@ -34,8 +34,6 @@ public class GunKosonsan extends DetailBase{
 		// タイプ
 		Define.CARD_TYPE type = mIsMy ? Define.CARD_TYPE.MYFIELD : Define.CARD_TYPE.ENEMYFIELD ;
 
-		System.out.println( cm.searchTypeNum( type ) );
-
 		// 戦場がいっぱいなら終了
 		if( cm.searchTypeNum( type ) >= Define.MAX_FIELD_CARD ) return;
 

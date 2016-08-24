@@ -6,6 +6,7 @@ import Application.Application;
 import Application.Define;
 import Application.DefineCardID;
 import Application.GSvector2;
+import Application.MesgRecvThread;
 import Object.Character.CharacterBase;
 import Object.Character.Tactician;
 import Object.Detail.DetailBase;
@@ -99,6 +100,7 @@ public class EnemyManager {
 			}catch( Exception e ){
 				Application.getObj().getCardManager( false ).sortField();
 
+				MesgRecvThread.outServer( Application.getID() + Define.MSG + "ReSort" );
 				e.printStackTrace();
 			}
 		}

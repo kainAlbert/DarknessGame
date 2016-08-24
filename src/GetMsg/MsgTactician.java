@@ -11,11 +11,7 @@ public class MsgTactician {
 	// 軍師設定
 	public static void setTactician( String[] t ){
 
-		System.out.println("setTactician:" + Application.getObj().getIsStart());
-
 		if( Application.getObj().getIsStart() ) return;
-
-		System.out.println("setTactician:" + Application.getSelectTactician().getIsSelect());
 
 		if( !Application.getSelectTactician().getIsSelect() ) return;
 

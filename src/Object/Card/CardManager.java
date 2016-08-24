@@ -6,6 +6,7 @@ import java.util.List;
 import Application.Application;
 import Application.Define;
 import Application.GSvector2;
+import Application.MesgRecvThread;
 import Object.Collision;
 import Object.Character.CharacterBase;
 import Object.Detail.DetailBase;
@@ -168,6 +169,7 @@ public class CardManager {
 				if( index >= Define.MAX_HAND_CARD ) return;
 			}catch( Exception e ){
 				e.printStackTrace();
+				MesgRecvThread.outServer( Application.getID() + Define.MSG + "HandError" );
 			}
 		}
 	}
@@ -189,13 +191,18 @@ public class CardManager {
 
 			mCardList.get(i).setFieldNumber( index );
 
-			// 攻撃中はソートしない
-			if( ((SoldierCard)mCardList.get(i)).getAttackTimer() <= 0 ){
+			try{
+				// 攻撃中はソートしない
+				if( ((SoldierCard)mCardList.get(i)).getAttackTimer() <= 0 ){
 
-				((Card)mCardList.get(i)).sortPos( new GSvector2( Define.FIELD_CARD_POSX[ index ], posY ) );
+					((Card)mCardList.get(i)).sortPos( new GSvector2( Define.FIELD_CARD_POSX[ index ], posY ) );
+				}
+
+				index++;
+			}catch(Exception e ){
+				e.printStackTrace();
+				MesgRecvThread.outServer( Application.getID() + Define.MSG + "FieldError" );
 			}
-
-			index++;
 
 			if( index >= Define.MAX_FIELD_CARD ) return;
 		}
