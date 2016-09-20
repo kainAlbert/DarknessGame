@@ -1,60 +1,59 @@
 package GetMsg;
 
 import Application.Application;
-import Application.Define;
+import Define.DefineMsg;
 
 public class GetMsg {
 
 	public static void getMsg( String msg ){
 
 		//入力データ分類
-		String[] t = msg.split( Define.MSG );
+		String[] t = msg.split( DefineMsg.MSG );
 
 		// コマンドが1つだけならIDとみなし、格納する
 		if( Application.getID() == 0 && t.length == 1 ){
 
-			int id = Integer.parseInt( t[0] ) % 2;
+			int id = ( Integer.parseInt( t[0] ) - 1 ) % 4 + 1;
 
-			System.out.println(id + 1);
+			System.out.println( id );
 
-			Application.setID( id + 1 );
+			Application.setID( id );
 			return;
 		}
 
-		// IDが自分と同じなら終了
-		if( Integer.parseInt(t[0]) == Application.getID() ) return;
+		int id = Application.getID();
 
-		// 開始ターン設定
-		if( t[1].equals( Define.MSG_START_TURN ) ){ MsgTurn.setStartTurn(t); }
+		// IDが1以外なら、1の信号のみ受信。1なら自分以外の信号のみ受信。
+		if( !( id != 1 && Integer.parseInt(t[0]) == 1 ) && !( id == 1 && Integer.parseInt(t[0]) != 1 ) ) return;
 
-		// 軍師設定
-		if( t[1].equals( Define.MSG_SET_TACTICIAN ) ){ MsgTactician.setTactician(t); }
+		System.out.println( msg );
 
-		// ゲーム開始
-		if( t[1].equals( Define.MSG_SET_START ) ){ MsgObjectManager.start(); }
+		// エントリー
+		if( t[1].equals( DefineMsg.ENTRY ) ) GetMsgScene.entry( t );
 
-		// カードを引く
-		if( t[1].equals( Define.MSG_DRAW_CARD ) ){ MsgDeckCard.drawCard( t ); }
+		// 次のシーンへ
+		if( t[1].equals( DefineMsg.NEXT_SCENE ) ) GetMsgScene.nextScene();
 
-		// ターン変更
-		if( t[1].equals( Define.MSG_CHANGE_TURN ) ){ MsgTurn.changeTurn(); }
+		// プレイヤー情報
+		if( t[1].equals( DefineMsg.PLAYER_INFO ) ) GetMsgPlayer.setPlayerInfo( t );
 
-		// 手札からカードを出す
-		if( t[1].equals( Define.MSG_PUT_HANDCARD ) ){ MsgHandCard.putHandCard(t); }
+		// 攻撃エフェクト
+		if( t[1].equals( DefineMsg.ATTACK_EFFECT ) ) GetMsgPlayer.attackEffect( t );
 
-		// 呪文を使う
-		if( t[1].equals( Define.MSG_PLAY_SPELL ) ){ MsgHandCard.playSpell(t); }
+		// 攻撃判定
+		if( t[1].equals( DefineMsg.COLLISION_ATTACK ) ) GetMsgPlayer.collisionAttack( t );
 
-		// 兵士の攻撃
-		if( t[1].equals( Define.MSG_ATTACK ) ){ MsgSoldierCard.attack(t); }
+		// 壁の移動
+		if( t[1].equals( DefineMsg.MOVE_WALL ) ) GetMsgWall.moveWall( t );
 
-		// ヒーローパワー
-		if( t[1].equals( Define.MSG_TACTICIAN_POWER ) ){ MsgTactician.userPower(t); }
+		// アイテム作成
+		if( t[1].equals( DefineMsg.CREATE_TREASURE ) ) GetMsgTreasure.createTreasure( t );
 
-		// ポインター関連
-		if( t[1].equals( Define.MSG_POINTER_FIRST ) ){ MsgPointer.pointerFirst( t ); }
-		if( t[1].equals( Define.MSG_POINTER_TARGET ) ){ MsgPointer.pointerTarget( t ); }
-		if( t[1].equals( Define.MSG_POINTER_RESET ) ){ MsgPointer.pointerReset(); }
+		// アイテム削除
+		if( t[1].equals( DefineMsg.REMOVE_TREASURE ) ) GetMsgTreasure.removeTreasure( t );
+
+		// 時間設定
+		if( t[1].equals( DefineMsg.GAME_TIME ) ) GetMsgTime.setGameTime( t );
 
 	}
 }

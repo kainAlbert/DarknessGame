@@ -42,9 +42,6 @@ public class MesgRecvThread extends Thread {
 				//読み込んだときにデータが読み込まれたかどうかをチェックする
 				if (inputLine != null) {
 
-					//デバッグ（動作確認用）にコンソールに出力する
-					System.out.println(inputLine);
-
 					GetMsg.getMsg( inputLine );
 				}else{
 					break;

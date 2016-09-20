@@ -1,7 +1,4 @@
 package Application;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -9,21 +6,16 @@ import java.net.UnknownHostException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import Define.Define;
 import Object.ObjectManager;
-import Object.Character.StringLabel;
+import Scene.Scene;
 
-public class Application extends JFrame implements MouseListener,MouseMotionListener {
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 6296962141376967263L;
+public class Application extends JFrame {
 
 	public static Panel mPanel;
 	public static ObjectManager mObj;		// オブジェクト管理者
-	public static SelectTactician mSelectTactician;
-	public static Turn mTurn;
-	public static StringLabel mStringLabel;
-	public static int mID;								// プレイヤーID
+	public static Scene mScene;					// シーン
+	public static int mID;							// プレイヤーID
 
 	public Application() {
 
@@ -39,25 +31,21 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 
 		// パネルの設定
 		mPanel.setLayout(null);
-		mPanel.addMouseListener( this );
-		mPanel.addMouseMotionListener( this );
 
 		//ウィンドウを作成する
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("MyClient");
 		setSize( (int)(Define.WINDOW_SIZE.x + Define.WINDOW_REVISION.x), (int)(Define.WINDOW_SIZE.y + Define.WINDOW_REVISION.y));
+		setResizable(false);
+
+		// キーボード入力の許可
+		this.addKeyListener( new InputKey() );
 
 		// オブジェクト管理者生成
 		mObj = new ObjectManager( this );
 
-		// 文字画像生成
-		mStringLabel = new StringLabel();
-
-		// 軍師選択
-		mSelectTactician = new SelectTactician();
-
-		// ターン
-		mTurn = new Turn();
+		// シーン生成
+		mScene = new Scene();
 
 		// IDの初期化
 		mID = 0;
@@ -86,29 +74,11 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		// アプリケーションを生成
 		Application app = new Application();
 
-		// 文字画像初期化
-		mStringLabel.initialize();
-
 		// 画面表示
 		app.setVisible(true);
 
-		int timer = 0;
-
-		while( !mSelectTactician.getIsSelect() ){
-
-			// FPS処理
-			setFPS();
-
-			timer++;
-			if( timer > 180 ){
-				System.out.println("notStart");
-				timer = 0;
-			}
-		}
-
-		//初期化
-		mTurn.initialize();
 		mObj.initialize();
+		mScene.initialize();
 
 		while( true ){
 
@@ -116,9 +86,8 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 			setFPS();
 
 			// 更新
-			mTurn.update();
+			mScene.update();
 			mObj.update();
-			mStringLabel.update();
 
 			// 再描画
 			app.repaint();
@@ -150,80 +119,12 @@ public class Application extends JFrame implements MouseListener,MouseMotionList
 		error = newTime - oldTime - sleepTime; // 休止時間の誤差
 	}
 
-	//ボタンをクリックしたときの処理
-	public void mouseClicked(MouseEvent e) {
-
-		if( !mSelectTactician.getIsSelect() ){
-
-			mSelectTactician.click();
-			return;
-		}
-
-		if( !mObj.getIsStart() || mObj.getIsEnd() ) return;
-
-		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
-		mObj.getCardManager( false ).mouseMove( Define.MOUSE_STATUS_TYPE.CLICK );
-		mObj.getCharacterManager().getTactician(true).click();
-		mObj.getCharacterManager().getTactician(false).click();
-
-		mTurn.click();
-	}
-
-	//マウスがオブジェクトに入ったときの処理
-	public void mouseEntered(MouseEvent e) {}
-
-	//マウスがオブジェクトから出たときの処理
-	public void mouseExited(MouseEvent e) {}
-
-	//マウスでオブジェクトを押したときの処理（クリックとの違いに注意）
-	public void mousePressed(MouseEvent e) {
-
-		if( !mObj.getIsStart() || mObj.getIsEnd() ) return;
-
-		if( !mTurn.getIsMyTurn() ) return;
-
-		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.SELECT );
-		mObj.getCharacterManager().getTactician(true).select();
-	}
-
-	//マウスで押していたオブジェクトを離したときの処理
-	public void mouseReleased(MouseEvent e) {
-
-		if( !mObj.getIsStart() || mObj.getIsEnd() ) return;
-
-		if( !mTurn.getIsMyTurn() ) return;
-
-		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.RELEASE );
-		mObj.getCharacterManager().getTactician(true).release();
-	}
-
-	//マウスでオブジェクトとをドラッグしているときの処理
-	public void mouseDragged(MouseEvent e) {
-
-		if( !mObj.getIsStart() || mObj.getIsEnd() ) return;
-
-		if( !mTurn.getIsMyTurn() ) return;
-
-		mObj.setMousePos( e.getPoint() );
-
-		mObj.getCardManager( true ).mouseMove( Define.MOUSE_STATUS_TYPE.DRAG );
-		mObj.getCharacterManager().getTactician(true).drag();
-	}
-
-	//マウスがオブジェクト上で移動したときの処理
-	public void mouseMoved(MouseEvent e){
-
-		mObj.setMousePos( e.getPoint() );
-	}
-
 	// セッター
 	public static void setID( int id ){ mID = id; }
 
 	// ゲッター
 	public static Panel getPanel(){ return mPanel; }
 	public static ObjectManager getObj(){ return mObj; }
-	public static SelectTactician getSelectTactician(){ return mSelectTactician; }
-	public static Turn getTurn(){ return mTurn; }
-	public static StringLabel getStringLabel(){ return mStringLabel; }
+	public static Scene getScene(){ return mScene; }
 	public static int getID(){ return mID; }
 }

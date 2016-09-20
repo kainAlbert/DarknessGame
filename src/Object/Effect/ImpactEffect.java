@@ -1,27 +1,26 @@
 package Object.Effect;
-import Application.Define;
-import Application.GSvector2;
+import Application.Vector2;
+import Define.DefineEffect;
 import Object.Character.CharacterBase;
 
 public class ImpactEffect extends CharacterBase{
 
 	private int mTimer;
-	private int mFactor;
 
 	// コンストラクタ
-	public ImpactEffect( GSvector2 pos, double size ){
+	public ImpactEffect( Vector2 pos, double size ){
 
 		super();
 
 		super.initialize(
-				"impact",
+				"impactEffect",
+				0,
 				pos,
-				new GSvector2( size, size ),
-				new GSvector2( Define.IMPACT_EFFECT_RESIZE.x, Define.IMPACT_EFFECT_RESIZE.y ),
-				0, 0 );
+				new Vector2( size, size ),
+				DefineEffect.IMPACT_RESIZE,
+				0 );
 
 		mTimer = 0;
-		mFactor = size <= Define.TACTICIAN_SIZE.x ? 1 : 3;
 	}
 
 	// 更新
@@ -29,12 +28,12 @@ public class ImpactEffect extends CharacterBase{
 
 		mTimer ++;
 
-		if( mTimer < Define.IMPACT_EFFECT_TIME * mFactor ) return;
+		if( mTimer < DefineEffect.IMPACT_ANIM_TIMER ) return;
 
 		mTimer = 0;
 
-		mReSize.x += Define.IMPACT_EFFECT_RESIZE.x;
+		mReSize.x += DefineEffect.IMPACT_RESIZE.x;
 
-		if( mReSize.x > Define.IMPACT_EFFECT_RESIZE.x * 7 ) mIsDead = true;
+		if( mReSize.x > DefineEffect.IMPACT_RESIZE.x * DefineEffect.IMPACT_IMAGE_NUM ) mIsDead = true;
 	}
 }

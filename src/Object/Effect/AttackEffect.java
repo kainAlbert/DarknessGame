@@ -1,25 +1,34 @@
 package Object.Effect;
-import Application.Define;
-import Application.GSvector2;
+import Application.Vector2;
+import Define.DefineEffect;
 import Object.Character.CharacterBase;
 
 public class AttackEffect extends CharacterBase{
 
 	private int mTimer;
+	private int mFactor;
 
 	// コンストラクタ
-	public AttackEffect( GSvector2 pos ){
+	public AttackEffect(){
 
 		super();
+	}
 
-		mTimer = 0;
+	// 初期化
+	public void initialize( Vector2 pos, int sizeFactor, double angle ){
 
 		super.initialize(
 				"attackEffect",
-				new GSvector2( pos.x - Define.ATTACK_EFFECT_SIZE.x / 2, pos.y - Define.ATTACK_EFFECT_SIZE.y / 2),
-				new GSvector2( Define.ATTACK_EFFECT_SIZE.x, Define.ATTACK_EFFECT_SIZE.y ),
-				new GSvector2( Define.ATTACK_EFFECT_RESIZE.x, Define.ATTACK_EFFECT_RESIZE.y ),
-				0, 0 );
+				0,
+				pos,
+				new Vector2( DefineEffect.ATTACK_SIZE.x * sizeFactor, DefineEffect.ATTACK_SIZE.y * sizeFactor ),
+				DefineEffect.ATTACK_RESIZE,
+				0 );
+
+		mAngle = angle;
+
+		mTimer = 0;
+		mFactor = sizeFactor;
 	}
 
 	// 更新
@@ -27,12 +36,12 @@ public class AttackEffect extends CharacterBase{
 
 		mTimer ++;
 
-		if( mTimer < Define.ATTACK_EFFECT_TIME ) return;
+		if( mTimer < DefineEffect.ATTACK_ANIM_TIMER * mFactor ) return;
 
 		mTimer = 0;
 
-		mReSize.x += Define.ATTACK_EFFECT_RESIZE.x;
+		mReSize.x += mReSizeDistance.x;
 
-		if( mReSize.x > Define.ATTACK_EFFECT_RESIZE.x * 5 ) mIsDead = true;
+		if( mReSize.x > mReSizeDistance.x * DefineEffect.ATTACK_IMAGE_NUM ) mIsDead = true;
 	}
 }

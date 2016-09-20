@@ -4,16 +4,25 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
 
-import Object.Card.Card;
-import Object.Card.CardExplanation;
-import Object.Card.DeckCard;
+import Define.Define;
+import Define.DefinePlayer;
+import Define.DefineScene;
+import Object.ObjectManager;
 import Object.Character.CharacterBase;
-import Object.Character.Tactician;
-import Object.Detail.DetailBase;
+import Object.Map.MiniMap;
+import Object.Player.Player;
+import Object.StringLabel.StringLabel;
+import Object.Time.GameTime;
+import Object.Treasure.Treasure;
+import Object.Wall.Wall;
+import Scene.Scene;
+import Scene.ScenePlayer;
+
 
 public class Panel extends JPanel{
 
@@ -30,119 +39,183 @@ public class Panel extends JPanel{
 
 		Graphics2D g2 = (Graphics2D)g;
 
-		SelectTactician selectTactician = null;
-		List<CharacterBase> effectList = null;
-		CharacterBase myTactician = null;
-		CharacterBase enemyTactician = null;
-		CharacterBase pointer = null;
-		CharacterBase cardExplanation = null;
+		preparation( g2 );
+
+		playGame( g2 );
+
+		endGame( g2 );
+	}
+
+	// ゲーム準備
+	private void preparation( Graphics2D g2 ){
+
+		ObjectManager obj = Application.getObj();
+
+		Scene scene = null;
+		ScenePlayer[] player = null;
+		StringLabel label = null;
 
 		try{
 
-			selectTactician = Application.getSelectTactician();
-			effectList = Application.getObj().getEffectManager().getEffectList();
-			myTactician = Application.getObj().getCharacterManager().getTactician(true);
-			enemyTactician = Application.getObj().getCharacterManager().getTactician(false);
-			pointer = Application.getObj().getEffectManager().getPointer();
-			cardExplanation = Application.getObj().getCardManager(true).getExplanation();
+			scene = Application.getScene();
+			player = scene.getPlayer();
+			label = obj.getStringLabel();
 		}catch( Exception e ){
 			return;
 		}
 
-		// 軍師選択描画
-		if( !selectTactician.getIsSelect() ){
+		if( scene.getScene() != DefineScene.PREPARATION ) return;
 
-			// 背景描画
-			draw( g2, selectTactician.getBack() );
+		// 背景描画
+		drawBack( g2 );
 
-			for( int i=0; i<4; i++ ){
+		// プレイヤー画像描画
+		for( int i=0; i<player.length; i++ ){
 
-				draw( g2, selectTactician.getTactician(i) );
-			}
+			draw( g2, player[i], new Vector2() );
+		}
+
+		// 文字
+		draw( g2, label, new Vector2() );
+	}
+
+	// ゲームプレイ
+	private  void playGame( Graphics2D g2 ){
+
+		ObjectManager obj = Application.getObj();
+
+		Scene scene = null;
+		Player player = null;
+		ArrayList<Player> playerList = null;
+		ArrayList<Wall> wallList = null;
+		ArrayList<Treasure> treasureList = null;
+		ArrayList<CharacterBase> effectList = null;
+		MiniMap miniMap = null;
+		CharacterBase dark = null;
+		GameTime gameTime = null;
+		StringLabel label = null;
+
+		try{
+
+			scene = Application.getScene();
+			player =  obj.getPlayerManager().getPlayer( Application.getID() );
+			playerList = obj.getPlayerManager().getPlayerList();
+			wallList = obj.getWallManager().getWallList();
+			treasureList = obj.getTreasureManager().getTreasureList();
+			effectList = obj.getEffectManager().getEffectList();
+			miniMap = obj.getMap().getMiniMap();
+			dark = obj.getMap().getDark();
+			gameTime = obj.getGameTime();
+			label = obj.getStringLabel();
+		}catch( Exception e ){
 			return;
 		}
 
+		if( scene.getScene() != DefineScene.GAME_PLAY ) return;
+
+		if( player == null ) return;
+
+		// 表示補正
+		Vector2 revision = new Vector2( Define.FIELD_SIZE.x / 2 - DefinePlayer.SIZE.x / 2 - player.getPos().x, Define.FIELD_SIZE.y / 2 - DefinePlayer.SIZE.y / 2 - player.getPos().y );
+
 		// 背景描画
-		draw( g2, Application.getObj().getBackGround() );
+		drawBack( g2 );
 
-		// ターン終了ボタン描画
-		draw( g2, Application.getTurn().getButton() );
+		// マップ描画
+		draw( g2, obj.getMap(), revision );
 
-		// 軍師描画
-		draw( g2, myTactician );
-		draw( g2, ((Tactician)myTactician).getHPLabel() );
-		draw( g2, ((Tactician)myTactician).getManaLabel() );
+		// プレイヤー描画
+		for( int i=0; i<playerList.size(); i++ ){
 
-		draw( g2, enemyTactician );
-		draw( g2, ((Tactician)enemyTactician).getHPLabel() );
-		draw( g2, ((Tactician)enemyTactician).getManaLabel() );
+			if( playerList.get(i).getID() != Application.getID() && playerList.get(i).getHideTimer() > 0 ) continue;
 
-		// 各カード描画
-		drawCard( g2, true );
-		drawCard( g2, false );
+			draw( g2, playerList.get(i), revision );
+		}
+
+		// 壁描画
+		for( int i=0; i<wallList.size(); i++ ){
+
+			draw( g2, wallList.get(i), revision );
+		}
+
+		// 宝箱描画
+		for( int i=0; i<treasureList.size(); i++ ){
+
+			draw( g2, treasureList.get(i), revision );
+		}
 
 		// エフェクト描画
 		for( int i=0; i<effectList.size(); i++ ){
 
-			draw( g2, effectList.get(i) );
+			draw( g2, effectList.get(i), revision );
 		}
 
-		// カード説明描画
-		if( cardExplanation != null ){
+		// ミニマップ描画
+		draw( g2, miniMap, revision );
 
-			// 本体画像
-			draw( g2, cardExplanation );
-			// 数値
-			draw( g2, ((CardExplanation)cardExplanation).getCostLabel() );
-			draw( g2, ((CardExplanation)cardExplanation).getAttackLabel() );
-			draw( g2, ((CardExplanation)cardExplanation).getHPLabel() );
+		// プレイヤーアイコン描画
+		for( int i=0; i<playerList.size(); i++ ){
+
+			if( playerList.get(i).getID() != Application.getID() && playerList.get(i).getHideTimer() > 0 ) continue;
+
+			if( playerList.get(i).getID() != Application.getID() && obj.getPlayerManager().getIconTimer() > DefinePlayer.ICON_APPEAR_TIME ) continue;
+
+			draw( g2, playerList.get(i).getIcon(), revision );
 		}
 
-		// ポインター描画
-		draw( g2, pointer );
+		// 宝箱アイコン描画
+		for( int i=0; i<treasureList.size(); i++ ){
 
-		// 文字画像描画
-		draw( g2, Application.getStringLabel() );
+			draw( g2, treasureList.get(i).getIcon(), revision );
+		}
+
+		// 闇
+		draw( g2, dark, revision );
+
+		// ゲーム時間
+		draw( g2, gameTime, revision );
+		draw( g2, gameTime.getMinute(), revision );
+		draw( g2, gameTime.getSecond(), revision );
+
+		// 文字
+		draw( g2, label, revision );
 	}
 
-	// カードの描画
-	private void drawCard( Graphics2D g2, boolean isMy ){
+	// ゲーム終了
+	private void endGame( Graphics2D g2 ){
 
-		List<CharacterBase> list = null;
+		ObjectManager obj = Application.getObj();
+
+		Scene scene = null;
+		CharacterBase endBack = null;
+		List<CharacterBase> effectList = null;
 
 		try{
 
-			list = Application.getObj().getCardManager(isMy).getCardList();
+			scene = Application.getScene();
+			endBack = scene.getEndBack();
+			effectList = obj.getEffectManager().getEffectList();
 		}catch( Exception e ){
 			return;
 		}
 
-		for( int i=0; i<list.size(); i++ ){
+		if( scene.getScene() != DefineScene.GAME_END ) return;
 
-			CharacterBase card = list.get(i);
-			DetailBase detail = ((Card)card).getDetail();
+		// 背景描画
+		drawBack( g2 );
 
-			if( detail == null ) continue;
+		// 背景画像描画
+		draw( g2, endBack, new Vector2() );
 
-			draw( g2, detail );
+		// エフェクト描画
+		for( int i=0; i<effectList.size(); i++ ){
 
-			draw( g2, card );
-
-			// 数値描画
-			draw( g2, detail.getCostLabel() );
-			draw( g2, detail.getAttackLabel() );
-			draw( g2, detail.getHPLabel() );
-
-			// デッキの数
-			if( card.getType() == Define.CARD_TYPE.DECK.ordinal() ){
-
-				draw( g2, ((DeckCard)card).getNumLabel() );
-			}
+			draw( g2, effectList.get(i), new Vector2() );
 		}
 	}
 
 	// 画像描画
-	private void draw( Graphics2D g2, CharacterBase c ){
+	private void draw( Graphics2D g2, CharacterBase c, Vector2 revision ){
 
 		BufferedImage readImage = null;
 
@@ -153,27 +226,24 @@ public class Panel extends JPanel{
 			return;
 		}
 
-		if( readImage == null )return;
+		if( readImage == null ) return;
+
+		// 位置修正
+		Vector2 revisionPos = c.getIsRevision() ? new Vector2( revision.x, revision.y ) : new Vector2();
 
 		AffineTransform af = new AffineTransform();
 
-		af.rotate(c.getAngle() * Math.PI / 180, c.getPos().x + c.getSize().x / 2, c.getPos().y + c.getSize().y / 2);
+		af.rotate(c.getAngle() * Math.PI / 180, c.getPos().x + c.getSize().x / 2 + revisionPos.x, c.getPos().y + c.getSize().y / 2 + revisionPos.y);
 		g2.setTransform(af);
 
-		// ダメージ時の振動
-		int revision = 0;
+		g2.setColor( Color.RED );
 
-		if( c.getDamageTimer() > 0 ){
-
-			revision = (int)( Math.random() * 10 - 5 );
-		}
-
-		int posx = (int)c.getPos().x + revision;
-		int posy = (int)c.getPos().y + revision;
+		int posx = (int)c.getPos().x + (int)revisionPos.x;
+		int posy = (int)c.getPos().y + (int)revisionPos.y;
 		int scalex = (int)c.getSize().x + posx;
 		int scaley = (int)c.getSize().y + posy;
-		int resizex1 = (int)c.getReSize().x - (int)c.getFirstReSize().x;
-		int resizey1 = (int)c.getReSize().y - (int)c.getFirstReSize().y;
+		int resizex1 = (int)c.getReSize().x - (int)c.getReSizeDistance().x;
+		int resizey1 = (int)c.getReSize().y - (int)c.getReSizeDistance().y;
 		int resizex2 = (int)c.getReSize().x;
 		int resizey2 = (int)c.getReSize().y;
 
@@ -187,6 +257,7 @@ public class Panel extends JPanel{
 
 		af.rotate( 0, Define.WINDOW_SIZE.x / 2, Define.WINDOW_SIZE.y / 2 );
 		g2.setTransform(af);
+		g2.setColor(null);
 	}
 
 	// 背景描画
