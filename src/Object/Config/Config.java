@@ -32,9 +32,9 @@ public class Config {
 		mBerserkerKillPoint = config.mBerserkerKillPoint;
 		mDeadPoint = config.mDeadPoint;
 		mBerserkerDeadPoint = config.mBerserkerDeadPoint;
-		 mPlayerSpeed = config.mPlayerSpeed;
-		 mPlayerAngleSpeed = config.mPlayerAngleSpeed;
-		 mMiniMapTime = config.mMiniMapTime;
+		mPlayerSpeed = config.mPlayerSpeed;
+		mPlayerAngleSpeed = config.mPlayerAngleSpeed;
+		mMiniMapTime = config.mMiniMapTime;
 	}
 
 	public int getGameTime(){ return mGameTime; }
