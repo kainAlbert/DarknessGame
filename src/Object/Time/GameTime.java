@@ -31,7 +31,7 @@ public class GameTime extends CharacterBase{
 		mMinute.initialize( true );
 		mSecond.initialize( false );
 
-		mGameTimer = DefineTime.GAME_TIME;
+		mGameTimer = Application.getObj().getConfig().getGameTime();
 
 	}
 

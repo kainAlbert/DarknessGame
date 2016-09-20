@@ -53,7 +53,7 @@ public class Player extends CharacterBase{
 				new Vector2(),
 				DefinePlayer.SIZE,
 				DefinePlayer.RESIZE,
-				DefinePlayer.SPEED);
+				Application.getObj().getConfig().getPlayerSpeed());
 
 		mReSize.x = id * DefinePlayer.RESIZE.x;
 
@@ -166,8 +166,8 @@ public class Player extends CharacterBase{
 		if( Application.getID() != mID ) return;
 
 		// 旋回
-		if( InputKey.mLeftKey ) mAngle -= DefinePlayer.ANGLE_SPEED;
-		if( InputKey.mRightKey ) mAngle += DefinePlayer.ANGLE_SPEED;
+		if( InputKey.mLeftKey ) mAngle -= Application.getObj().getConfig().getPlayerAngleSpeed();
+		if( InputKey.mRightKey ) mAngle += Application.getObj().getConfig().getPlayerAngleSpeed();
 
 		// 前後移動
 		double velocity = 0;
@@ -228,7 +228,9 @@ public class Player extends CharacterBase{
 		// 一定時間ごとに当たり判定
 		if( mBerserkerTimer % 30 == 0 ){
 
-			mPoint += Collision.collisionPlayerAttack( mID, new Vector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 ), DefinePlayer.ATTACK_SPHERE * 2, true ) * 3;
+			int berserkerPoint = Application.getObj().getConfig().getBerserkerKillPoint();
+
+			mPoint += Collision.collisionPlayerAttack( mID, new Vector2( mPos.x + mSize.x / 2, mPos.y + mSize.y / 2 ), DefinePlayer.ATTACK_SPHERE * 2, true ) * berserkerPoint;
 		}
 
 		// タイマー終了したらバーサーカー終了
@@ -245,6 +247,8 @@ public class Player extends CharacterBase{
 
 	// 攻撃
 	private void attack(){
+
+		if( Application.getID() != mID ) return;
 
 		// 準備中でなければ終了
 		if( mPreparationTimer <= 0 ) return;
@@ -280,7 +284,9 @@ public class Player extends CharacterBase{
 				mPos.y + mSize.y / 2 + direction.y * DefinePlayer.ATTACK_DISTANCE * 1.3
 				);
 
-		mPoint += Collision.collisionPlayerAttack( mID, pos, DefinePlayer.ATTACK_SPHERE * mAttackSize, false ) * 2;
+		int killPoint = Application.getObj().getConfig().getKillPoint();
+
+		mPoint += Collision.collisionPlayerAttack( mID, pos, DefinePlayer.ATTACK_SPHERE * mAttackSize, false ) * killPoint;
 	}
 
 	// 宝箱獲得

@@ -11,10 +11,10 @@ public interface DefinePlayer {
 	Vector2 RESIZE = new Vector2( 256, 256 );
 
 	// 移動速度
-	double SPEED = 5;
+//	double SPEED = 5;
 
 	// 旋回速度
-	double ANGLE_SPEED = 10;
+//	double ANGLE_SPEED = 10;
 
 	// 可動範囲
 	Vector2 LIMIT_LEFT = new Vector2( SIZE.x, SIZE.y );
@@ -24,7 +24,7 @@ public interface DefinePlayer {
 	int PREPARATION_TIMER = 99999;
 	int SPEED_TIMER = 600;
 	int HIDE_TIMER = 1200;
-	int ICON_MAX_TIME = 360;
+//	int ICON_MAX_TIME = 360;
 	int ICON_APPEAR_TIME = 60;
 
 	// 攻撃距離

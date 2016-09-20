@@ -28,9 +28,11 @@ public class TreasureFactory {
 
 		mAppearRect = new Rect( Define.APPEAR_RECT[id].top, Define.APPEAR_RECT[id].left, Define.APPEAR_RECT[id].bottom, Define.APPEAR_RECT[id].right );
 
-		mTimer = DefineTreasure.APPEAR_TREASURE + mRnd.nextInt( DefineTreasure.APPEAR_TREASURE / 4 ) - DefineTreasure.APPEAR_TREASURE / 8;
+		int appearTime = Application.getObj().getConfig().getItemApperTime();
 
-		mTimer -= DefineTreasure.APPEAR_TREASURE / 2;
+		mTimer = appearTime + mRnd.nextInt( appearTime / 4 ) - appearTime / 8;
+
+		mTimer -= appearTime / 2;
 
 		mID = id;
 	}
@@ -44,14 +46,16 @@ public class TreasureFactory {
 
 		if( mTimer > 0 ) return;
 
-		mTimer = DefineTreasure.APPEAR_TREASURE + mRnd.nextInt( DefineTreasure.APPEAR_TREASURE / 4 ) - DefineTreasure.APPEAR_TREASURE / 8;;
+		int appearTime = Application.getObj().getConfig().getItemApperTime();
+
+		mTimer = appearTime + mRnd.nextInt( appearTime / 4 ) - appearTime / 8;;
 
 		TreasureManager tm = Application.getObj().getTreasureManager();
 
 		// 宝箱が上限なら生成しない
 		int treasureNum = tm.getTreasureNum( mID );
 
-		if( treasureNum >= DefineTreasure.MAX_NUM ) return;
+		if( treasureNum >= Application.getObj().getConfig().getMaxItemNum() ) return;
 
 		Vector2 pos = new Vector2();
 

@@ -92,5 +92,7 @@ public class StringLabel extends CharacterBase{
 		mPos.y = DefineString.FIRST_POS.y;
 
 		mLastPos.y = DefineString.FIRST_POS.y;
+
+		mTimer = 0;
 	}
 }

@@ -5,7 +5,7 @@ import Application.Vector2;
 public interface DefineTime {
 
 	// ゲーム時間
-	int GAME_TIME = 7200;
+//	int GAME_TIME = 7200;
 
 	// 時間の大きさ
 	Vector2 TIME_SIZE = new Vector2( 50, 50 );

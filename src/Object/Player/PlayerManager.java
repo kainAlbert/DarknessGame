@@ -38,7 +38,7 @@ public class PlayerManager {
 		}
 
 		mSendTimer = DefinePlayer.SEND_INFO_TIME;
-		mIconTimer = DefinePlayer.ICON_MAX_TIME;
+		mIconTimer = Application.getObj().getConfig().getMiniMapTime();
 	}
 
 	// 更新
@@ -54,7 +54,7 @@ public class PlayerManager {
 
 		mIconTimer--;
 
-		if( mIconTimer <= 0 ) mIconTimer = DefinePlayer.ICON_MAX_TIME;
+		if( mIconTimer <= 0 ) mIconTimer = Application.getObj().getConfig().getMiniMapTime();
 	}
 
 	// 全員のプレイヤー情報を送信

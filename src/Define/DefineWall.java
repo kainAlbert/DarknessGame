@@ -13,8 +13,8 @@ public interface DefineWall {
 	// 速度
 	double SPEED = 0.5;
 
-	// 1フィールドの数
-	int WALL_NUM = 50;
+	// 1区画の数
+//	int WALL_NUM = 50;
 
 	// ランダム移動までの時間
 	int MOVE_TIME = 30 * 60;

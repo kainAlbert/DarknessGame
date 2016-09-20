@@ -2,8 +2,8 @@ package Object.Wall;
 
 import java.util.ArrayList;
 
+import Application.Application;
 import Application.Vector2;
-import Define.DefineWall;
 
 public class WallManager {
 
@@ -20,7 +20,7 @@ public class WallManager {
 
 		for( int i=0; i<4; i++ ){
 
-			for( int j=0; j<DefineWall.WALL_NUM; j++ ){
+			for( int j=0; j<Application.getObj().getConfig().getWallNum(); j++ ){
 
 				int id = i + 1;
 

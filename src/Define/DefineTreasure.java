@@ -22,8 +22,8 @@ public interface DefineTreasure {
 	Vector2 RESIZE = new Vector2( 128, 128 );
 
 	// 出現間隔
-	int APPEAR_TREASURE = 600;
+//	int APPEAR_TREASURE = 600;
 
 	// 1区画の最大数
-	int MAX_NUM = 5;
+//	int MAX_NUM = 5;
 }

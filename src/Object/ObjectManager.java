@@ -3,6 +3,7 @@ package Object;
 
 import Application.Application;
 import Define.DefineScene;
+import Object.Config.Config;
 import Object.Effect.EffectManager;
 import Object.Map.Map;
 import Object.Player.PlayerManager;
@@ -22,6 +23,7 @@ public class ObjectManager {
 	private Map mMap;
 	private GameTime mGameTime;
 	private StringLabel mLabel;
+	private Config mConfig;
 
 	private boolean mIsStart;
 	private boolean mIsEnd;
@@ -39,11 +41,13 @@ public class ObjectManager {
 		mMap = new Map();
 		mGameTime = new GameTime();
 		mLabel = new StringLabel();
+		mConfig = new Config();
 	}
 
 	// 初期化
 	public void initialize(){
 
+		mConfig.initialize();
 		mEffectManager.initialize();
 		mPlayerManager.initialize();
 		mWallManager.initialize();
@@ -86,5 +90,6 @@ public class ObjectManager {
 	public StringLabel getStringLabel(){ return mLabel; }
 	public boolean getIsStart(){ return mIsStart; }
 	public boolean getIsEnd(){ return mIsEnd || mEndTimer > 0; }
+	public Config getConfig(){ return mConfig; }
 
 }
