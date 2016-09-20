@@ -12,6 +12,7 @@ import Scene.Scene;
 
 public class Application extends JFrame {
 
+
 	public static Panel mPanel;
 	public static ObjectManager mObj;		// オブジェクト管理者
 	public static Scene mScene;					// シーン
