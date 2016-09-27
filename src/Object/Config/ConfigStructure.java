@@ -13,4 +13,5 @@ public class ConfigStructure {
 	public double mPlayerSpeed;
 	public double mPlayerAngleSpeed;
 	public int mMiniMapTime;
+	public int mBerserkerConditionPoint;
 }

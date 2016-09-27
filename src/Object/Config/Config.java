@@ -13,6 +13,7 @@ public class Config {
 	private double mPlayerSpeed;
 	private double mPlayerAngleSpeed;
 	private int mMiniMapTime;
+	private int mBerserkerConditionPoint;
 
 	// コンストラクタ
 	public Config(){
@@ -35,6 +36,7 @@ public class Config {
 		mPlayerSpeed = config.mPlayerSpeed;
 		mPlayerAngleSpeed = config.mPlayerAngleSpeed;
 		mMiniMapTime = config.mMiniMapTime;
+		mBerserkerConditionPoint = config.mBerserkerConditionPoint;
 	}
 
 	public int getGameTime(){ return mGameTime; }
@@ -48,4 +50,5 @@ public class Config {
 	public double getPlayerSpeed(){ return mPlayerSpeed; }
 	public double getPlayerAngleSpeed(){ return mPlayerAngleSpeed; }
 	public int getMiniMapTime(){ return mMiniMapTime; }
+	public int getBerserkerConditionPoint(){ return mBerserkerConditionPoint; }
 }

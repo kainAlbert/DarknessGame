@@ -399,7 +399,7 @@ public class Player extends CharacterBase{
 			Application.getObj().getStringLabel().setString( isBerserker ? DefineString.KILLED_BERSERKER : DefineString.IS_DEAD );
 		}
 
-		if( isBerserker ) return;
+		if( isBerserker || mPoint > Application.getObj().getConfig().getBerserkerConditionPoint() ) return;
 
 		// バーサーカーに殺されてない場合
 		mIsBerserker = true;

@@ -83,6 +83,11 @@ public class ConfigReader {
 			item = str.split(PAUSE);
 			config.mMiniMapTime = Integer.parseInt( item[1] ) * 60;
 
+			// バーサーカー条件ポイント
+			str = br.readLine();
+			item = str.split(PAUSE);
+			config.mBerserkerConditionPoint = Integer.parseInt( item[1] );
+
 		}catch( Exception e ){
 
 			e.printStackTrace();
